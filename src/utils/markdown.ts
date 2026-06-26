@@ -5,6 +5,10 @@ export interface READMEData {
   skills?: string;
   projects?: string;
   socials?: string;
+  avatarUrl?: string;
+  followers?: number;
+  following?: number;
+  publicRepos?: number;
 }
 
 export interface RoadmapData {
@@ -13,9 +17,19 @@ export interface RoadmapData {
 }
 
 export function generateReadmeMarkdown(data: READMEData): string {
+  const avatarMarkdown = data.avatarUrl
+    ? `<p align="center">\n  <img src="${data.avatarUrl}" alt="Avatar" width="120" height="120" style="border-radius: 50%;" />\n</p>`
+    : '';
+
+  const statsMarkdown = (data.followers !== undefined && data.following !== undefined && data.publicRepos !== undefined)
+    ? `<p align="center">\n  👥 <b>Followers:</b> ${data.followers} | 👥 <b>Following:</b> ${data.following} | 📦 <b>Repos:</b> ${data.publicRepos}\n</p>`
+    : '';
+
   return [
+    avatarMarkdown,
     data.name ? `# ${data.name}` : '',
     data.role ? `## ${data.role}` : '',
+    statsMarkdown,
     data.about ? data.about : '',
     data.skills ? `### Skills\n${data.skills}` : '',
     data.projects ? `### Projects\n${data.projects}` : '',

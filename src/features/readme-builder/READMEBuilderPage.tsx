@@ -6,6 +6,7 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 import Textarea from '@/components/Textarea';
 import useReadmeStore from '@/stores/readme-store';
+import { fetchGithubProfile, fetchGithubRepos } from '@/utils/github-api';
 
 const READMEBuilderPage = () => {
   const searchParams = useSearchParams();
@@ -26,6 +27,10 @@ const READMEBuilderPage = () => {
     setSkills,
     setProjects,
     setSocials,
+    setAvatarUrl,
+    setFollowers,
+    setFollowing,
+    setPublicRepos,
     reset,
   } = useReadmeStore();
 
@@ -37,21 +42,10 @@ const READMEBuilderPage = () => {
       setError(null);
       try {
         // Fetch user profile info
-        const profileRes = await fetch(`https://api.github.com/users/${username}`);
-        if (!profileRes.ok) {
-          if (profileRes.status === 404) {
-            throw new Error(`GitHub user "${username}" not found.`);
-          }
-          throw new Error('Failed to fetch GitHub profile. API rate limit may be exceeded.');
-        }
-        const profile = await profileRes.json();
+        const profile = await fetchGithubProfile(username);
 
         // Fetch repositories
-        const reposRes = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`);
-        let repos = [];
-        if (reposRes.ok) {
-          repos = await reposRes.json();
-        }
+        const repos = await fetchGithubRepos(username);
 
         // Generate profile content
         setName(profile.name || profile.login || '');
@@ -69,14 +63,23 @@ const READMEBuilderPage = () => {
         const bioParts = [];
         if (profile.bio) bioParts.push(profile.bio);
         if (profile.location) bioParts.push(`📍 Based in ${profile.location}`);
-        if (profile.hireable) bioParts.push('💼 Open to new opportunities');
         setAbout(bioParts.join('\n\n'));
 
-        // Generate repository list
-        const projectList = repos
-          .filter((repo: any) => !repo.fork)
-          .slice(0, 5)
-          .map((repo: any) => `- [${repo.name}](${repo.html_url})${repo.description ? ` - ${repo.description}` : ''}`)
+        // Populate avatar and GitHub statistics
+        setAvatarUrl(profile.avatar_url);
+        setFollowers(profile.followers);
+        setFollowing(profile.following);
+        setPublicRepos(profile.public_repos);
+
+        // Identify top repositories sorted by stars
+        const topRepos = repos
+          .filter((repo) => !repo.fork)
+          .sort((a, b) => b.stargazers_count - a.stargazers_count)
+          .slice(0, 5);
+
+        // Format repository list for projects
+        const projectList = topRepos
+          .map((repo) => `- [${repo.name}](${repo.html_url})${repo.description ? ` - ${repo.description}` : ''} (⭐ ${repo.stargazers_count})`)
           .join('\n');
         setProjects(projectList);
 
@@ -99,7 +102,18 @@ const READMEBuilderPage = () => {
     };
 
     fetchGitHubData();
-  }, [username, setName, setRole, setAbout, setProjects, setSocials]);
+  }, [
+    username,
+    setName,
+    setRole,
+    setAbout,
+    setProjects,
+    setSocials,
+    setAvatarUrl,
+    setFollowers,
+    setFollowing,
+    setPublicRepos,
+  ]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-12 px-4 bg-gray-100 dark:bg-[#1e1e1e]">
