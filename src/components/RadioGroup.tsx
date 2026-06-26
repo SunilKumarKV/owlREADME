@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { FC, useId } from 'react';
 
 export interface RadioOption {
   value: string;
@@ -25,12 +25,16 @@ const RadioGroup: FC<RadioGroupProps> = ({
   disabled,
   loading
 }) => {
+  const groupName = useId();
   const normalizedOptions = options.map((option) =>
     typeof option === 'string' ? { value: option, label: option } : option
   );
 
   return (
-    <div className={['flex flex-col space-y-2 relative', className].filter(Boolean).join(' ')}>
+    <div
+      role="radiogroup"
+      className={['flex flex-col space-y-2 relative', className].filter(Boolean).join(' ')}
+    >
       {normalizedOptions.map((option) => {
         const optionDisabled = disabled || option.disabled || loading;
         return (
@@ -43,10 +47,11 @@ const RadioGroup: FC<RadioGroupProps> = ({
           >
             <input
               type="radio"
+              name={groupName}
               checked={value === option.value}
               onChange={() => !optionDisabled && onChange(option.value)}
               disabled={optionDisabled}
-              className="text-blue-500 focus:ring-2 ring-offset-2 ring-blue-500"
+              className="text-blue-500 focus:ring-2 focus:ring-offset-2 ring-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             />
             <span>{labels ? labels[option.value] || option.label : option.label}</span>
           </label>

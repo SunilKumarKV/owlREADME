@@ -42,8 +42,9 @@ const RoadmapBuilderPage = () => {
 
       {/* Template Selector */}
       <div className="w-full max-w-lg mb-6">
-        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300 font-semibold">Select Roadmap Template</label>
+        <label htmlFor="roadmap-template-select" className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300 font-semibold">Select Roadmap Template</label>
         <select
+          id="roadmap-template-select"
           value={template}
           onChange={(e) => handleTemplateChange(e.target.value)}
           className="w-full px-4 py-2 rounded-md border border-gray-300 dark:bg-[#1e1e1e] dark:text-white dark:border-gray-600 focus:border-blue-500 focus:ring-2 ring-blue-500 transition duration-200"
@@ -59,8 +60,9 @@ const RoadmapBuilderPage = () => {
 
       <form className="space-y-4 w-full max-w-lg">
         <div>
-          <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Roadmap Title</label>
+          <label htmlFor="roadmap-title" className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Roadmap Title</label>
           <Input
+            id="roadmap-title"
             value={title}
             onChange={(e) => setField('title', e.target.value)}
             placeholder="Roadmap Title"
@@ -71,18 +73,22 @@ const RoadmapBuilderPage = () => {
           <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Steps</label>
           {steps.map((step, index) => (
             <div key={index} className="flex space-x-2 items-start w-full">
-              <Textarea
-                value={step}
-                onChange={(e) => handleStepChange(index, e.target.value)}
-                placeholder={`Step ${index + 1}`}
-                className="flex-grow"
-                rows={2}
-              />
+              <div className="flex-grow">
+                <label htmlFor={`roadmap-step-${index}`} className="sr-only">Step {index + 1}</label>
+                <Textarea
+                  id={`roadmap-step-${index}`}
+                  value={step}
+                  onChange={(e) => handleStepChange(index, e.target.value)}
+                  placeholder={`Step ${index + 1}`}
+                  rows={2}
+                />
+              </div>
               <button
                 type="button"
                 onClick={() => handleRemoveStep(index)}
                 className="px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md font-bold transition duration-200 flex items-center justify-center cursor-pointer"
-                title="Remove step"
+                title={`Remove step ${index + 1}`}
+                aria-label={`Remove step ${index + 1}`}
               >
                 ✕
               </button>

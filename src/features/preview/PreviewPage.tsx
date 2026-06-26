@@ -13,7 +13,14 @@ import '@uiw/react-md-editor/markdown-editor.css';
 // Dynamically import the Markdown preview component to disable SSR
 const MDMarkdown = dynamic(
   () => import('@uiw/react-md-editor').then((mod) => mod.default.Markdown),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => (
+      <div className="animate-pulse bg-gray-100 dark:bg-gray-800/40 rounded-md h-[400px] flex items-center justify-center text-xs text-gray-400">
+        Loading markdown preview...
+      </div>
+    ),
+  }
 );
 
 const PreviewPage = () => {

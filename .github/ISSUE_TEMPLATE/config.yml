@@ -1,0 +1,9 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: 💬 Ask a Question / Start a Discussion
+    url: https://github.com/SunilKumarKV/owlroadmap/discussions
+    about: For questions, ideas, and general conversation — use GitHub Discussions.
+  - name: 📖 Read the Documentation
+    url: https://github.com/SunilKumarKV/owlroadmap/blob/main/README.md
+    about: Check the README and docs folder for setup instructions and guides.

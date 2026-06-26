@@ -10,6 +10,7 @@ import useRoadmapStore from '@/stores/roadmap-store';
 import useThemeStore from '@/stores/theme-store';
 import { generateReadmeMarkdown, generateRoadmapMarkdown, combineMarkdown } from '@/utils/markdown';
 import { downloadTextFile, downloadZipPackage, downloadJsonBackup, exportToPdf } from '@/utils/export-utils';
+import { generateShareUrl } from '@/utils/share-utils';
 import '@uiw/react-md-editor/markdown-editor.css';
 import {
   FileText,
@@ -25,13 +26,21 @@ import {
   Download,
   ExternalLink,
   Sparkles,
-  Info
+  Info,
+  Share2
 } from 'lucide-react';
 
 // Dynamically import the Markdown preview component to disable SSR
 const MDMarkdown = dynamic(
   () => import('@uiw/react-md-editor').then((mod) => mod.default.Markdown),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => (
+      <div className="animate-pulse bg-gray-100 dark:bg-gray-800/40 rounded-md h-[400px] flex items-center justify-center text-xs text-gray-400">
+        Loading markdown preview...
+      </div>
+    ),
+  }
 );
 
 interface Toast {
@@ -188,6 +197,19 @@ const ExportCenterPage = () => {
     addToast('PDF print preview requested!', 'success');
   };
 
+  const handleShare = (type: 'readme' | 'roadmap') => {
+    try {
+      const state = type === 'readme' ? readmeState : roadmapState;
+      const url = generateShareUrl(type, state, theme);
+      navigator.clipboard.writeText(url);
+      addToast(`Public share link for ${type === 'readme' ? 'README' : 'roadmap'} copied to clipboard!`, 'success');
+      readmeState.addExportHistoryItem(`Share Link (${type})`, getProjectName(type));
+    } catch (err) {
+      console.error('Failed to generate share link:', err);
+      addToast('Failed to copy share link', 'error');
+    }
+  };
+
   const handleClearHistory = () => {
     // Clear history logs without resetting the rest of the store
     useReadmeStore.setState({ exportHistory: [] });
@@ -258,6 +280,13 @@ const ExportCenterPage = () => {
               >
                 <Copy className="h-3 w-3 mr-1" /> Copy Markdown
               </Button>
+              <Button
+                onClick={() => handleShare('readme')}
+                className="w-full text-xs py-2"
+                variant="secondary"
+              >
+                <Share2 className="h-3 w-3 mr-1" /> Share Link
+              </Button>
             </div>
           </div>
 
@@ -282,6 +311,13 @@ const ExportCenterPage = () => {
                 variant="secondary"
               >
                 <Copy className="h-3 w-3 mr-1" /> Copy Markdown
+              </Button>
+              <Button
+                onClick={() => handleShare('roadmap')}
+                className="w-full text-xs py-2"
+                variant="secondary"
+              >
+                <Share2 className="h-3 w-3 mr-1" /> Share Link
               </Button>
             </div>
           </div>
@@ -350,8 +386,10 @@ const ExportCenterPage = () => {
                 <Sparkles className="h-5 w-5 text-blue-500" />
                 <h2 className="font-bold text-lg">Studio Preview</h2>
               </div>
-              <div className="flex bg-gray-100 dark:bg-black/40 rounded-lg p-1 text-xs">
+              <div role="tablist" className="flex bg-gray-100 dark:bg-black/40 rounded-lg p-1 text-xs">
                 <button
+                  role="tab"
+                  aria-selected={viewMode === 'preview'}
                   onClick={() => setViewMode('preview')}
                   className={`px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
                     viewMode === 'preview'
@@ -362,6 +400,8 @@ const ExportCenterPage = () => {
                   Rendered
                 </button>
                 <button
+                  role="tab"
+                  aria-selected={viewMode === 'source'}
                   onClick={() => setViewMode('source')}
                   className={`px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
                     viewMode === 'source'
@@ -375,8 +415,10 @@ const ExportCenterPage = () => {
             </div>
 
             {/* Target Select Tabs */}
-            <div className="flex border-b border-gray-100 dark:border-gray-800 mb-4 text-xs font-semibold">
+            <div role="tablist" className="flex border-b border-gray-100 dark:border-gray-800 mb-4 text-xs font-semibold">
               <button
+                role="tab"
+                aria-selected={activeTab === 'readme'}
                 onClick={() => setActiveTab('readme')}
                 className={`pb-2 px-4 border-b-2 transition cursor-pointer ${
                   activeTab === 'readme'
@@ -387,6 +429,8 @@ const ExportCenterPage = () => {
                 README.md
               </button>
               <button
+                role="tab"
+                aria-selected={activeTab === 'roadmap'}
                 onClick={() => setActiveTab('roadmap')}
                 className={`pb-2 px-4 border-b-2 transition cursor-pointer ${
                   activeTab === 'roadmap'
@@ -397,6 +441,8 @@ const ExportCenterPage = () => {
                 roadmap.md
               </button>
               <button
+                role="tab"
+                aria-selected={activeTab === 'combined'}
                 onClick={() => setActiveTab('combined')}
                 className={`pb-2 px-4 border-b-2 transition cursor-pointer ${
                   activeTab === 'combined'

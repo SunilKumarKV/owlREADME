@@ -129,8 +129,9 @@ const READMEBuilderPage = () => {
 
       {/* Template Selector */}
       <div className="w-full max-w-lg mb-6">
-        <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300 font-semibold">README Style Template</label>
+        <label htmlFor="readme-template-select" className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300 font-semibold">README Style Template</label>
         <select
+          id="readme-template-select"
           value={template}
           onChange={(e) => setTemplate(e.target.value as READMEStyleTemplate)}
           className="w-full px-4 py-2 rounded-md border border-gray-300 dark:bg-[#1e1e1e] dark:text-white dark:border-gray-600 focus:border-blue-500 focus:ring-2 ring-blue-500 transition duration-200"
@@ -145,8 +146,9 @@ const READMEBuilderPage = () => {
 
       <form className="space-y-4 w-full max-w-lg">
         <div>
-          <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Name</label>
+          <label htmlFor="readme-name" className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Name</label>
           <Input
+            id="readme-name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Your Name"
@@ -155,8 +157,9 @@ const READMEBuilderPage = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Role / Designation</label>
+          <label htmlFor="readme-role" className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Role / Designation</label>
           <Input
+            id="readme-role"
             value={role}
             onChange={(e) => setRole(e.target.value)}
             placeholder="Your Role"
@@ -165,8 +168,9 @@ const READMEBuilderPage = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">About Me / Bio</label>
+          <label htmlFor="readme-about" className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">About Me / Bio</label>
           <Textarea
+            id="readme-about"
             value={about}
             onChange={(e) => setAbout(e.target.value)}
             placeholder="About You"
@@ -176,8 +180,9 @@ const READMEBuilderPage = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Skills</label>
+          <label htmlFor="readme-skills" className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Skills</label>
           <Textarea
+            id="readme-skills"
             value={skills}
             onChange={(e) => setSkills(e.target.value)}
             placeholder="Skills (comma-separated or list)"
@@ -187,8 +192,9 @@ const READMEBuilderPage = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Projects / Repositories</label>
+          <label htmlFor="readme-projects" className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Projects / Repositories</label>
           <Textarea
+            id="readme-projects"
             value={projects}
             onChange={(e) => setProjects(e.target.value)}
             placeholder="Projects (comma-separated or list)"
@@ -198,8 +204,9 @@ const READMEBuilderPage = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Social Links</label>
+          <label htmlFor="readme-socials" className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Social Links</label>
           <Textarea
+            id="readme-socials"
             value={socials}
             onChange={(e) => setSocials(e.target.value)}
             placeholder="Social Links (comma-separated or list)"

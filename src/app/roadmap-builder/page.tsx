@@ -1,4 +1,4 @@
-import RoadmapBuilderPage from '@/features/readme-builder/RoadmapBuilderPage';
+import RoadmapBuilderPage from '@/features/roadmap-builder/RoadmapBuilderPage';
 
 const RoadmapBuilder = () => {
   return <RoadmapBuilderPage />;

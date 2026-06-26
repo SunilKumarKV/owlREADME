@@ -10,6 +10,36 @@ export interface ExportHistoryItem {
   projectName: string;
 }
 
+export interface RepoAnalysisResult {
+  languages: { name: string; count: number }[];
+  topStarred: { name: string; stars: number; description: string; url: string }[];
+  topActive: { name: string; lastUpdated: string; description: string; url: string }[];
+  suggestedSkills: string[];
+  suggestedTechStack: string[];
+  suggestedReadmeSections: { title: string; content: string }[];
+  totalStars: number;
+  totalForks: number;
+}
+
+export interface AISuggestions {
+  readme: {
+    aboutMe: string;
+    introduction: string;
+    skills: string;
+    projects: string;
+  } | null;
+  roadmap: {
+    nextTopics: string[];
+    technologies: string[];
+    roadmapSteps: string[];
+  } | null;
+  profile: {
+    improvedBio: string;
+    portfolioDescription: string;
+    githubImprovements: string[];
+  } | null;
+}
+
 export type READMEField =
   | 'name'
   | 'role'
@@ -40,6 +70,9 @@ interface READMEState {
   readmeExportsCount: number;
   templatesUsedCount: number;
   exportHistory: ExportHistoryItem[];
+  repoAnalysis: RepoAnalysisResult | null;
+  aiSuggestions: AISuggestions | null;
+  aiGenerationsCount: number;
   setField: (field: READMEField, value: any) => void;
   setName: (value: string) => void;
   setRole: (value: string) => void;
@@ -54,7 +87,10 @@ interface READMEState {
   setTemplate: (value: READMEStyleTemplate) => void;
   incrementReadmeExports: () => void;
   incrementTemplatesUsed: () => void;
+  incrementAiGenerations: () => void;
   addExportHistoryItem: (format: string, projectName: string) => void;
+  setRepoAnalysis: (analysis: RepoAnalysisResult | null) => void;
+  setAiSuggestions: (suggestions: AISuggestions | null) => void;
   reset: () => void;
 }
 
@@ -75,6 +111,9 @@ const useREADMEStore = create<READMEState>()(
       readmeExportsCount: 0,
       templatesUsedCount: 0,
       exportHistory: [],
+      repoAnalysis: null,
+      aiSuggestions: null,
+      aiGenerationsCount: 0,
       setField: (field, value) => set({ [field]: value } as Partial<READMEState>),
       setName: (value) => set({ name: value }),
       setRole: (value) => set({ role: value }),
@@ -94,6 +133,7 @@ const useREADMEStore = create<READMEState>()(
       },
       incrementReadmeExports: () => set((state) => ({ readmeExportsCount: state.readmeExportsCount + 1 })),
       incrementTemplatesUsed: () => set((state) => ({ templatesUsedCount: state.templatesUsedCount + 1 })),
+      incrementAiGenerations: () => set((state) => ({ aiGenerationsCount: state.aiGenerationsCount + 1 })),
       addExportHistoryItem: (format, projectName) =>
         set((state) => ({
           exportHistory: [
@@ -106,6 +146,8 @@ const useREADMEStore = create<READMEState>()(
             ...(state.exportHistory || []),
           ].slice(0, 50),
         })),
+      setRepoAnalysis: (analysis) => set({ repoAnalysis: analysis }),
+      setAiSuggestions: (suggestions) => set({ aiSuggestions: suggestions }),
       reset: () =>
         set({
           name: '',
@@ -122,6 +164,9 @@ const useREADMEStore = create<READMEState>()(
           readmeExportsCount: 0,
           templatesUsedCount: 0,
           exportHistory: [],
+          repoAnalysis: null,
+          aiSuggestions: null,
+          aiGenerationsCount: 0,
         }),
     }),
     { name: 'readme-store' }

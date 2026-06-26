@@ -205,3 +205,41 @@ body.theme-gradient .theme-preview-container blockquote {
   border-left-color: #c084fc !important;
   background: rgba(255, 255, 255, 0.03) !important;
 }
+
+/* Landing Page Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.15;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.05);
+    opacity: 0.25;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.35);
+  }
+}
+
+.animate-glow-bubble-1 {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-glow-bubble-2 {
+  animation: float 12s ease-in-out infinite 2s;
+}
+
+.animate-glow-bubble-3 {
+  animation: float 10s ease-in-out infinite 4s;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+

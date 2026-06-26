@@ -1,8 +1,8 @@
 import React from 'react';
-import GitHubUsernameInput from '@/features/home/GitHubUsernameInput';
+import LandingPage from '@/features/home/LandingPage';
 
 const HomePage: React.FC = () => {
-  return <GitHubUsernameInput />;
+  return <LandingPage />;
 };
 
 export default HomePage;

@@ -11,6 +11,7 @@ export interface ButtonProps {
   loading?: boolean;
   className?: string;
   type?: 'button' | 'submit' | 'reset';
+  title?: string;
 }
 
 const Spinner: FC = () => (
@@ -29,7 +30,8 @@ const Button: FC<ButtonProps> = ({
   href,
   loading,
   className,
-  type = 'button'
+  type = 'button',
+  title
 }) => {
   const classes = [
     'px-4 py-2 rounded-md font-semibold text-white transition duration-300 flex items-center justify-center',
@@ -44,7 +46,7 @@ const Button: FC<ButtonProps> = ({
 
   if (href && !disabled && !loading) {
     return (
-      <Link href={href} className={classes} onClick={onClick}>
+      <Link href={href} className={classes} onClick={onClick} title={title}>
         {loading && <Spinner />}
         {icon && !loading && <span>{icon}</span>}
         {children}
@@ -58,6 +60,7 @@ const Button: FC<ButtonProps> = ({
       className={classes}
       onClick={disabled || loading ? undefined : onClick}
       disabled={disabled || loading}
+      title={title}
     >
       {loading && <Spinner />}
       {icon && !loading && <span>{icon}</span>}
