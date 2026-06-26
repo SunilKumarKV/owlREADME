@@ -3,6 +3,13 @@ import { persist } from 'zustand/middleware';
 
 export type READMEStyleTemplate = 'minimal' | 'professional' | 'developer' | 'open-source' | 'portfolio';
 
+export interface ExportHistoryItem {
+  id: string;
+  timestamp: string;
+  format: string;
+  projectName: string;
+}
+
 export type READMEField =
   | 'name'
   | 'role'
@@ -32,6 +39,7 @@ interface READMEState {
   template: READMEStyleTemplate;
   readmeExportsCount: number;
   templatesUsedCount: number;
+  exportHistory: ExportHistoryItem[];
   setField: (field: READMEField, value: any) => void;
   setName: (value: string) => void;
   setRole: (value: string) => void;
@@ -46,6 +54,7 @@ interface READMEState {
   setTemplate: (value: READMEStyleTemplate) => void;
   incrementReadmeExports: () => void;
   incrementTemplatesUsed: () => void;
+  addExportHistoryItem: (format: string, projectName: string) => void;
   reset: () => void;
 }
 
@@ -65,6 +74,7 @@ const useREADMEStore = create<READMEState>()(
       template: 'minimal',
       readmeExportsCount: 0,
       templatesUsedCount: 0,
+      exportHistory: [],
       setField: (field, value) => set({ [field]: value } as Partial<READMEState>),
       setName: (value) => set({ name: value }),
       setRole: (value) => set({ role: value }),
@@ -84,6 +94,18 @@ const useREADMEStore = create<READMEState>()(
       },
       incrementReadmeExports: () => set((state) => ({ readmeExportsCount: state.readmeExportsCount + 1 })),
       incrementTemplatesUsed: () => set((state) => ({ templatesUsedCount: state.templatesUsedCount + 1 })),
+      addExportHistoryItem: (format, projectName) =>
+        set((state) => ({
+          exportHistory: [
+            {
+              id: Math.random().toString(36).substring(2, 9),
+              timestamp: new Date().toISOString(),
+              format,
+              projectName: projectName || 'Untitled Project',
+            },
+            ...(state.exportHistory || []),
+          ].slice(0, 50),
+        })),
       reset: () =>
         set({
           name: '',
@@ -99,6 +121,7 @@ const useREADMEStore = create<READMEState>()(
           template: 'minimal',
           readmeExportsCount: 0,
           templatesUsedCount: 0,
+          exportHistory: [],
         }),
     }),
     { name: 'readme-store' }
