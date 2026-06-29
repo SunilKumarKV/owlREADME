@@ -58,6 +58,7 @@ const LandingPage: React.FC = () => {
 
           {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center space-x-8 text-sm font-semibold text-gray-600 dark:text-gray-400">
+            <Link href="/gallery" className="hover:text-blue-500 dark:hover:text-blue-400 transition">Gallery</Link>
             <a href="#features" className="hover:text-blue-500 dark:hover:text-blue-400 transition">Features</a>
             <a href="#templates" className="hover:text-blue-500 dark:hover:text-blue-400 transition">Templates</a>
             <a href="#how-it-works" className="hover:text-blue-500 dark:hover:text-blue-400 transition">How it Works</a>
