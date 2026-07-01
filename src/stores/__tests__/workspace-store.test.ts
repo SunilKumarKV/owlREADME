@@ -182,7 +182,7 @@ describe('useWorkspaceStore', () => {
                 openToWork: true,
                 freelance: false,
                 learning: 'Next.js',
-                building: 'OwlRoadmap',
+                building: 'OwlREADME',
               },
               visitorPlacement: 'top',
             },

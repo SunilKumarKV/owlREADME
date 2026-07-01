@@ -27,6 +27,7 @@ import useReadmeStore from '@/stores/readme-store';
 import { generateReadmeMarkdown } from '@/utils/markdown';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
+import { BRANDING } from '@/config/branding';
 
 const MDMarkdown = dynamic(
   () => import('@uiw/react-md-editor').then((mod) => mod.default.Markdown),
@@ -203,7 +204,7 @@ const ShowcaseGalleryPage = () => {
 
     addShowcase({
       name: createForm.name || 'Custom Showcase Portfolio',
-      description: createForm.description || 'Stunning custom workspace layout created on OwlRoadmap',
+      description: createForm.description || `Stunning custom workspace layout created on ${BRANDING.name}`,
       author: createForm.author || 'dev_master',
       category: createForm.category,
       technologies: createForm.technologiesInput ? createForm.technologiesInput.split(',').map(t => t.trim()).filter(Boolean) : [],
@@ -233,9 +234,9 @@ const ShowcaseGalleryPage = () => {
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xl">🦉</span>
+              <img src="/branding/owlreadme-icon.svg" className="h-6 w-6" alt="OwlREADME Icon" />
               <h1 className="text-md font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
-                OwlRoadmap Showcase
+                {BRANDING.name} Showcase
               </h1>
             </div>
             <p className="text-4xs font-semibold text-gray-450 dark:text-gray-500 uppercase tracking-widest mt-0.5">

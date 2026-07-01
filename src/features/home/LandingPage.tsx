@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import { GitHubIcon } from '@/components/Icons';
+import { BRANDING } from '@/config/branding';
 import {
   Sparkles,
   ArrowRight,
@@ -48,11 +49,11 @@ const LandingPage: React.FC = () => {
       <header className="sticky top-0 z-40 bg-white/80 dark:bg-black/60 backdrop-blur-md border-b border-gray-100 dark:border-gray-900 transition-colors">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2.5 group">
-            <div className="p-2 bg-blue-500 text-white rounded-xl shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform duration-200">
-              <Sparkles className="h-5 w-5" />
+            <div className="p-1 bg-gradient-to-tr from-indigo-500 to-blue-500 rounded-xl shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform duration-200">
+              <img src="/branding/owlreadme-icon.svg" className="h-7 w-7" alt="OwlREADME Icon" />
             </div>
-            <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-              OwlRoadmap
+            <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
+              {BRANDING.name}
             </span>
           </Link>
 
@@ -150,7 +151,7 @@ const LandingPage: React.FC = () => {
         <section id="hero" className="max-w-4xl mx-auto px-4 py-20 text-center space-y-8 z-10 relative">
           <div className="inline-flex items-center space-x-1.5 px-3 py-1 bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 rounded-full text-xs font-bold border border-blue-100 dark:border-blue-900/30">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>Introducing OwlRoadmap SaaS 0.1.0</span>
+            <span>Introducing {BRANDING.name} {BRANDING.version}</span>
           </div>
 
           <h1 className="text-5xl sm:text-6xl font-black tracking-tight leading-none bg-gradient-to-r from-gray-900 via-blue-950 to-purple-950 dark:from-white dark:via-blue-100 dark:to-purple-200 bg-clip-text text-transparent">
@@ -159,7 +160,7 @@ const LandingPage: React.FC = () => {
           </h1>
 
           <p className="text-gray-500 dark:text-gray-400 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed">
-            Instantly create professional developer profile READMEs, customize step-by-step learning roadmaps, and track repository metrics in a unified local developer workspace.
+            {BRANDING.description}
           </p>
 
           {/* GitHub Onboarding input box */}
@@ -292,7 +293,7 @@ const LandingPage: React.FC = () => {
               </div>
               <h2 className="text-3xl font-extrabold tracking-tight">Flexible design configurations to match your personal brand</h2>
               <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                OwlRoadmap includes diverse presets for templates, timelines, and style rendering. Instantly apply, test, and swap designs on the fly.
+                {BRANDING.name} includes diverse presets for templates, timelines, and style rendering. Instantly apply, test, and swap designs on the fly.
               </p>
 
               {/* Sub-tabs selector for preview showcase */}
@@ -629,7 +630,7 @@ const LandingPage: React.FC = () => {
                 <span className="text-blue-500 font-bold transition-transform group-open:rotate-45">+</span>
               </summary>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-3 leading-relaxed">
-                Yes! OwlRoadmap is 100% free and open-source. All core builder workspaces run entirely inside your browser environment.
+                Yes! {BRANDING.name} is 100% free and open-source. All core builder workspaces run entirely inside your browser environment.
               </p>
             </details>
 
@@ -661,22 +662,36 @@ const LandingPage: React.FC = () => {
       <footer className="bg-white dark:bg-black border-t border-gray-100 dark:border-gray-900 py-12 px-4 transition-colors">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center space-x-2 text-gray-500 dark:text-gray-400">
-            <Sparkles className="h-5 w-5 text-blue-500" />
-            <span className="font-extrabold text-sm tracking-tight text-black dark:text-white">OwlRoadmap</span>
+            <div className="p-1 bg-gradient-to-tr from-indigo-500 to-blue-500 rounded-lg">
+              <img src="/branding/owlreadme-icon.svg" className="h-5 w-5" alt="OwlREADME Icon" />
+            </div>
+            <span className="font-extrabold text-sm tracking-tight text-black dark:text-white">{BRANDING.name}</span>
             <span className="text-xs">© 2026. MIT License.</span>
           </div>
 
           <div className="flex flex-wrap justify-center gap-8 text-xs font-semibold text-gray-500 dark:text-gray-400">
             <a
-              href="https://github.com"
+              href={BRANDING.socialLinks.github}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-blue-500 dark:hover:text-blue-400 transition flex items-center gap-1"
             >
               <GitHubIcon className="h-4 w-4" /> GitHub Repository
             </a>
-            <a href="#features" className="hover:text-blue-500 dark:hover:text-blue-400 transition">Documentation</a>
-            <a href="#faq" className="hover:text-blue-500 dark:hover:text-blue-400 transition">Contact Support</a>
+            <a
+              href={BRANDING.documentationUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-blue-500 dark:hover:text-blue-400 transition"
+            >
+              Documentation
+            </a>
+            <a
+              href={`mailto:${BRANDING.supportEmail}`}
+              className="hover:text-blue-500 dark:hover:text-blue-400 transition"
+            >
+              Contact Support
+            </a>
           </div>
         </div>
       </footer>

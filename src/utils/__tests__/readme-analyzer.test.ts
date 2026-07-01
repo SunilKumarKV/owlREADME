@@ -25,7 +25,7 @@ I enjoy building scalable frontend apps. Based in India.
 ![TypeScript](https://img.shields.io/badge/TypeScript-blue?logo=typescript)
 
 ## Projects
-- [owlroadmap](https://github.com/SunilKumarKV/owlroadmap) - Visually build interactive roadmap charts.
+- [owlreadme](https://github.com/SunilKumarKV/owlroadmap) - Visually build interactive roadmap charts.
 
 ## Stats
 ![GitHub Stats](https://github-readme-stats.vercel.app/api?username=SunilKumarKV&theme=dark)

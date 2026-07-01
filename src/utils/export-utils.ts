@@ -30,7 +30,7 @@ export function downloadTextFile(filename: string, content: string): void {
 export async function downloadZipPackage(
   readmeContent: string,
   roadmapContent: string,
-  zipName: string = 'owlroadmap-package.zip'
+  zipName: string = 'owlreadme-package.zip'
 ): Promise<void> {
   if (!readmeContent && !roadmapContent) return;
   const zip = new JSZip();
@@ -50,7 +50,7 @@ export async function downloadZipPackage(
 export function downloadJsonBackup(
   readmeData: any,
   roadmapData: any,
-  filename: string = 'owlroadmap-backup.json'
+  filename: string = 'owlreadme-backup.json'
 ): void {
   const backup = {
     version: '1.0.0',

@@ -3,36 +3,41 @@ import "./globals.css";
 import ThemeProvider from '@/components/ThemeProvider';
 import Analytics from '@/components/Analytics';
 import { Suspense } from 'react';
+import { BRANDING } from "@/config/branding";
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://owlroadmap.com';
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://owlreadme.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
-  title: "OwlRoadmap | Interactive Developer Profile & Learning Roadmap Generator",
-  description: "Instantly create professional developer profile READMEs, customize step-by-step learning roadmaps, and share your technical portfolio with responsive themes.",
-  keywords: ["developer portfolio", "github readme generator", "learning roadmap", "developer dashboard", "portfolio builder", "resume builder", "visual roadmap", "software engineer curriculum"],
-  authors: [{ name: "OwlRoadmap Team" }],
+  title: BRANDING.seo.defaultTitle,
+  description: BRANDING.seo.defaultDescription,
+  keywords: BRANDING.seo.keywords,
+  authors: [{ name: BRANDING.seo.author }],
+  icons: {
+    icon: "/branding/favicon.svg",
+    apple: "/branding/owlreadme-icon.svg",
+  },
   openGraph: {
-    title: "OwlRoadmap | Interactive Developer Profile & Learning Roadmap Generator",
-    description: "Instantly create professional developer profile READMEs, customize step-by-step learning roadmaps, and share your technical portfolio.",
+    title: BRANDING.openGraph.title,
+    description: BRANDING.openGraph.description,
     type: "website",
-    locale: "en_US",
-    siteName: "OwlRoadmap",
-    url: "/",
+    locale: BRANDING.openGraph.locale,
+    siteName: BRANDING.openGraph.siteName,
+    url: BRANDING.openGraph.url,
     images: [
       {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "OwlRoadmap - Visual Developer Workspaces",
+        url: BRANDING.openGraph.image.url,
+        width: BRANDING.openGraph.image.width,
+        height: BRANDING.openGraph.image.height,
+        alt: BRANDING.openGraph.image.alt,
       }
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "OwlRoadmap | Interactive Developer Profile & Learning Roadmap Generator",
-    description: "Instantly create professional developer profile READMEs, customize step-by-step learning roadmaps, and share your technical portfolio.",
-    images: ["/og-image.jpg"],
+    title: BRANDING.openGraph.title,
+    description: BRANDING.openGraph.description,
+    images: [BRANDING.openGraph.image.url],
   }
 };
 

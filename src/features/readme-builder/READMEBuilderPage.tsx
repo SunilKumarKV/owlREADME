@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { BRANDING } from '@/config/branding';
 import dynamic from 'next/dynamic';
 import {
   Clock,
@@ -482,10 +483,10 @@ const READMEBuilderPage = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const favs = localStorage.getItem('owlroadmap-fav-templates');
+      const favs = localStorage.getItem('owlreadme-fav-templates');
       if (favs) setFavoriteTemplates(JSON.parse(favs));
       
-      const recents = localStorage.getItem('owlroadmap-recent-templates');
+      const recents = localStorage.getItem('owlreadme-recent-templates');
       if (recents) setRecentlyUsedTemplates(JSON.parse(recents));
     }
 
@@ -505,14 +506,14 @@ const READMEBuilderPage = () => {
       ? favoriteTemplates.filter((fid) => fid !== id)
       : [...favoriteTemplates, id];
     setFavoriteTemplates(updated);
-    localStorage.setItem('owlroadmap-fav-templates', JSON.stringify(updated));
+    localStorage.setItem('owlreadme-fav-templates', JSON.stringify(updated));
   };
 
   const applyMarketplaceTemplate = (tpl: any) => {
     applyTemplate(tpl);
     const updatedRecents = [tpl.id, ...recentlyUsedTemplates.filter((id) => id !== tpl.id)].slice(0, 4);
     setRecentlyUsedTemplates(updatedRecents);
-    localStorage.setItem('owlroadmap-recent-templates', JSON.stringify(updatedRecents));
+    localStorage.setItem('owlreadme-recent-templates', JSON.stringify(updatedRecents));
   };
 
   const duplicateTemplateToWorkspace = (tpl: any) => {
@@ -554,7 +555,7 @@ const READMEBuilderPage = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `owlroadmap-config-${Date.now()}.json`;
+    a.download = `owlreadme-config-${Date.now()}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -740,7 +741,7 @@ const READMEBuilderPage = () => {
   }, [localMarkdown]);
 
   const handleExportAnalysisReport = () => {
-    const reportText = `OWLROADMAP README QUALITY REPORT
+    const reportText = `OWLREADME README QUALITY REPORT
 Generated: ${new Date().toLocaleDateString()}
 Overall Score: ${analysisResult.overallScore}/100
 
@@ -773,7 +774,7 @@ ${analysisResult.recommendedTemplates.map((t) => `- ${t}`).join('\n')}
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `owlroadmap-analysis-report-${Date.now()}.txt`;
+    a.download = `owlreadme-analysis-report-${Date.now()}.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -3431,7 +3432,7 @@ jobs:
 
     publishTemplate({
       name: publishForm.name || 'My Custom Template',
-      description: publishForm.description || 'Custom template created in OwlRoadmap',
+      description: publishForm.description || `Custom template created in ${BRANDING.name}`,
       author: publishForm.author || 'Developer',
       category: publishForm.category,
       tags: publishForm.tagsInput ? publishForm.tagsInput.split(',').map((t) => t.trim()).filter(Boolean) : [],
@@ -3830,8 +3831,10 @@ jobs:
       {/* ── Global Toolbar / Header ── */}
       <header className="flex flex-wrap items-center justify-between px-6 py-2.5 bg-white dark:bg-[#121212] border-b border-gray-200 dark:border-gray-800 z-50 flex-shrink-0 gap-3">
         <div className="flex items-center gap-2.5">
-          <span className="text-lg font-black tracking-tight text-blue-600 dark:text-blue-400 flex items-center gap-1.5 select-none">
-            🦉 OwlRoadmap <span className="text-2xs font-bold px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/35 text-blue-700 dark:text-blue-300">v1.1.0</span>
+          <span className="text-lg font-black tracking-tight text-blue-600 dark:text-blue-400 flex items-center gap-2 select-none">
+            <img src="/branding/owlreadme-icon.svg" className="h-6 w-6" alt="OwlREADME Icon" />
+            <span>{BRANDING.name}</span>
+            <span className="text-2xs font-bold px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/35 text-blue-700 dark:text-blue-300">v{BRANDING.version}</span>
           </span>
         </div>
 

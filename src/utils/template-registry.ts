@@ -154,7 +154,7 @@ export const TEMPLATE_MARKETPLACE: MarketplaceTemplate[] = [
         typingDelay: 800,
         typingColor: 'a855f7',
         typingCenter: true,
-        badges: { openToWork: false, freelance: true, learning: 'Three.js', building: 'OwlRoadmap' },
+        badges: { openToWork: false, freelance: true, learning: 'Three.js', building: 'OwlREADME' },
         visitorPlacement: 'bottom',
       },
       githubStats: { enabled: true, theme: 'tokyonight', hideBorder: false, showIcons: true, compactMode: false, layout: 'default' },

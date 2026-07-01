@@ -1,6 +1,6 @@
-# Contributing to OwlRoadmap
+# Contributing to OwlREADME
 
-Thank you for your interest in contributing to OwlRoadmap! As an open-source project, we welcome improvements in code quality, accessibility, styling, and feature additions.
+Thank you for your interest in contributing to OwlREADME! As an open-source project, we welcome improvements in code quality, accessibility, styling, and feature additions.
 
 ---
 

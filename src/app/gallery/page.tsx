@@ -1,8 +1,10 @@
 import { Suspense } from 'react';
 import ShowcaseGalleryPage from '@/features/showcase/ShowcaseGalleryPage';
 
+import { BRANDING } from '@/config/branding';
+
 export const metadata = {
-  title: 'Showcase Gallery | OwlRoadmap',
+  title: `Showcase Gallery | ${BRANDING.name}`,
   description: 'Browse, inspect, and duplicate stunning developer profile README configurations and visual layouts.',
 };
 

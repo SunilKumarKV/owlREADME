@@ -11,6 +11,7 @@ import useThemeStore from '@/stores/theme-store';
 import { generateReadmeMarkdown, generateRoadmapMarkdown, combineMarkdown } from '@/utils/markdown';
 import { downloadTextFile, downloadZipPackage, downloadJsonBackup, exportToPdf } from '@/utils/export-utils';
 import { generateShareUrl } from '@/utils/share-utils';
+import { BRANDING } from '@/config/branding';
 import '@uiw/react-md-editor/markdown-editor.css';
 import {
   FileText,
@@ -155,7 +156,7 @@ const ExportCenterPage = () => {
       return;
     }
     try {
-      await downloadZipPackage(readmeMarkdown, roadmapMarkdown, 'owlroadmap-workspace.zip');
+      await downloadZipPackage(readmeMarkdown, roadmapMarkdown, 'owlreadme-workspace.zip');
       readmeState.incrementReadmeExports();
       roadmapState.incrementRoadmapExports();
       readmeState.addExportHistoryItem('ZIP Package', getProjectName('Combined'));
@@ -167,7 +168,7 @@ const ExportCenterPage = () => {
   };
 
   const handleDownloadJson = () => {
-    downloadJsonBackup(readmeState, roadmapState, 'owlroadmap-backup.json');
+    downloadJsonBackup(readmeState, roadmapState, 'owlreadme-backup.json');
     readmeState.incrementReadmeExports();
     roadmapState.incrementRoadmapExports();
     readmeState.addExportHistoryItem('JSON Backup', getProjectName('Combined'));

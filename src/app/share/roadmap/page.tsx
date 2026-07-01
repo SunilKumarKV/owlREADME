@@ -8,6 +8,7 @@ import Textarea from '@/components/Textarea';
 import { generateRoadmapMarkdown } from '@/utils/markdown';
 import { decodeShareData } from '@/utils/share-utils';
 import { Sparkles, Copy, CheckCircle, ArrowRight, ListChecks } from 'lucide-react';
+import { BRANDING } from '@/config/branding';
 
 interface RoadmapData {
   title: string;
@@ -34,9 +35,9 @@ function ShareRoadmapContent() {
   // Set page title dynamically
   useEffect(() => {
     if (decodedData?.title) {
-      document.title = `${decodedData.title} Roadmap | OwlRoadmap`;
+      document.title = `${decodedData.title} Roadmap | ${BRANDING.name}`;
     } else {
-      document.title = 'Shared Learning Roadmap | OwlRoadmap';
+      document.title = `Shared Learning Roadmap | ${BRANDING.name}`;
     }
   }, [decodedData]);
 
@@ -74,7 +75,7 @@ function ShareRoadmapContent() {
             We couldn't decode the roadmap state from this link. Make sure the share link is complete.
           </p>
           <Button href="/" variant="primary" className="w-full">
-            Back to OwlRoadmap
+            Back to {BRANDING.name}
           </Button>
         </div>
       </div>
@@ -96,7 +97,7 @@ function ShareRoadmapContent() {
             </div>
             <div>
               <span className="text-[10px] uppercase tracking-wider font-extrabold text-blue-500 block">Shared Learning Roadmap</span>
-              <h2 className="font-bold text-sm">Created via OwlRoadmap</h2>
+              <h2 className="font-bold text-sm">Created via {BRANDING.name}</h2>
             </div>
           </div>
           <Link

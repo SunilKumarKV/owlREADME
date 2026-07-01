@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="owlGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="50%" stop-color="#4f46e5" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+    <linearGradient id="eyeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <linearGradient id="beakGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+  </defs>
+
+  <!-- Owl Body/Face shape: Geometric Shield -->
+  <path d="M 256 64 
+           C 310 64, 400 96, 416 160 
+           C 424 192, 424 320, 384 384 
+           C 344 448, 256 464, 256 464 
+           C 256 464, 168 448, 128 384 
+           C 88 320, 88 192, 96 160 
+           C 112 96, 202 64, 256 64 Z" 
+        fill="url(#owlGradient)" />
+
+  <!-- Brow / Feathers (Geometric) -->
+  <path d="M 120 180 Q 256 260 392 180" fill="none" stroke="#ffffff" stroke-width="24" stroke-linecap="round" opacity="0.15" />
+  
+  <!-- Left/Right Ears -->
+  <polygon points="96,160 140,90 200,120" fill="#4f46e5" opacity="0.5" />
+  <polygon points="416,160 372,90 312,120" fill="#4f46e5" opacity="0.5" />
+
+  <!-- Left Eye -->
+  <circle cx="180" cy="230" r="64" fill="#ffffff" />
+  <circle cx="180" cy="230" r="48" fill="#1e1b4b" />
+  <circle cx="184" cy="226" r="28" fill="url(#eyeGradient)" />
+  <circle cx="188" cy="222" r="14" fill="#ffffff" />
+
+  <!-- Right Eye -->
+  <circle cx="332" cy="230" r="64" fill="#ffffff" />
+  <circle cx="332" cy="230" r="48" fill="#1e1b4b" />
+  <circle cx="328" cy="226" r="28" fill="url(#eyeGradient)" />
+  <circle cx="324" cy="222" r="14" fill="#ffffff" />
+
+  <!-- Beak -->
+  <polygon points="256,260 236,310 276,310" fill="url(#beakGradient)" />
+
+  <!-- Breast Feathers / Code brackets -->
+  <path d="M 216 360 L 236 380 L 216 400" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity="0.8" />
+  <path d="M 296 360 L 276 380 L 296 400" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity="0.8" />
+  <path d="M 256 370 L 256 410" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity="0.8" />
+</svg>

@@ -8,7 +8,7 @@ describe('markdown utilities', () => {
       role: 'Frontend Engineer',
       about: 'I design user interfaces.',
       skills: 'React, TypeScript, CSS',
-      projects: '1. OwlRoadmap\n2. Portfolio',
+      projects: '1. OwlREADME\n2. Portfolio',
       socials: 'GitHub: @alice',
     };
 
@@ -18,7 +18,7 @@ describe('markdown utilities', () => {
       expect(markdown).toContain('## Frontend Engineer');
       expect(markdown).toContain('I design user interfaces.');
       expect(markdown).toContain('### Skills\nReact, TypeScript, CSS');
-      expect(markdown).toContain('### Projects\n1. OwlRoadmap\n2. Portfolio');
+      expect(markdown).toContain('### Projects\n1. OwlREADME\n2. Portfolio');
       expect(markdown).toContain('### Socials\nGitHub: @alice');
     });
 
@@ -42,7 +42,7 @@ describe('markdown utilities', () => {
       const markdown = generateReadmeMarkdown({ ...baseData, template: 'open-source' });
       expect(markdown).toContain('# 🤝 Alice Developer | Open Source');
       expect(markdown).toContain('**Frontend Engineer**');
-      expect(markdown).toContain('### 📦 Open Source Contributions & Repositories\n1. OwlRoadmap\n2. Portfolio');
+      expect(markdown).toContain('### 📦 Open Source Contributions & Repositories\n1. OwlREADME\n2. Portfolio');
       expect(markdown).toContain('### 🌟 About Me\nI design user interfaces.');
     });
 

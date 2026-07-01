@@ -10,6 +10,7 @@ import { generateReadmeMarkdown } from '@/utils/markdown';
 import { decodeShareData } from '@/utils/share-utils';
 import '@uiw/react-md-editor/markdown-editor.css';
 import { Sparkles, Copy, CheckCircle, ArrowRight, ExternalLink } from 'lucide-react';
+import { BRANDING } from '@/config/branding';
 
 const MDMarkdown = dynamic(
   () => import('@uiw/react-md-editor').then((mod) => mod.default.Markdown),
@@ -49,9 +50,9 @@ function ShareReadmeContent() {
   // Set the dynamic document title for SEO
   useEffect(() => {
     if (decodedData?.name) {
-      document.title = `${decodedData.name}'s Profile README | OwlRoadmap`;
+      document.title = `${decodedData.name}'s Profile README | ${BRANDING.name}`;
     } else {
-      document.title = 'Shared Profile README | OwlRoadmap';
+      document.title = `Shared Profile README | ${BRANDING.name}`;
     }
   }, [decodedData]);
 
@@ -89,7 +90,7 @@ function ShareReadmeContent() {
             We couldn't decode the workspace state from this link. Make sure the share link is complete.
           </p>
           <Button href="/" variant="primary" className="w-full">
-            Back to OwlRoadmap
+            Back to {BRANDING.name}
           </Button>
         </div>
       </div>
@@ -110,7 +111,7 @@ function ShareReadmeContent() {
             </div>
             <div>
               <span className="text-[10px] uppercase tracking-wider font-extrabold text-blue-500 block">Shared Profile Workspace</span>
-              <h2 className="font-bold text-sm">Created via OwlRoadmap</h2>
+              <h2 className="font-bold text-sm">Created via {BRANDING.name}</h2>
             </div>
           </div>
           <Link

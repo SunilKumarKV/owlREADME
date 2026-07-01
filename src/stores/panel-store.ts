@@ -66,7 +66,7 @@ export const usePanelStore = create<PanelState>()(
       }),
     }),
     {
-      name: 'owlroadmap-panel-store',
+      name: 'owlreadme-panel-store',
     }
   )
 );

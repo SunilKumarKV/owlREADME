@@ -1,8 +1,8 @@
-# 🦉 OwlRoadmap
+# 🦉 OwlREADME
 
-OwlRoadmap is a professional, visual developer workspace that allows you to instantly generate GitHub Profile READMEs, customize step-by-step learning roadmaps, consult AI assistants for resume and timeline suggestions, and track repository metrics in dynamic, interactive dashboards.
+OwlREADME is a professional, visual developer workspace that allows you to instantly generate GitHub Profile READMEs, customize step-by-step learning roadmaps, consult AI assistants for resume and timeline suggestions, and track repository metrics in dynamic, interactive dashboards.
 
-Built with Next.js, React, and Tailwind CSS, OwlRoadmap runs entirely in the browser with offline-first local storage, allowing you to manage multiple project workspaces seamlessly.
+Built with Next.js, React, and Tailwind CSS, OwlREADME runs entirely in the browser with offline-first local storage, allowing you to manage multiple project workspaces seamlessly.
 
 ---
 
@@ -46,7 +46,7 @@ Built with Next.js, React, and Tailwind CSS, OwlRoadmap runs entirely in the bro
 
 ## 📦 Installation & Setup
 
-To run OwlRoadmap locally, ensure you have Node.js (v18+) and `pnpm` installed.
+To run OwlREADME locally, ensure you have Node.js (v18+) and `pnpm` installed.
 
 1. **Clone the repository**:
    ```bash
@@ -97,7 +97,7 @@ To run OwlRoadmap locally, ensure you have Node.js (v18+) and `pnpm` installed.
 
 ## 🚀 Production Deployment
 
-OwlRoadmap is optimized for zero-config deployment on Vercel or modern container hosts. For detailed hosting instructions, custom domains setup, and analytics integration, refer to the [Deployment Guide](file:///Users/sunilkumarkv/Desktop/Projects/owlroadmap/docs/deployment.md).
+OwlREADME is optimized for zero-config deployment on Vercel or modern container hosts. For detailed hosting instructions, custom domains setup, and analytics integration, refer to the [Deployment Guide](file:///Users/sunilkumarkv/Desktop/Projects/owlroadmap/docs/deployment.md).
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FSunilKumarKV%2Fowlroadmap)
 

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft, BarChart2, Cpu, HelpCircle, Sparkles, CheckCircle } from 'lucide-react';
 import { GitHubIcon } from '@/components/Icons';
 import Button from '@/components/Button';
+import { BRANDING } from '@/config/branding';
 import useWorkspaceStore from '@/stores/workspace-store';
 import useReadmeStore from '@/stores/readme-store';
 import useRoadmapStore from '@/stores/roadmap-store';
@@ -59,7 +60,7 @@ const DeveloperAnalyticsPage: React.FC = () => {
 
   const skillCount = repoAnalysis?.suggestedSkills.length || 0;
 
-  // 3. OwlRoadmap Analytics
+  // 3. OwlREADME Analytics
   const workspaceCount = workspaces.length;
   const totalExports = readmeExportsCount + roadmapExportsCount;
   const totalTemplates = readmeTemplatesCount + roadmapTemplatesCount + themeTemplatesCount;
@@ -241,7 +242,7 @@ const DeveloperAnalyticsPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Card 3: OwlRoadmap Analytics */}
+          {/* Card 3: OwlREADME Analytics */}
           <div className="bg-white dark:bg-[#121212] p-6 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-4 border-b pb-2 border-gray-100 dark:border-gray-800">
