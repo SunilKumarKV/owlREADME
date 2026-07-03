@@ -6,6 +6,7 @@ import { parseReadmeMarkdown } from '@/utils/readme-importer';
 import { generateReadmeMarkdown } from '@/utils/markdown';
 import { getCurrentConfig } from '../utils/builder-helpers';
 import { TemplateCategory } from '@/stores/template-store';
+import type { DiffVisualTab, ConflictResolution, ImportMethod } from '../types/builder-types';
 
 export const useBuilderDialogs = () => {
   // Stores
@@ -36,7 +37,7 @@ export const useBuilderDialogs = () => {
 
   // 2. README Import Wizard Modal
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
-  const [importMethod, setImportMethod] = useState<'username' | 'repoUrl' | 'rawUrl' | 'paste' | 'upload'>('username');
+  const [importMethod, setImportMethod] = useState<ImportMethod>('username');
   const [importUsernameInput, setImportUsernameInput] = useState('');
   const [importRepoUrlInput, setImportRepoUrlInput] = useState('');
   const [importRawUrlInput, setImportRawUrlInput] = useState('');
@@ -45,7 +46,7 @@ export const useBuilderDialogs = () => {
   const [importStatusMessage, setImportStatusMessage] = useState('');
   const [parsedImportResult, setParsedImportResult] = useState<any | null>(null);
   const [selectedImportSections, setSelectedImportSections] = useState<SectionId[]>([]);
-  const [conflictResolution, setConflictResolution] = useState<'new' | 'overwrite' | 'merge'>('new');
+  const [conflictResolution, setConflictResolution] = useState<ConflictResolution>('new');
 
   const executeImportReadme = async (markdownText: string) => {
     try {
@@ -186,7 +187,7 @@ export const useBuilderDialogs = () => {
   const [comparingSnapshot, setComparingSnapshot] = useState<Snapshot | null>(null);
   const [restoringSnapshot, setRestoringSnapshot] = useState<Snapshot | null>(null);
   const [copiedDiffCode, setCopiedDiffCode] = useState(false);
-  const [diffVisualTab, setDiffVisualTab] = useState<'visual' | 'code' | 'summary'>('visual');
+  const [diffVisualTab, setDiffVisualTab] = useState<DiffVisualTab>('visual');
 
   const [selectedRestoreFields, setSelectedRestoreFields] = useState<Record<string, boolean>>({
     name: true,
@@ -238,7 +239,7 @@ export const useBuilderDialogs = () => {
 
   const executeSectionRestore = () => {
     if (!restoringSnapshot) return;
-    const restorePayload: any = {};
+    const restorePayload: Partial<Snapshot['config']> = {};
     const cfg = restoringSnapshot.config;
     
     if (selectedRestoreFields.name) restorePayload.name = cfg.name;

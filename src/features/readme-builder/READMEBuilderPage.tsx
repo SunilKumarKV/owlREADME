@@ -43,17 +43,11 @@ import Textarea from '@/components/Textarea';
 import useReadmeStore, { READMEStyleTemplate, GitHubStatsConfig, TechStackConfig, SocialLinksConfig, SectionId, FeaturedProject } from '@/stores/readme-store';
 import { useHistoryStore, Snapshot, computeConfigDiff } from '@/stores/history-store';
 import { generateReadmeMarkdown } from '@/utils/markdown';
-import { TECHNOLOGY_REGISTRY, CATEGORIES, Technology } from '@/utils/tech-registry';
-import { SOCIAL_PLATFORM_REGISTRY, SOCIAL_CATEGORIES, SocialPlatform } from '@/utils/social-registry';
-import { fetchGithubProfile, fetchGithubRepos } from '@/utils/github-api';
 import { TEMPLATE_MARKETPLACE } from '@/utils/template-registry';
-import { parseReadmeMarkdown } from '@/utils/readme-importer';
-import { analyzeReadmeMarkdown } from '@/utils/readme-analyzer';
 
 import BuilderHeader from './components/BuilderHeader';
 import BuilderSidebar from './components/BuilderSidebar';
 import BuilderPreview from './components/BuilderPreview';
-import BuilderStatusBar from './components/BuilderStatusBar';
 import BuilderLayout from './components/BuilderLayout';
 import HeaderPanel from './panels/HeaderPanel';
 import AboutPanel from './panels/AboutPanel';
@@ -924,7 +918,6 @@ const READMEBuilderPage = () => {
             setIsImportModalOpen={setIsImportModalOpen}
           />
         }
-        statusBar={<BuilderStatusBar />}
         mobileTabsHeader={
           <div className="lg:hidden flex border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-[#121212] z-40 flex-shrink-0 select-none">
             <button
@@ -1062,6 +1055,7 @@ const READMEBuilderPage = () => {
               <button
                 onClick={() => setPreviewingTemplate(null)}
                 className="text-gray-400 hover:text-gray-600 transition font-bold cursor-pointer text-sm"
+                aria-label="Close template preview"
               >
                 ✕
               </button>
@@ -1128,6 +1122,7 @@ const READMEBuilderPage = () => {
                   setImportStatus('idle');
                 }}
                 className="text-gray-400 hover:text-gray-600 transition font-bold cursor-pointer text-sm"
+                aria-label="Close import wizard"
               >
                 ✕
               </button>
@@ -1842,6 +1837,7 @@ const READMEBuilderPage = () => {
               <button
                 onClick={() => setComparingSnapshot(null)}
                 className="text-gray-400 hover:text-gray-600 transition font-bold cursor-pointer text-sm"
+                aria-label="Close compare view"
               >
                 ✕
               </button>
@@ -1979,6 +1975,7 @@ const READMEBuilderPage = () => {
               <button
                 onClick={() => setRestoringSnapshot(null)}
                 className="text-gray-400 hover:text-gray-650 transition font-bold cursor-pointer text-sm"
+                aria-label="Close restore dialog"
               >
                 ✕
               </button>

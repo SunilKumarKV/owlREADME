@@ -1,15 +1,15 @@
 import React from 'react';
+import type { FullscreenPanel, MobileViewMode } from '../types/builder-types';
 
 export interface BuilderLayoutProps {
   header: React.ReactNode;
-  statusBar: React.ReactNode;
   mobileTabsHeader: React.ReactNode;
   
   // Panel state props
   builderCollapsed: boolean;
   previewCollapsed: boolean;
   markdownCollapsed: boolean;
-  fullscreenPanel: 'builder' | 'preview' | 'markdown' | null;
+  fullscreenPanel: FullscreenPanel;
   panelWidths: { builder: string; preview: string; markdown: string };
   startResizing: (e: React.PointerEvent<HTMLDivElement>, direction: 'left' | 'right') => void;
   
@@ -19,7 +19,7 @@ export interface BuilderLayoutProps {
   desktopMarkdownPanel: React.ReactNode;
   
   // Mobile Panel slots
-  mobileViewMode: 'builder' | 'preview' | 'markdown';
+  mobileViewMode: MobileViewMode;
   mobileBuilderPanel: React.ReactNode;
   mobilePreviewPanel: React.ReactNode;
   mobileMarkdownPanel: React.ReactNode;
@@ -30,7 +30,6 @@ export interface BuilderLayoutProps {
 
 export const BuilderLayout: React.FC<BuilderLayoutProps> = ({
   header,
-  statusBar,
   mobileTabsHeader,
   builderCollapsed,
   previewCollapsed,
@@ -103,8 +102,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({
         </div>
       </div>
 
-      {/* Telemetry/auto-save bar */}
-      {statusBar}
     </div>
   );
 };

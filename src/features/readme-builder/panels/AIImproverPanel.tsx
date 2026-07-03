@@ -1,7 +1,8 @@
 import React from 'react';
+import type { ImproverHistoryEntry } from '../types/builder-types';
 
 export interface AIImproverPanelProps {
-  improverHistory: any[];
+  improverHistory: ImproverHistoryEntry[];
   handleUndoImprove: () => void;
   improverSection: 'aboutMe' | 'headerName' | 'headerTitle' | 'headerSubtitle' | 'skills' | 'projects';
   setImproverSection: (sec: 'aboutMe' | 'headerName' | 'headerTitle' | 'headerSubtitle' | 'skills' | 'projects') => void;

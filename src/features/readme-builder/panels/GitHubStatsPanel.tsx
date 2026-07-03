@@ -15,7 +15,7 @@ export interface GitHubStatsPanelProps {
       streak: { enabled: boolean };
     };
   };
-  setGithubStats: (updates: Partial<GitHubStatsPanelProps['githubStats']> | { cardConfigs: any }) => void;
+  setGithubStats: (updates: Partial<GitHubStatsPanelProps['githubStats']>) => void;
 }
 
 export const GitHubStatsPanel: React.FC<GitHubStatsPanelProps> = ({

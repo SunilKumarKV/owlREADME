@@ -1,5 +1,6 @@
 import React from 'react';
 import { PanelLeft, PanelLeftClose, Maximize2, Minimize2 } from 'lucide-react';
+import type { BuilderTabId, FullscreenPanel } from '../types/builder-types';
 
 export interface BuilderSidebarProps {
   mode: 'desktop' | 'mobile';
@@ -7,13 +8,13 @@ export interface BuilderSidebarProps {
   // Collapse/Expand states for desktop split panel
   builderCollapsed?: boolean;
   setBuilderCollapsed?: (collapsed: boolean) => void;
-  fullscreenPanel?: 'builder' | 'preview' | 'markdown' | null;
-  setFullscreenPanel?: (panel: 'builder' | 'preview' | 'markdown' | null) => void;
+  fullscreenPanel?: FullscreenPanel;
+  setFullscreenPanel?: (panel: FullscreenPanel) => void;
   panelWidth?: string;
   
   // Tabs controller
-  activeBuilderTab: 'editor' | 'marketplace' | 'community' | 'analyzer' | 'improver';
-  setActiveBuilderTab: (tab: 'editor' | 'marketplace' | 'community' | 'analyzer' | 'improver') => void;
+  activeBuilderTab: BuilderTabId;
+  setActiveBuilderTab: (tab: BuilderTabId) => void;
   marketplaceLength: number;
   
   children: React.ReactNode;

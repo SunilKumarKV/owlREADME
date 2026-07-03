@@ -1,6 +1,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { Eye, Minimize2, Maximize2, PanelLeftClose, PanelRightClose, Code, Copy, Download } from 'lucide-react';
+import type { FullscreenPanel } from '../types/builder-types';
 
 const MDMarkdown = dynamic(
   () => import('@uiw/react-md-editor').then((mod) => mod.default.Markdown),
@@ -24,8 +25,8 @@ export interface BuilderPreviewProps {
   setPreviewCollapsed?: (collapsed: boolean) => void;
   markdownCollapsed?: boolean;
   setMarkdownCollapsed?: (collapsed: boolean) => void;
-  fullscreenPanel?: 'builder' | 'preview' | 'markdown' | null;
-  setFullscreenPanel?: (panel: 'builder' | 'preview' | 'markdown' | null) => void;
+  fullscreenPanel?: FullscreenPanel;
+  setFullscreenPanel?: (panel: FullscreenPanel) => void;
   panelWidth?: string;
   
   mode: 'desktop-preview' | 'desktop-markdown' | 'mobile-preview' | 'mobile-markdown';

@@ -2,6 +2,7 @@ import React from 'react';
 import Input from '@/components/Input';
 import Textarea from '@/components/Textarea';
 import { READMEStyleTemplate } from '@/stores/readme-store';
+import type { Snapshot } from '@/stores/history-store';
 
 export interface HeaderPanelProps {
   sectionId: string;
@@ -31,8 +32,8 @@ export interface HeaderPanelProps {
   template: string;
   setTemplate: (template: READMEStyleTemplate) => void;
   triggerAutoSnapshot: (source: 'template' | 'manual' | 'ai' | 'import' | 'auto', customTitle?: string) => void;
-  pushUndo: (config: any) => void;
-  getCurrentConfig: () => any;
+  pushUndo: (config: Snapshot['config']) => void;
+  getCurrentConfig: () => Snapshot['config'];
   handleUndoCapture: () => void;
   
   name: string;

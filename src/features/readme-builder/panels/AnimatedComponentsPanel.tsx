@@ -1,13 +1,13 @@
 import React from 'react';
 import { Search } from 'lucide-react';
 import Input from '@/components/Input';
-import { AnimatedComponentsConfig } from '@/stores/readme-store';
+import { AnimatedComponentsConfig, AnimatedComponentItem } from '@/stores/readme-store';
 
 export interface AnimatedComponentsPanelProps {
   sectionId: string;
   animatedComponents: AnimatedComponentsConfig;
   setAnimatedComponents: (config: Partial<AnimatedComponentsConfig>) => void;
-  updateAnimatedComponentItem: (id: string, updates: any) => void;
+  updateAnimatedComponentItem: (id: string, updates: Partial<AnimatedComponentItem>) => void;
   animatedSearch: string;
   setAnimatedSearch: (query: string) => void;
   animatedCategory: 'all' | 'headers' | 'dividers' | 'widgets';

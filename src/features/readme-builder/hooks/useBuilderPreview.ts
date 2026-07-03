@@ -37,7 +37,7 @@ CATEGORY SCORES:
 =========================================
 AUDIT CHECKLIST:
 =========================================
-${Object.values(analysisResult.categories).flatMap((cat: any) => cat.items).map((item: any) => `- [${item.passed ? 'X' : ' '}] ${item.name} (${item.passed ? 'PASSED' : 'FAILED'} - ${item.suggestion || ''})`).join('\n')}
+${Object.values(analysisResult.categories).flatMap((cat) => cat.items).map((item) => `- [${item.passed ? 'X' : ' '}] ${item.name} (${item.passed ? 'PASSED' : 'FAILED'} - ${item.suggestion || ''})`).join('\n')}
 
 =========================================
 RECOMMENDED ACTIONS:

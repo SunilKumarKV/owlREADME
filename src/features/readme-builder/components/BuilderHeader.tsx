@@ -3,16 +3,19 @@ import Link from 'next/link';
 import Button from '@/components/Button';
 import { Layout, FolderPlus } from 'lucide-react';
 import { BRANDING } from '@/config/branding';
+import type { Workspace } from '@/stores/workspace-store';
+import type { READMEStyleTemplate } from '@/stores/readme-store';
+import type { Theme } from '../types/builder-types';
 
 export interface BuilderHeaderProps {
-  workspaces: any[];
+  workspaces: Workspace[];
   activeWorkspaceId: string | null;
   createWorkspace: (name: string, type: 'readme' | 'roadmap') => string;
   setActiveWorkspaceId: (id: string | null) => void;
   template: string;
-  setTemplate: (template: any) => void;
-  theme: string;
-  setTheme: (theme: any) => void;
+  setTemplate: (template: READMEStyleTemplate) => void;
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
   resetLayout: () => void;
   setIsImportModalOpen: (open: boolean) => void;
 }
@@ -67,10 +70,11 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
         )}
 
         <div className="flex items-center gap-1.5">
-          <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Template:</span>
+          <label htmlFor="builder-template-select" className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Template:</label>
           <select
+            id="builder-template-select"
             value={template}
-            onChange={(e) => setTemplate(e.target.value)}
+            onChange={(e) => setTemplate(e.target.value as READMEStyleTemplate)}
             className="px-2 py-1 text-xs rounded border border-gray-200 dark:bg-gray-800 dark:border-gray-700 focus:border-blue-500 focus:outline-none cursor-pointer text-black dark:text-white"
           >
             <option value="minimal">Minimal</option>
@@ -82,10 +86,11 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
         </div>
 
         <div className="flex items-center gap-1.5">
-          <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Theme:</span>
+          <label htmlFor="builder-theme-select" className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Theme:</label>
           <select
+            id="builder-theme-select"
             value={theme}
-            onChange={(e) => setTheme(e.target.value as any)}
+            onChange={(e) => setTheme(e.target.value as Theme)}
             className="px-2 py-1 text-xs rounded border border-gray-200 dark:bg-gray-800 dark:border-gray-700 focus:border-blue-500 focus:outline-none cursor-pointer text-black dark:text-white"
           >
             <option value="minimal">Minimal Theme</option>

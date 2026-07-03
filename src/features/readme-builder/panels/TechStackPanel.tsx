@@ -1,6 +1,7 @@
 import React from 'react';
 import Input from '@/components/Input';
 import { TECHNOLOGY_REGISTRY, CATEGORIES } from '@/utils/tech-registry';
+import type { TechCategory } from '../types/builder-types';
 
 export interface TechStackPanelProps {
   sectionId: string;
@@ -14,8 +15,8 @@ export interface TechStackPanelProps {
   setTechStack: (updates: Partial<TechStackPanelProps['techStack']>) => void;
   techSearch: string;
   setTechSearch: (val: string) => void;
-  activeTechCategory: string;
-  setActiveTechCategory: (val: any) => void;
+  activeTechCategory: TechCategory;
+  setActiveTechCategory: (val: TechCategory) => void;
 }
 
 export const TechStackPanel: React.FC<TechStackPanelProps> = ({
@@ -103,7 +104,7 @@ export const TechStackPanel: React.FC<TechStackPanelProps> = ({
                 <button
                   key={category}
                   type="button"
-                  onClick={() => setActiveTechCategory(category)}
+                  onClick={() => setActiveTechCategory(category as TechCategory)}
                   className={`px-2.5 py-1 text-2xs font-semibold rounded cursor-pointer transition ${
                     activeTechCategory === category
                       ? 'bg-blue-600 text-white'

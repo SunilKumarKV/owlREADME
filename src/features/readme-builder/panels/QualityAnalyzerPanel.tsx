@@ -85,7 +85,7 @@ export const QualityAnalyzerPanel: React.FC<QualityAnalyzerPanelProps> = ({
       <div className="p-4 bg-gray-50 dark:bg-gray-900/25 border border-gray-200 dark:border-gray-800/80 rounded-xl space-y-3.5">
         <h4 className="text-2xs font-extrabold uppercase tracking-wider text-gray-400 dark:text-gray-500">Category Metrics</h4>
         <div className="space-y-2.5">
-          {Object.values(categories).map((cat: any) => (
+          {Object.values(categories).map((cat) => (
             <div key={cat.name} className="space-y-1">
               <div className="flex justify-between font-bold text-gray-600 dark:text-gray-450 text-[10px]">
                 <span>{cat.name}</span>
@@ -140,7 +140,7 @@ export const QualityAnalyzerPanel: React.FC<QualityAnalyzerPanelProps> = ({
         </div>
 
         <div className="space-y-2">
-          {Object.values(categories).flatMap((cat: any) => cat.items).map((item: any, idx: number) => (
+          {Object.values(categories).flatMap((cat) => cat.items).map((item, idx: number) => (
             <div
               key={idx}
               className={`p-3 rounded-lg border flex items-start gap-3 transition ${

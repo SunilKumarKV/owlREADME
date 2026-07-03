@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import useWorkspaceStore from '@/stores/workspace-store';
 import useReadmeStore from '@/stores/readme-store';
+import type { MarketplaceTemplate } from '@/utils/template-registry';
+import type { AnimatedCategory, TechCategory } from '../types/builder-types';
 
 export const useBuilderActions = () => {
   const { createWorkspace, setActiveWorkspaceId } = useWorkspaceStore();
@@ -13,7 +15,7 @@ export const useBuilderActions = () => {
 
   // Tech Stack searches
   const [techSearch, setTechSearch] = useState('');
-  const [activeTechCategory, setActiveTechCategory] = useState<'All' | 'Languages' | 'Frontend' | 'Backend' | 'Database' | 'DevOps & Cloud' | 'Tools'>('All');
+  const [activeTechCategory, setActiveTechCategory] = useState<TechCategory>('All');
   
   // Social links search
   const [socialSearch, setSocialSearch] = useState('');
@@ -33,7 +35,7 @@ export const useBuilderActions = () => {
 
   // Animated README Components States
   const [animatedSearch, setAnimatedSearch] = useState('');
-  const [animatedCategory, setAnimatedCategory] = useState<'all' | 'headers' | 'dividers' | 'widgets'>('all');
+  const [animatedCategory, setAnimatedCategory] = useState<AnimatedCategory>('all');
   const [activeEditingCompId, setActiveEditingCompId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -63,14 +65,14 @@ export const useBuilderActions = () => {
     localStorage.setItem('owlreadme-fav-templates', JSON.stringify(updated));
   };
 
-  const applyMarketplaceTemplate = (tpl: any) => {
+  const applyMarketplaceTemplate = (tpl: MarketplaceTemplate) => {
     applyTemplate(tpl);
     const updatedRecents = [tpl.id, ...recentlyUsedTemplates.filter((id) => id !== tpl.id)].slice(0, 4);
     setRecentlyUsedTemplates(updatedRecents);
     localStorage.setItem('owlreadme-recent-templates', JSON.stringify(updatedRecents));
   };
 
-  const duplicateTemplateToWorkspace = (tpl: any) => {
+  const duplicateTemplateToWorkspace = (tpl: MarketplaceTemplate) => {
     const name = prompt(`Enter name for duplicated template workspace:`, `${tpl.name} Workspace`);
     if (name && name.trim()) {
       const wsId = createWorkspace(name.trim(), 'readme');
