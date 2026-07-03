@@ -1,7 +1,8 @@
 import type { FC } from 'react';
+import NewSkeleton from './ui/Skeleton';
 
 export const SkeletonBase: FC<{ className?: string }> = ({ className }) => (
-  <div className={`animate-pulse bg-gray-200 dark:bg-gray-800 rounded ${className}`} />
+  <NewSkeleton variant="rect" className={className} />
 );
 
 export const ProfileCardSkeleton: FC = () => (
@@ -63,9 +64,10 @@ export const ChartSkeleton: FC = () => (
       </div>
     </div>
     <div className="flex items-center justify-center min-h-[300px]">
-      <SkeletonBase className="h-[220px] w-[220px] rounded-full" />
+      <NewSkeleton variant="circle" className="h-[220px] w-[220px]" />
     </div>
   </div>
 );
 
 export default SkeletonBase;
+export { SkeletonBase as LegacySkeleton };
