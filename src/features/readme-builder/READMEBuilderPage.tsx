@@ -759,6 +759,7 @@ const READMEBuilderPage = () => {
                       key={pres}
                       type="button"
                       onClick={() => applyPreset(pres)}
+                      aria-label={`Apply ${pres.replace('-style', '').replace('gprm', 'GPRM')} layout preset`}
                       className="px-2 py-0.5 text-[10px] font-semibold rounded bg-gray-155 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-755 text-gray-655 dark:text-gray-300 transition capitalize cursor-pointer"
                     >
                       {pres.replace('-style', '').replace('gprm', 'GPRM')}

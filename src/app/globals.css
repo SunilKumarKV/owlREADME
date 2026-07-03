@@ -286,6 +286,46 @@ body.theme-gradient .theme-preview-container blockquote {
   animation: pulse-glow 4s ease-in-out infinite;
 }
 
+@keyframes fade-in-smooth {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-smooth {
+  animation: fade-in-smooth 0.85s ease-out both;
+}
+
+.reveal-item {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.55s ease-out, transform 0.55s ease-out;
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-glow-bubble-1,
+  .animate-glow-bubble-2,
+  .animate-glow-bubble-3,
+  .animate-pulse-glow,
+  .animate-fade-in-smooth,
+  .reveal-item,
+  .reveal-visible {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
 /* Multi-Panel Resizable layout styles */
 .cursor-col-resize {
   cursor: col-resize;

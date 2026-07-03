@@ -103,6 +103,16 @@ export const BuilderSidebar: React.FC<BuilderSidebarProps> = ({
     return (
       <div
         onClick={() => setBuilderCollapsed?.(false)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setBuilderCollapsed?.(false);
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label="Expand Section Builder"
+        aria-expanded="false"
         className="w-9 bg-white dark:bg-[#121212] border-r border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800/40 flex flex-col items-center py-4 cursor-pointer select-none gap-2 flex-shrink-0 transition"
         title="Expand Section Builder"
       >

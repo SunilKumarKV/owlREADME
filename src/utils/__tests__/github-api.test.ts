@@ -1,5 +1,13 @@
-import { describe, it, expect } from 'vitest';
-import { validateGithubUsername } from '../github-api';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import {
+  validateGithubUsername,
+  parseGithubRepositoryUrl,
+  fetchGithubReadmeFromRawUrl,
+} from '../github-api';
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe('validateGithubUsername', () => {
   it('should not throw for valid github usernames', () => {
@@ -33,5 +41,45 @@ describe('validateGithubUsername', () => {
 
   it('should throw for consecutive hyphens', () => {
     expect(() => validateGithubUsername('octo--cat')).toThrow('Usernames cannot contain consecutive hyphens.');
+  });
+});
+
+describe('parseGithubRepositoryUrl', () => {
+  it('should parse valid GitHub repo URLs', () => {
+    expect(parseGithubRepositoryUrl('https://github.com/octocat/hello-world')).toEqual({
+      owner: 'octocat',
+      repo: 'hello-world',
+    });
+    expect(parseGithubRepositoryUrl('github.com/octocat/hello-world')).toEqual({
+      owner: 'octocat',
+      repo: 'hello-world',
+    });
+    expect(parseGithubRepositoryUrl('https://www.github.com/octocat/hello-world.git')).toEqual({
+      owner: 'octocat',
+      repo: 'hello-world',
+    });
+  });
+
+  it('should throw for invalid repo URLs', () => {
+    expect(() => parseGithubRepositoryUrl('https://example.com/octocat/hello-world')).toThrow(
+      'Invalid GitHub repository URL format. Expected https://github.com/owner/repo'
+    );
+    expect(() => parseGithubRepositoryUrl('')).toThrow('Please enter a valid GitHub repository URL.');
+  });
+});
+
+describe('fetchGithubReadmeFromRawUrl', () => {
+  it('should fetch raw markdown content from a URL', async () => {
+    const mockFetch = vi.fn().mockResolvedValue({ ok: true, text: async () => '# README' });
+    global.fetch = mockFetch as any;
+    const result = await fetchGithubReadmeFromRawUrl('https://raw.githubusercontent.com/octocat/hello-world/main/README.md');
+    expect(result).toBe('# README');
+    expect(mockFetch).toHaveBeenCalledWith('https://raw.githubusercontent.com/octocat/hello-world/main/README.md');
+  });
+
+  it('should throw when the raw URL is invalid', async () => {
+    await expect(fetchGithubReadmeFromRawUrl('not-a-url')).rejects.toThrow(
+      'Please enter a valid raw URL starting with https:// or http://.'
+    );
   });
 });

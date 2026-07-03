@@ -87,7 +87,7 @@ const DeveloperAnalyticsPage: React.FC = () => {
     else if (f.includes('share') || f.includes('link')) exportCounts.Share++;
   });
 
-  // If no exports are logged, populate some default/mock counts or show actuals
+  // Use measured export counts; fall back to stored builder metrics when history is empty
   const exportChartData = [
     { label: 'README', value: exportCounts.README || readmeExportsCount },
     { label: 'Roadmap', value: exportCounts.Roadmap || roadmapExportsCount },

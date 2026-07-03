@@ -11,6 +11,17 @@ export const BRANDING = {
     github: 'https://github.com/SunilKumarKV/owlroadmap',
     twitter: 'https://twitter.com/owlreadme',
   },
+  assets: {
+    faviconSvg: '/branding/favicon.svg',
+    faviconPng: '/branding/favicon.png',
+    appleTouchIcon: '/branding/apple-touch-icon.png',
+    iconSvg: '/branding/owlreadme-icon.svg',
+    icon192: '/branding/owlreadme-icon-192.png',
+    icon256: '/branding/owlreadme-icon-256.png',
+    logo: '/branding/owlreadme-logo.svg',
+    ogImage: '/branding/og-image.jpg',
+    ogImageDark: '/branding/og-image-dark.jpg',
+  },
   seo: {
     defaultTitle: 'OwlREADME | Build Beautiful GitHub READMEs.',
     defaultDescription: 'Professional GitHub README Builder for developers. Instantly create stunning profile READMEs, organize your project descriptions, showcase your tech stack, and share your developer portfolio.',
@@ -33,7 +44,7 @@ export const BRANDING = {
     siteName: 'OwlREADME',
     url: 'https://owlreadme.com',
     image: {
-      url: '/og-image.jpg',
+      url: '/branding/og-image.jpg',
       width: 1200,
       height: 630,
       alt: 'OwlREADME - Visual Developer Workspaces',

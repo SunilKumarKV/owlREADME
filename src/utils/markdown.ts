@@ -593,7 +593,7 @@ export function generateFeaturedProjectsMarkdown(config?: FeaturedProjectsConfig
   if (cardStyle === 'grid' || layout === 'grid') {
     // GitHub-readme-stats pinned card style: grid of repo cards
     const cards = sorted.map((p) => {
-      const url = p.repoUrl || p.demoUrl || '#';
+      const url = p.repoUrl || p.demoUrl;
       const displayName = p.title || p.repoName || 'Project';
       const desc = p.description || '';
       const badges: string[] = [];
@@ -607,7 +607,9 @@ export function generateFeaturedProjectsMarkdown(config?: FeaturedProjectsConfig
         badges.push(`![Forks](https://img.shields.io/badge/🍴%20Forks-${p.forks}-orange?style=${badgeStyle})`);
       }
       const badgeRow = badges.length > 0 ? `\n${badges.join(' ')}` : '';
-      return `### [${displayName}](${url})\n${desc}${badgeRow}`;
+      return url
+        ? `### [${displayName}](${url})\n${desc}${badgeRow}`
+        : `### ${displayName}\n${desc}${badgeRow}`;
     });
     lines.push(cards.join('\n\n'));
   } else if (cardStyle === 'gprm') {
@@ -639,13 +641,14 @@ export function generateFeaturedProjectsMarkdown(config?: FeaturedProjectsConfig
   } else if (cardStyle === 'compact') {
     // Compact table format
     const rows = sorted.map((p) => {
-      const url = p.repoUrl || p.demoUrl || '#';
+      const url = p.repoUrl || p.demoUrl;
       const name = p.title || p.repoName || 'Project';
       const desc = p.description || '-';
       const lang = p.language || '-';
       const stars = p.stars !== undefined ? `⭐ ${p.stars}` : '-';
       const forks = p.forks !== undefined ? `🍴 ${p.forks}` : '-';
-      return `| [${name}](${url}) | ${desc} | ${lang} | ${stars} | ${forks} |`;
+      const displayName = url ? `[${name}](${url})` : name;
+      return `| ${displayName} | ${desc} | ${lang} | ${stars} | ${forks} |`;
     });
     lines.push('| Project | Description | Language | Stars | Forks |');
     lines.push('|---------|-------------|----------|-------|-------|');
@@ -653,22 +656,22 @@ export function generateFeaturedProjectsMarkdown(config?: FeaturedProjectsConfig
   } else if (cardStyle === 'minimal') {
     // Minimal: just bullet list with links
     const items = sorted.map((p) => {
-      const url = p.repoUrl || p.demoUrl || '#';
+      const url = p.repoUrl || p.demoUrl;
       const name = p.title || p.repoName || 'Project';
       const desc = p.description ? ` — ${p.description}` : '';
       const stars = showStars && p.stars !== undefined ? ` ⭐ ${p.stars}` : '';
-      return `- [**${name}**](${url})${desc}${stars}`;
+      return url ? `- [**${name}**](${url})${desc}${stars}` : `- **${name}**${desc}${stars}`;
     });
     lines.push(...items);
   } else {
     // modern (default): rich card blocks with badges
     const cards = sorted.map((p) => {
-      const url = p.repoUrl || p.demoUrl || '#';
+      const url = p.repoUrl || p.demoUrl;
       const name = p.title || p.repoName || 'Project';
       const desc = p.description || '';
       const parts: string[] = [];
 
-      parts.push(`#### [${name}](${url})`);
+      parts.push(url ? `#### [${name}](${url})` : `#### ${name}`);
       if (desc) parts.push(`> ${desc}`);
 
       const badges: string[] = [];

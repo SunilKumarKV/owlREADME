@@ -46,6 +46,144 @@ export function validateGithubUsername(username: string): void {
   }
 }
 
+interface GitHubCacheEntry<T> {
+  value: T;
+  expiresAt: number;
+}
+
+const CACHE_TTL_MS = 5 * 60 * 1000;
+const githubProfileCache = new Map<string, GitHubCacheEntry<GitHubProfile>>();
+const githubReposCache = new Map<string, GitHubCacheEntry<GitHubRepo[]>>();
+const githubReadmeCache = new Map<string, GitHubCacheEntry<string>>();
+
+function normalizeGithubKey(value: string): string {
+  return value.trim().toLowerCase();
+}
+
+function getCachedValue<T>(cache: Map<string, GitHubCacheEntry<T>>, key: string): T | undefined {
+  const entry = cache.get(key);
+  if (!entry) return undefined;
+  if (Date.now() > entry.expiresAt) {
+    cache.delete(key);
+    return undefined;
+  }
+  return entry.value;
+}
+
+function setCachedValue<T>(cache: Map<string, GitHubCacheEntry<T>>, key: string, value: T) {
+  cache.set(key, {
+    value,
+    expiresAt: Date.now() + CACHE_TTL_MS,
+  });
+}
+
+function createCacheKey(prefix: string, value: string) {
+  return `${prefix}:${normalizeGithubKey(value)}`;
+}
+
+function validateGithubRepoName(repo: string): void {
+  if (!repo || typeof repo !== 'string') {
+    throw new Error('Invalid GitHub repository name. Please provide a valid repository name.');
+  }
+
+  const cleaned = repo.trim().replace(/\.git$/, '');
+
+  if (cleaned.length === 0) {
+    throw new Error('Invalid GitHub repository name. Please provide a valid repository name.');
+  }
+
+  if (!/^[A-Za-z0-9_.-]+$/.test(cleaned)) {
+    throw new Error(
+      `Invalid repository name "${repo}". Repository names can only contain letters, numbers, hyphens, underscores, and periods.`
+    );
+  }
+}
+
+export function parseGithubRepositoryUrl(url: string): { owner: string; repo: string } {
+  if (!url || typeof url !== 'string') {
+    throw new Error('Please enter a valid GitHub repository URL.');
+  }
+
+  const trimmed = url.trim();
+  const match = trimmed.match(/^(?:https?:\/\/)?(?:www\.)?github\.com\/([^\/]+)\/([^\/]+)(?:\/.*)?$/i);
+  if (!match) {
+    throw new Error('Invalid GitHub repository URL format. Expected https://github.com/owner/repo');
+  }
+
+  const owner = match[1].trim();
+  const repo = match[2].replace(/\.git$/, '').trim();
+
+  validateGithubUsername(owner);
+  validateGithubRepoName(repo);
+
+  return { owner, repo };
+}
+
+export async function fetchGithubReadmeByRepo(owner: string, repo: string): Promise<string> {
+  validateGithubUsername(owner);
+  validateGithubRepoName(repo);
+
+  const cacheKey = `readme:${normalizeGithubKey(owner)}/${normalizeGithubKey(repo)}`;
+  const cached = getCachedValue(githubReadmeCache, cacheKey);
+  if (cached) return cached;
+
+  const tryRawUrl = async (branch: 'main' | 'master') => {
+    const url = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/README.md`;
+    const res = await fetch(url);
+    if (res.ok) {
+      return await res.text();
+    }
+    return null;
+  };
+
+  const mainReadme = await tryRawUrl('main');
+  if (mainReadme !== null) {
+    setCachedValue(githubReadmeCache, cacheKey, mainReadme);
+    return mainReadme;
+  }
+
+  const masterReadme = await tryRawUrl('master');
+  if (masterReadme !== null) {
+    setCachedValue(githubReadmeCache, cacheKey, masterReadme);
+    return masterReadme;
+  }
+
+  const apiRes = await fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/README.md`, {
+    headers: { Accept: 'application/vnd.github.v3.raw' },
+  });
+
+  if (!apiRes.ok) {
+    if (apiRes.status === 404) {
+      throw new Error(
+        `Could not find README.md in repository "${owner}/${repo}". Please verify the repository name and try again.`
+      );
+    }
+    throw await handleApiError(apiRes, `Failed to fetch README from repository "${owner}/${repo}".`);
+  }
+
+  const readmeText = await apiRes.text();
+  setCachedValue(githubReadmeCache, cacheKey, readmeText);
+  return readmeText;
+}
+
+export async function fetchGithubReadmeFromRawUrl(rawUrl: string): Promise<string> {
+  if (!rawUrl || typeof rawUrl !== 'string') {
+    throw new Error('Please enter a valid raw URL.');
+  }
+
+  const trimmed = rawUrl.trim();
+  if (!/^https?:\/\//i.test(trimmed)) {
+    throw new Error('Please enter a valid raw URL starting with https:// or http://.');
+  }
+
+  const res = await fetch(trimmed);
+  if (!res.ok) {
+    throw new Error('Failed to fetch content from the specified URL. Please check the URL and try again.');
+  }
+
+  return res.text();
+}
+
 export interface GitHubProfile {
   login: string;
   name: string | null;
@@ -116,6 +254,10 @@ async function handleApiError(res: Response, defaultMsg: string): Promise<Error>
  */
 export async function fetchGithubProfile(username: string): Promise<GitHubProfile> {
   validateGithubUsername(username);
+  const cacheKey = createCacheKey('profile', username);
+  const cached = getCachedValue(githubProfileCache, cacheKey);
+  if (cached) return cached;
+
   const encoded = encodeURIComponent(username.trim());
   const res = await fetch(`https://api.github.com/users/${encoded}`);
   if (!res.ok) {
@@ -125,7 +267,10 @@ export async function fetchGithubProfile(username: string): Promise<GitHubProfil
     );
     throw err;
   }
-  return res.json() as Promise<GitHubProfile>;
+
+  const profile = (await res.json()) as GitHubProfile;
+  setCachedValue(githubProfileCache, cacheKey, profile);
+  return profile;
 }
 
 /**
@@ -135,6 +280,10 @@ export async function fetchGithubProfile(username: string): Promise<GitHubProfil
  */
 export async function fetchGithubRepos(username: string): Promise<GitHubRepo[]> {
   validateGithubUsername(username);
+  const cacheKey = createCacheKey('repos', username);
+  const cached = getCachedValue(githubReposCache, cacheKey);
+  if (cached) return cached;
+
   const encoded = encodeURIComponent(username.trim());
   const res = await fetch(
     `https://api.github.com/users/${encoded}/repos?sort=updated&per_page=100`
@@ -143,5 +292,8 @@ export async function fetchGithubRepos(username: string): Promise<GitHubRepo[]> 
     const err = await handleApiError(res, 'Failed to fetch GitHub repositories. Please try again.');
     throw err;
   }
-  return res.json() as Promise<GitHubRepo[]>;
+
+  const repos = (await res.json()) as GitHubRepo[];
+  setCachedValue(githubReposCache, cacheKey, repos);
+  return repos;
 }

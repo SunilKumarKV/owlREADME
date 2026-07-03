@@ -39,6 +39,7 @@ export const ProjectsPanel: React.FC<ProjectsPanelProps> = ({
   const [reposError, setReposError] = useState<string | null>(null);
   const [fetchedRepos, setFetchedRepos] = useState<FeaturedProject[]>([]);
   const [repoSearchQuery, setRepoSearchQuery] = useState('');
+  const [reposFetched, setReposFetched] = useState(false);
   const [showManualForm, setShowManualForm] = useState(false);
   const [manualTechInput, setManualTechInput] = useState('');
   const [manualDraft, setManualDraft] = useState<Partial<FeaturedProject>>({
@@ -219,8 +220,11 @@ export const ProjectsPanel: React.FC<ProjectsPanelProps> = ({
                         updatedAt: r.updated_at || r.pushed_at || '',
                       }));
                     setFetchedRepos(mapped);
+                    setReposFetched(true);
                   } catch (err: any) {
                     setReposError(err.message || 'Failed to fetch repositories.');
+                    setFetchedRepos([]);
+                    setReposFetched(true);
                   } finally {
                     setReposLoading(false);
                   }
@@ -233,6 +237,10 @@ export const ProjectsPanel: React.FC<ProjectsPanelProps> = ({
 
             {reposError && (
               <p className="text-xs text-red-500">{reposError}</p>
+            )}
+
+            {(reposFetched && !reposLoading && fetchedRepos.length === 0 && !reposError) && (
+              <p className="text-xs text-gray-500 dark:text-gray-400">No public repositories were found for this GitHub username.</p>
             )}
 
             {/* Search + Repo List */}

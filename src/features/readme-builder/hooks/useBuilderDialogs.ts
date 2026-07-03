@@ -4,6 +4,12 @@ import useReadmeStore, { SectionId } from '@/stores/readme-store';
 import { useHistoryStore, Snapshot } from '@/stores/history-store';
 import { parseReadmeMarkdown } from '@/utils/readme-importer';
 import { generateReadmeMarkdown } from '@/utils/markdown';
+import {
+  fetchGithubReadmeByRepo,
+  fetchGithubReadmeFromRawUrl,
+  parseGithubRepositoryUrl,
+  validateGithubUsername,
+} from '@/utils/github-api';
 import { getCurrentConfig } from '../utils/builder-helpers';
 import { TemplateCategory } from '@/stores/template-store';
 import type { DiffVisualTab, ConflictResolution, ImportMethod } from '../types/builder-types';
@@ -72,60 +78,20 @@ export const useBuilderDialogs = () => {
       if (importMethod === 'username') {
         const username = importUsernameInput.trim();
         if (!username) throw new Error('Please enter a GitHub username.');
-        
-        const rawRes = await fetch(`https://raw.githubusercontent.com/${username}/${username}/main/README.md`);
-        if (rawRes.ok) {
-          markdownText = await rawRes.text();
-        } else {
-          const masterRes = await fetch(`https://raw.githubusercontent.com/${username}/${username}/master/README.md`);
-          if (masterRes.ok) {
-            markdownText = await masterRes.text();
-          } else {
-            const apiRes = await fetch(`https://api.github.com/repos/${username}/${username}/contents/README.md`, {
-              headers: { Accept: 'application/vnd.github.v3.raw' }
-            });
-            if (!apiRes.ok) throw new Error(`Could not find profile README for user "${username}".`);
-            markdownText = await apiRes.text();
-          }
-        }
+        validateGithubUsername(username);
+        markdownText = await fetchGithubReadmeByRepo(username, username);
       } else if (importMethod === 'repoUrl') {
         const urlStr = importRepoUrlInput.trim();
         if (!urlStr) throw new Error('Please enter a GitHub repository URL.');
-        
-        const match = urlStr.match(/github\.com\/([^\/]+)\/([^\/]+)/i);
-        if (!match) throw new Error('Invalid GitHub repository URL format.');
-        const owner = match[1];
-        const repo = match[2].replace(/\.git$/, '');
-
-        const apiRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/README.md`, {
-          headers: { Accept: 'application/vnd.github.v3.raw' }
-        });
-        if (!apiRes.ok) {
-          const rawMain = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/main/README.md`);
-          if (rawMain.ok) {
-            markdownText = await rawMain.text();
-          } else {
-            const rawMaster = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/master/README.md`);
-            if (rawMaster.ok) {
-              markdownText = await rawMaster.text();
-            } else {
-              throw new Error(`Failed to locate README.md file in repository "${owner}/${repo}".`);
-            }
-          }
-        } else {
-          markdownText = await apiRes.text();
-        }
+        const { owner, repo } = parseGithubRepositoryUrl(urlStr);
+        markdownText = await fetchGithubReadmeByRepo(owner, repo);
       } else if (importMethod === 'rawUrl') {
-        const urlStr = importRawUrlInput.trim();
-        if (!urlStr) throw new Error('Please enter a raw URL.');
-        const res = await fetch(urlStr);
-        if (!res.ok) throw new Error('Failed to fetch content from the specified URL.');
-        markdownText = await res.text();
+        markdownText = await fetchGithubReadmeFromRawUrl(importRawUrlInput.trim());
       } else if (importMethod === 'paste') {
         markdownText = importPasteMarkdown;
         if (!markdownText.trim()) throw new Error('Please paste your Markdown content.');
       }
-      
+
       await executeImportReadme(markdownText);
     } catch (err: any) {
       setImportStatus('error');

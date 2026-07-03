@@ -14,8 +14,9 @@ export const metadata: Metadata = {
   keywords: BRANDING.seo.keywords,
   authors: [{ name: BRANDING.seo.author }],
   icons: {
-    icon: "/branding/favicon.svg",
-    apple: "/branding/owlreadme-icon.svg",
+    icon: BRANDING.assets.faviconSvg,
+    shortcut: BRANDING.assets.faviconPng,
+    apple: BRANDING.assets.appleTouchIcon,
   },
   openGraph: {
     title: BRANDING.openGraph.title,

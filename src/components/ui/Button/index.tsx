@@ -28,14 +28,14 @@ export const Button: FC<ButtonProps> = ({
   type = 'button',
   ...props
 }) => {
-  const baseStyle = 'inline-flex items-center justify-center px-4 py-2 font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none rounded-md select-none';
+  const baseStyle = 'inline-flex items-center justify-center px-4 py-2 font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#0c0c0e] disabled:opacity-50 disabled:pointer-events-none rounded-md select-none';
   
   const variants = {
-    primary: 'bg-blue-600 hover:bg-blue-700 text-white focus:ring-blue-500 border border-transparent dark:bg-blue-600 dark:hover:bg-blue-700',
-    secondary: 'bg-gray-150 hover:bg-gray-200 text-gray-800 focus:ring-gray-400 border border-transparent dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700',
-    danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500 border border-transparent',
-    ghost: 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 focus:ring-gray-500 border border-transparent',
-    outline: 'border border-gray-300 dark:border-gray-600 bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-800 dark:text-gray-200 focus:ring-blue-500',
+    primary: 'bg-blue-600 hover:bg-blue-700 text-white focus-visible:ring-blue-500 border border-transparent dark:bg-blue-600 dark:hover:bg-blue-700',
+    secondary: 'bg-gray-150 hover:bg-gray-200 text-gray-800 focus-visible:ring-gray-400 border border-transparent dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700',
+    danger: 'bg-red-600 hover:bg-red-700 text-white focus-visible:ring-red-500 border border-transparent',
+    ghost: 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 focus-visible:ring-gray-500 border border-transparent',
+    outline: 'border border-gray-300 dark:border-gray-600 bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-500',
   };
 
   const classes = `${baseStyle} ${variants[variant]} ${icon ? 'gap-2' : ''} ${className}`;

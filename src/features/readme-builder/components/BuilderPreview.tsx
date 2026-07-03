@@ -99,6 +99,16 @@ export const BuilderPreview: React.FC<BuilderPreviewProps> = ({
       return (
         <div
           onClick={() => setPreviewCollapsed?.(false)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setPreviewCollapsed?.(false);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Expand Live Preview"
+          aria-expanded="false"
           className="w-9 bg-white dark:bg-[#121212] border-r border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800/40 flex flex-col items-center py-4 cursor-pointer select-none gap-2 flex-shrink-0 transition"
           title="Expand Live Preview"
         >
@@ -166,6 +176,16 @@ export const BuilderPreview: React.FC<BuilderPreviewProps> = ({
       return (
         <div
           onClick={() => setMarkdownCollapsed?.(false)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setMarkdownCollapsed?.(false);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Expand Raw Markdown"
+          aria-expanded="false"
           className="w-9 bg-white dark:bg-[#121212] hover:bg-gray-100 dark:hover:bg-gray-800/40 flex flex-col items-center py-4 cursor-pointer select-none gap-2 flex-shrink-0 transition"
           title="Expand Raw Markdown"
         >
