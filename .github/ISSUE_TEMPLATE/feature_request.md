@@ -1,6 +1,6 @@
 ---
 name: 🚀 Feature Request
-about: Suggest an idea or enhancement for OwlRoadmap
+about: Suggest an idea or enhancement for OwlREADME
 title: "[Feature]: "
 labels: ["enhancement", "needs-discussion"]
 assignees: ""

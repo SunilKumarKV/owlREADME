@@ -1,6 +1,6 @@
 # 🌱 Good First Issues — Contribution Guide
 
-Welcome! This document lists well-scoped, beginner-friendly tasks that are perfect for your first contribution to OwlRoadmap.
+Welcome! This document lists well-scoped, beginner-friendly tasks that are perfect for your first contribution to OwlREADME.
 
 Each task includes an estimated difficulty level, the affected area, and a hint to get you started. For full setup instructions, see [CONTRIBUTING.md](../CONTRIBUTING.md).
 

@@ -1,14 +1,14 @@
-# 🦉 OwlRoadmap — Release Notes
+# 🦉 OwlREADME — Release Notes
 
-All notable releases of OwlRoadmap are documented here in reverse-chronological order.
-For a full feature roadmap, see [ROADMAP.md](../ROADMAP.md). For all changes, see [CHANGELOG.md](../CHANGELOG.md).
+All notable releases of OwlREADME are documented here in reverse-chronological order.
+For a full feature roadmap, see [ROADMAP.md](ROADMAP.md). For all changes, see [CHANGELOG.md](../CHANGELOG.md).
 
 ---
 
 ## 🚀 v0.5.0 — Workspace Suite & Security
 **Released: 2026-06-26**
 
-This release transforms OwlRoadmap from a single-page tool into a full developer workspace platform.
+This release transforms OwlREADME from a single-page tool into a full developer workspace platform.
 
 ### Highlights
 - **🔐 Secure AI Proxy** — Gemini API keys are now protected server-side via a Next.js App Router API route, eliminating any client-side credential exposure.
@@ -30,7 +30,7 @@ This release is backwards compatible with v0.1.0 local storage data. On first lo
 ## 🌱 v0.1.0 — MVP (Minimum Viable Product)
 **Released: 2026-06-12**
 
-The initial public release of OwlRoadmap.
+The initial public release of OwlREADME.
 
 ### Highlights
 - **README Builder** — Edit profile fields (name, role, about, skills, projects, socials) and preview them rendered as markdown.
@@ -52,4 +52,4 @@ The initial public release of OwlRoadmap.
 
 ---
 
-*OwlRoadmap follows [Semantic Versioning](https://semver.org/).*
+*OwlREADME follows [Semantic Versioning](https://semver.org/).*

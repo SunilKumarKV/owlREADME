@@ -10,8 +10,8 @@ Thank you for your interest in contributing to OwlREADME! As an open-source proj
 2. **Fork the repository**: Create a copy of the project under your own GitHub account.
 3. **Clone the fork**:
    ```bash
-   git clone https://github.com/your-username/owlroadmap.git
-   cd owlroadmap
+   git clone https://github.com/your-username/owlreadme.git
+   cd owlreadme
    ```
 4. **Install dependencies**:
    ```bash
@@ -86,4 +86,4 @@ We follow a structured commit message format inspired by **Conventional Commits*
 | [Good First Issues](docs/good-first-issues.md) | Curated beginner-friendly tasks with hints |
 | [GitHub Labels](docs/labels.md) | Label reference for issues and PRs |
 | [Code of Conduct](CODE_OF_CONDUCT.md) | Community standards and enforcement |
-| [GitHub Discussions](https://github.com/SunilKumarKV/owlroadmap/discussions) | Questions, ideas, show-and-tell |
+| [GitHub Discussions](https://github.com/SunilKumarKV/owlreadme/discussions) | Questions, ideas, show-and-tell |

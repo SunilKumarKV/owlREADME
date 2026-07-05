@@ -25,7 +25,7 @@ I enjoy building scalable frontend apps. Based in India.
 ![TypeScript](https://img.shields.io/badge/TypeScript-blue?logo=typescript)
 
 ## Projects
-- [owlreadme](https://github.com/SunilKumarKV/owlroadmap) - Visually build interactive roadmap charts.
+- [owlreadme](https://github.com/SunilKumarKV/owlreadme) - Visually build interactive roadmap charts.
 
 ## Stats
 ![GitHub Stats](https://github-readme-stats.vercel.app/api?username=SunilKumarKV&theme=dark)
@@ -39,7 +39,7 @@ I enjoy building scalable frontend apps. Based in India.
     const analysis = analyzeReadmeMarkdown(markdown);
     expect(analysis.overallScore).toBeGreaterThan(70);
     expect(analysis.categories.completeness.score).toBe(100);
-    expect(analysis.categories.branding.score).toBe(100); // role, multiple socials, portfolio link (github-readme-stats doesn't count, but github.com/SunilKumarKV/owlroadmap might or connect badges)
+    expect(analysis.categories.branding.score).toBe(100); // role, multiple socials, portfolio link (github-readme-stats doesn't count, but github.com/SunilKumarKV/owlreadme might or connect badges)
   });
 
   it('should detect spacing and header hierarchy errors', () => {

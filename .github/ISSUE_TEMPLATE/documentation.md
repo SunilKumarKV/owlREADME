@@ -1,6 +1,6 @@
 ---
 name: 📖 Documentation Improvement
-about: Suggest a fix or enhancement for the OwlRoadmap documentation
+about: Suggest a fix or enhancement for the OwlREADME documentation
 title: "[Docs]: "
 labels: ["documentation", "good first issue"]
 assignees: ""

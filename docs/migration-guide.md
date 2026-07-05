@@ -1,6 +1,6 @@
-# Migration Guide: OwlRoadmap v0.5.0 to v1.1.0
+# Migration Guide: OwlREADME v0.5.0 to v1.1.0
 
-This guide provides instructions for migrating your local environment, configurations, and templates from OwlRoadmap v0.5.0/v1.0.0-planned drafts to the v1.1.0 release.
+This guide provides instructions for migrating your local environment, configurations, and templates from OwlREADME v0.5.0/v1.0.0-planned drafts to the v1.1.0 release.
 
 ---
 

@@ -1,6 +1,6 @@
 # 🏷️ GitHub Labels Reference
 
-This document describes all GitHub labels used in the OwlRoadmap repository to organize issues and pull requests.
+This document describes all GitHub labels used in the OwlREADME repository to organize issues and pull requests.
 
 ---
 

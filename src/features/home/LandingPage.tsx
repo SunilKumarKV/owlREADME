@@ -378,7 +378,7 @@ const LandingPage: React.FC = () => {
                         <span className="text-[8px] text-gray-500">Premium profile README builder tools</span>
                       </div>
                       <div className="p-2 border border-gray-800 rounded bg-[#18181b]">
-                        <span className="text-white font-bold block text-[9px]">owlroadmap</span>
+                        <span className="text-white font-bold block text-[9px]">owlreadme</span>
                         <span className="text-[8px] text-gray-500">Interactive roadmap timeline creators</span>
                       </div>
                     </div>

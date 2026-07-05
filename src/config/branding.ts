@@ -4,11 +4,11 @@ export const BRANDING = {
   tagline: 'Build Beautiful GitHub READMEs.',
   description: 'Professional GitHub README Builder for developers.',
   version: '1.1.0',
-  repositoryUrl: 'https://github.com/SunilKumarKV/owlroadmap',
-  documentationUrl: 'https://github.com/SunilKumarKV/owlroadmap#documentation',
+  repositoryUrl: 'https://github.com/SunilKumarKV/owlreadme',
+  documentationUrl: 'https://github.com/SunilKumarKV/owlreadme#documentation',
   supportEmail: 'support@owlreadme.com',
   socialLinks: {
-    github: 'https://github.com/SunilKumarKV/owlroadmap',
+    github: 'https://github.com/SunilKumarKV/owlreadme',
     twitter: 'https://twitter.com/owlreadme',
   },
   assets: {

@@ -7,10 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [1.1.0] - 2026-06-28
+## [1.1.0] - 2026-07-05
 ### Added
 - **README Showcase Gallery**: Responsive community showcases grid gallery page under `/gallery` with search, categorization, live preview tabs, and one-click duplication tools mapping preset configurations directly into the active editor.
 - **Version History & Snapshots**: Integrated client-side version control engine featuring undo/redo stacks, Ctrl+Z/Ctrl+Y hotkey triggers, custom manual snap points, relative timeline lists, granular section-by-section restores, and side-by-side markdown comparison diff.
+
+### Changed
+- **Branding Renaming**: Standardized repository naming to **OwlREADME** (repository name `owlreadme`) across configuration schemas, URLs, sitemaps, and documentation.
+
+### Security Hardening
+- **Share Payload Sanitization**: Hardened `decodeShareData` to reject query string payloads larger than 256KB and run strict validation schemas (`validateREADMEData` and `validateRoadmapData`) stripping proto-pollution attributes.
+- **PDF Export Sanitization**: Implemented a browser-native DOMParser HTML sanitizer in `export-utils.ts` to strip inline event handlers, script injections, and malformed tags during print rendering.
+- **Iframe Sandboxing**: Enabled strict iframe sandboxing policies inside the PDF printing workflow.
+
+### Fixed
+- **React SetState Warnings**: Resolved `set-state-in-effect` warnings by moving mounting state initializations to render-phase transitions or lazy initializer callbacks.
+- **Linter Zero errors**: Cleared all 179 ESLint compilation errors across the project codebase.
+- **Donut Chart Immutability**: Fixed React segment offset calculations in `DonutChart.tsx` to compute accumulators functionally, eliminating mutations.
+
+---
 
 ## [1.0.0] - Planned
 ### Added
@@ -18,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Relational Cloud Sync**: Integration with PostgreSQL/Firestore to support user accounts and cross-device workspace syncing.
 - **Visual Roadmap Canvas**: Switch list-based roadmap editing to a visual grid canvas featuring node drag-and-drop capabilities.
 - **Static Shared Previews**: Pre-rendered public share paths with rich Open Graph headers for search engine optimization.
+
+---
 
 ## [0.5.0] - 2026-06-26
 ### Added

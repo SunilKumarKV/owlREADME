@@ -1,6 +1,6 @@
 ---
 name: 🐛 Bug Report
-about: Report a bug to help us improve OwlRoadmap
+about: Report a bug to help us improve OwlREADME
 title: "[Bug]: "
 labels: ["bug", "needs-triage"]
 assignees: ""

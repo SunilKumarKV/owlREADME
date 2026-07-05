@@ -1,6 +1,6 @@
-# 👋 OwlRoadmap Community Guidelines
+# 👋 OwlREADME Community Guidelines
 
-Welcome to the OwlRoadmap community! We're a developer-first, open-source project and we want every contributor — regardless of background or experience level — to feel safe, respected, and empowered.
+Welcome to the OwlREADME community! We're a developer-first, open-source project and we want every contributor — regardless of background or experience level — to feel safe, respected, and empowered.
 
 Please read these guidelines before participating in any community channel (GitHub Issues, Pull Requests, or Discussions).
 
@@ -22,9 +22,9 @@ Please read these guidelines before participating in any community channel (GitH
 
 | Channel | Purpose |
 | --- | --- |
-| [GitHub Issues](https://github.com/SunilKumarKV/owlroadmap/issues) | Bug reports and feature requests |
-| [GitHub Discussions](https://github.com/SunilKumarKV/owlroadmap/discussions) | Q&A, ideas, show-and-tell, polls |
-| [Pull Requests](https://github.com/SunilKumarKV/owlroadmap/pulls) | Code contributions, docs improvements |
+| [GitHub Issues](https://github.com/SunilKumarKV/owlreadme/issues) | Bug reports and feature requests |
+| [GitHub Discussions](https://github.com/SunilKumarKV/owlreadme/discussions) | Q&A, ideas, show-and-tell, polls |
+| [Pull Requests](https://github.com/SunilKumarKV/owlreadme/pulls) | Code contributions, docs improvements |
 
 > ⚠️ Please **do not** open issues to ask general questions. Use **Discussions** instead.
 
@@ -53,8 +53,8 @@ Please read these guidelines before participating in any community channel (GitH
 Welcome! Here are some great starting points:
 
 1. Read [CONTRIBUTING.md](../CONTRIBUTING.md) for the full setup guide.
-2. Browse [`good first issue`](https://github.com/SunilKumarKV/owlroadmap/labels/good%20first%20issue) labelled tickets.
-3. Join a [Discussion](https://github.com/SunilKumarKV/owlroadmap/discussions) to introduce yourself.
+2. Browse [`good first issue`](https://github.com/SunilKumarKV/owlreadme/labels/good%20first%20issue) labelled tickets.
+3. Join a [Discussion](https://github.com/SunilKumarKV/owlreadme/discussions) to introduce yourself.
 4. Open a **Draft PR** early — you don't need to finish before asking for feedback.
 
 ---
@@ -75,7 +75,7 @@ First-time contributors are encouraged to request mentorship. Add the comment:
 
 Violations of these guidelines or the [Code of Conduct](../CODE_OF_CONDUCT.md) may result in a warning, temporary ban, or permanent ban from community channels depending on severity.
 
-Report violations to **support@owlroadmap.com** — all reports are kept confidential.
+Report violations to **support@owlreadme.com** — all reports are kept confidential.
 
 ---
 

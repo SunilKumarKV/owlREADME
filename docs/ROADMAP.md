@@ -1,6 +1,6 @@
-# OwlRoadmap Development Roadmap
+# OwlREADME Development Roadmap
 
-This document outlines the current project status, completed milestones, and future plans for OwlRoadmap.
+This document outlines the current project status, completed milestones, and future plans for OwlREADME.
 
 ---
 
@@ -25,7 +25,7 @@ This document outlines the current project status, completed milestones, and fut
 
 ## 📍 Current Status
 
-OwlRoadmap is fully client-side operational. It leverages local caches (`localStorage`) to auto-save and restore states, guaranteeing complete privacy and zero hosting requirements. Dynamic AI features are securely routed to protect credentials.
+OwlREADME is fully client-side operational. It leverages local caches (`localStorage`) to auto-save and restore states, guaranteeing complete privacy and zero hosting requirements. Dynamic AI features are securely routed to protect credentials.
 
 ---
 
