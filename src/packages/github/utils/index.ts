@@ -35,7 +35,7 @@ export async function handleApiError(res: Response, defaultMsg: string): Promise
       return new Error(
         `GitHub API rate limit reached. Please try again in ${waitMinutes} minute${waitMinutes === 1 ? '' : 's'}.`
       );
-    } catch (e) {
+    } catch {
       return new Error('GitHub API rate limit reached. Please try again in about an hour.');
     }
   }
@@ -45,7 +45,7 @@ export async function handleApiError(res: Response, defaultMsg: string): Promise
     if (errorBody?.message) {
       return new Error(`GitHub API error: ${errorBody.message}`);
     }
-  } catch (e) {
+  } catch {
     // Body not parseable — fall through to default
   }
 

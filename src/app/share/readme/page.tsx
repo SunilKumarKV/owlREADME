@@ -110,6 +110,7 @@ function ShareReadmeContent() {
         {/* Profile Card Summary */}
         <div className="bg-white dark:bg-[#121212] border border-gray-200 dark:border-gray-800 p-6 rounded-xl shadow-sm flex flex-col md:flex-row items-center gap-6">
           {decodedData.avatarUrl && (
+            /* eslint-disable-next-line @next/next/no-img-element */
             <img
               src={decodedData.avatarUrl}
               alt="Avatar"

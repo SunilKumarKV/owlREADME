@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- Legacy codebase types rely on explicit any, refactoring would require major architecture changes */
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import useWorkspaceStore from '@/stores/workspace-store';
 import useReadmeStore, { SectionId } from '@/stores/readme-store';
 import { useHistoryStore, Snapshot } from '@/stores/history-store';
@@ -20,13 +20,7 @@ export const useBuilderDialogs = () => {
   const { createWorkspace, setActiveWorkspaceId } = useWorkspaceStore();
   const readmeStore = useReadmeStore();
   const {
-    snapshots,
-    past,
-    future,
     createSnapshot,
-    deleteSnapshot,
-    clearHistory,
-    importSnapshots,
     pushUndo,
     undo,
     redo,
@@ -110,7 +104,7 @@ export const useBuilderDialogs = () => {
       try {
         const text = event.target?.result as string;
         await executeImportReadme(text);
-      } catch (err: any) {
+      } catch {
         setImportStatus('error');
         setImportStatusMessage('Failed to read upload file.');
       }
@@ -178,19 +172,19 @@ export const useBuilderDialogs = () => {
     );
   };
 
-  const handleUndo = () => {
+  const handleUndo = useCallback(() => {
     const prev = undo(getCurrentConfig());
     if (prev) {
       useReadmeStore.setState(prev);
     }
-  };
+  }, [undo]);
 
-  const handleRedo = () => {
+  const handleRedo = useCallback(() => {
     const next = redo(getCurrentConfig());
     if (next) {
       useReadmeStore.setState(next);
     }
-  };
+  }, [redo]);
 
   const handleManualSnapshot = (e: React.FormEvent) => {
     e.preventDefault();
@@ -258,7 +252,7 @@ export const useBuilderDialogs = () => {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [past, future]);
+  }, [handleUndo, handleRedo]);
 
   return {
     isPublishModalOpen,

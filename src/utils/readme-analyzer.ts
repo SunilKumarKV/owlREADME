@@ -229,7 +229,6 @@ export function analyzeReadmeMarkdown(markdown: string): ReadmeAnalysisResult {
   const htmlImages = content.match(/<img\s+[^>]*>/gi) || [];
   const emptyHtmlAlts = htmlImages.filter((img) => !/alt\s*=\s*["'][^"']+["']/i.test(img));
 
-  const totalImagesCount = markdownImages.length + htmlImages.length;
   const totalEmptyAlts = emptyMarkdownAlts.length + emptyHtmlAlts.length;
   const hasAllImageAlts = totalEmptyAlts === 0;
 

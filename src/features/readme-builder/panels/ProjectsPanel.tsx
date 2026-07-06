@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import Input from '@/components/Input';
 import Textarea from '@/components/Textarea';
-import { Search } from 'lucide-react';
 import { fetchGithubRepos } from '@/utils/github-api';
 import { FeaturedProject } from '@/stores/readme-store';
 

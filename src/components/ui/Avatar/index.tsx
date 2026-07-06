@@ -16,7 +16,8 @@ export const Avatar: FC<AvatarProps> = ({ src, fallback, size = 'md', className 
   return (
     <div className={`relative inline-flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden select-none flex-shrink-0 ${sizes[size]} ${className}`}>
       {src ? (
-        <img src={src} className="h-full w-full object-cover" {...props} />
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img src={src} alt={props.alt || ''} className="h-full w-full object-cover" {...props} />
       ) : (
         <span className="font-semibold text-gray-600 dark:text-gray-300 uppercase">
           {fallback.substring(0, 2)}

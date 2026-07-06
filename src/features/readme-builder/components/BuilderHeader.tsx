@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 import Button from '@/components/Button';
 import { Layout, FolderPlus } from 'lucide-react';
 import { BRANDING } from '@/config/branding';
@@ -36,6 +35,7 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
     <header className="flex flex-wrap items-center justify-between px-6 py-2.5 bg-white dark:bg-[#121212] border-b border-gray-200 dark:border-gray-800 z-50 flex-shrink-0 gap-3">
       <div className="flex items-center gap-2.5">
         <span className="text-lg font-black tracking-tight text-blue-600 dark:text-blue-400 flex items-center gap-2 select-none">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/branding/owlreadme-icon.svg" className="h-6 w-6" alt="OwlREADME Icon" />
           <span>{BRANDING.name}</span>
           <span className="text-2xs font-bold px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/35 text-blue-700 dark:text-blue-300">v{BRANDING.version}</span>

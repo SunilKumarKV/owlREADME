@@ -7,21 +7,15 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   Search,
-  Heart,
   Eye,
-  Download,
-  Upload,
-  BookOpen,
   Sparkles,
   Copy,
   Plus,
   Trash2,
   Share2,
-  ExternalLink,
   FileDown,
   ArrowLeft,
   Check,
-  ChevronDown
 } from 'lucide-react';
 import { useShowcaseStore, Showcase, ShowcaseCategory } from '@/stores/showcase-store';
 import useReadmeStore from '@/stores/readme-store';
@@ -97,7 +91,7 @@ const ShowcaseGalleryPage = () => {
     } else {
       setTimeout(() => setModalTab('visual'), 0);
     }
-  }, [previewingShowcase]);
+  }, [previewingShowcase, viewShowcase]);
 
   // Filters & Sorting
   const filteredShowcases = showcases
@@ -234,6 +228,7 @@ const ShowcaseGalleryPage = () => {
           </Link>
           <div>
             <div className="flex items-center gap-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/branding/owlreadme-icon.svg" className="h-6 w-6" alt="OwlREADME Icon" />
               <h1 className="text-md font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
                 {BRANDING.name} Showcase

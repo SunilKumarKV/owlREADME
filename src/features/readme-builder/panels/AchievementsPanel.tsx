@@ -8,14 +8,12 @@ export interface AchievementsPanelProps {
   sectionId: string;
   achievements: AchievementsConfig;
   setAchievements: (updates: Partial<AchievementsConfig>) => void;
-  loading: boolean;
 }
 
 export const AchievementsPanel: React.FC<AchievementsPanelProps> = ({
   sectionId,
   achievements,
   setAchievements,
-  loading,
 }) => {
   return (
     <div key={sectionId} className="p-6 bg-white dark:bg-[#121212] border border-gray-200 dark:border-gray-800 rounded-lg shadow-sm space-y-4">

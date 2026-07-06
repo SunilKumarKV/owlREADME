@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { READMEData, RoadmapData } from '@/packages/readme-engine';
 import { validateREADMEData, validateRoadmapData } from './share-validators';
 

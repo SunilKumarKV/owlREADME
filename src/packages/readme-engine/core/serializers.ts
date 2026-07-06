@@ -8,7 +8,7 @@ export const deserializeREADME = (payload: string): READMEData => {
   try {
     const parsed = JSON.parse(payload);
     return parsed as READMEData;
-  } catch (error) {
+  } catch {
     throw new Error('Failed to parse README payload.');
   }
 };
@@ -21,7 +21,7 @@ export const deserializeRoadmap = (payload: string): { title?: string; steps?: s
   try {
     const parsed = JSON.parse(payload);
     return parsed as { title?: string; steps?: string[] };
-  } catch (error) {
+  } catch {
     throw new Error('Failed to parse roadmap payload.');
   }
 };

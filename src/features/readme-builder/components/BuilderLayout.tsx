@@ -35,7 +35,6 @@ export const BuilderLayout: React.FC<BuilderLayoutProps> = ({
   previewCollapsed,
   markdownCollapsed,
   fullscreenPanel,
-  panelWidths,
   startResizing,
   desktopBuilderPanel,
   desktopPreviewPanel,

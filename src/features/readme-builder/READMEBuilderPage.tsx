@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- Legacy codebase types rely on explicit any, refactoring would require major architecture changes */
 "use client";
 
-import { useEffect, useState, useRef, useMemo } from 'react';
-import { useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import { useState } from 'react';
 import { BRANDING } from '@/config/branding';
 import dynamic from 'next/dynamic';
 import ErrorBoundary from '@/components/ErrorBoundary';
@@ -13,38 +11,20 @@ import {
   RotateCw,
   Trash2,
   Download,
-  Upload,
-  Check,
-  Eye,
   ArrowLeftRight,
-  Sparkles,
   Save,
-  ChevronRight,
   Search,
-  FileDown,
-  Share2,
-  Layout,
-  FolderPlus,
-  PanelLeft,
-  Minimize2,
-  Maximize2,
-  PanelLeftClose,
-  PanelRightClose,
-  Code,
-  Copy,
 } from 'lucide-react';
 import { Reorder } from 'framer-motion';
 import { useTemplateStore, CommunityTemplate, TemplateCategory } from '@/stores/template-store';
 import usePanelStore from '@/stores/panel-store';
-import useWorkspaceStore from '@/stores/workspace-store';
 import useThemeStore from '@/stores/theme-store';
 import { getAIService } from '@/utils/ai/ai-service';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import Textarea from '@/components/Textarea';
-import useReadmeStore, { READMEStyleTemplate, GitHubStatsConfig, TechStackConfig, SocialLinksConfig, SectionId, FeaturedProject } from '@/stores/readme-store';
-import { useHistoryStore, Snapshot, computeConfigDiff } from '@/stores/history-store';
-import { generateREADME } from '@/utils/markdown';
+import useReadmeStore, { SectionId } from '@/stores/readme-store';
+import { useHistoryStore, computeConfigDiff } from '@/stores/history-store';
 import { TEMPLATE_MARKETPLACE } from '@/utils/template-registry';
 
 import BuilderHeader from './components/BuilderHeader';
@@ -114,10 +94,6 @@ const READMEBuilderPage = () => {
     setSkills,
     setProjects,
     setSocials,
-    setAvatarUrl,
-    setFollowers,
-    setFollowing,
-    setPublicRepos,
     setTemplate,
     setGithubStats,
     setTechStack,
@@ -134,10 +110,8 @@ const READMEBuilderPage = () => {
     animatedComponents,
     setAnimatedComponents,
     updateAnimatedComponentItem,
-    reorderAnimatedComponents,
     applyPreset,
     applyTemplate,
-    importReadmeData,
     reset,
   } = useReadmeStore();
 
@@ -217,9 +191,7 @@ const READMEBuilderPage = () => {
     importStatus,
     setImportStatus,
     importStatusMessage,
-    setImportStatusMessage,
     parsedImportResult,
-    setParsedImportResult,
     selectedImportSections,
     setSelectedImportSections,
     conflictResolution,
@@ -237,8 +209,7 @@ const READMEBuilderPage = () => {
     setComparingSnapshot,
     restoringSnapshot,
     setRestoringSnapshot,
-    copiedDiffCode,
-    setCopiedDiffCode,
+
     diffVisualTab,
     setDiffVisualTab,
     selectedRestoreFields,
@@ -600,7 +571,6 @@ const READMEBuilderPage = () => {
             sectionId={sectionId}
             achievements={achievements}
             setAchievements={setAchievements}
-            loading={loading}
           />
         );
 

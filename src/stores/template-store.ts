@@ -207,7 +207,7 @@ const SEED_TEMPLATES: CommunityTemplate[] = [
 
 export const useTemplateStore = create<TemplateStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       templates: SEED_TEMPLATES,
       favorites: [],
       recentlyUsed: [],

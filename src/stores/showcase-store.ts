@@ -213,7 +213,7 @@ const SEED_SHOWCASES: Showcase[] = [
 
 export const useShowcaseStore = create<ShowcaseStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       showcases: SEED_SHOWCASES,
 
       addShowcase: (showcaseData) => {

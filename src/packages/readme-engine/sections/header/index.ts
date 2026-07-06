@@ -1,5 +1,5 @@
 import type { HeaderConfig } from '../../types';
-import { image as helperImage, paragraph as helperParagraph } from '../../utils/markdown-helpers';
+import { image as helperImage } from '../../utils/markdown-helpers';
 
 export const renderHeader = (config?: HeaderConfig, username?: string): string => {
   if (!config || !config.enabled) return '';

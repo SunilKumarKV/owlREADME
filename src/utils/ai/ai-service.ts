@@ -50,6 +50,7 @@ export class DynamicLocalAIService implements AIService {
   }
 
   async generateRoadmapSuggestions(roadmapTitle: string, currentSteps: string[]): Promise<RoadmapSuggestions> {
+    void currentSteps;
     const titleLower = (roadmapTitle || '').toLowerCase();
 
     let nextTopics = ['Advanced Software Architectures', 'Design Patterns & Principles', 'Scalability & Load Balancing'];
@@ -101,9 +102,6 @@ export class DynamicLocalAIService implements AIService {
   }
 
   async improveText(text: string, tone: string, type: string): Promise<ImproveSuggestions> {
-    const cleaned = text ? text.trim() : '';
-    const base = cleaned || `Developer building modern software solutions.`;
-
     let alternatives: string[] = [];
     if (tone === 'More professional') {
       alternatives = [

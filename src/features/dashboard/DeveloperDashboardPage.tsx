@@ -11,7 +11,6 @@ import { fetchGithubProfile, fetchGithubRepos } from '@/utils/github-api';
 import { analyzeRepositories } from '@/utils/repo-analyzer';
 import { getAIService } from '@/utils/ai/ai-service';
 import { Sparkles, CheckCircle, Edit2, Plus, Trash2, Copy } from 'lucide-react';
-import { generateShareUrl } from '@/utils/share-utils';
 import useWorkspaceStore from '@/stores/workspace-store';
 import { ProfileCardSkeleton, AISuggestionsSkeleton } from '@/components/Skeleton';
 
@@ -279,7 +278,7 @@ const DeveloperDashboardPage = () => {
     };
 
     importGitHubData();
-  }, [username, setName, setRole, setAbout, setProjects, setSocials, setAvatarUrl, setFollowers, setPublicRepos, setRepoAnalysis]);
+  }, [username, setName, setRole, setAbout, setProjects, setSocials, setAvatarUrl, setFollowers, setFollowing, setPublicRepos, setRepoAnalysis]);
 
   const totalTemplatesCount = readmeTemplatesCount + roadmapTemplatesCount + themeTemplatesCount;
 
@@ -306,6 +305,7 @@ const DeveloperDashboardPage = () => {
                   <h2 className="text-xl font-bold mb-4 text-left border-b pb-2 border-gray-100 dark:border-gray-800">GitHub Profile</h2>
                   {avatarUrl ? (
                     <div className="flex flex-col items-center">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={avatarUrl}
                         alt="GitHub Avatar"

@@ -78,7 +78,7 @@ export async function fetchContributionActivity(username: string): Promise<Contr
 
     setCachedValue(cacheKey, activity);
     return activity;
-  } catch (e) {
+  } catch {
     // Fallback static metrics
     const activity: ContributionActivity = {
       commitsCount: 150,

@@ -1,18 +1,5 @@
 import { SupportConfig, QuotesConfig, StandaloneVisitorConfig } from '../types';
 
-// Import new renderers
-import { renderHeader } from './header';
-import { renderAbout } from './about';
-import { renderTechStack } from './tech-stack';
-import { renderGitHubStats } from './github-stats';
-import { renderProjects } from './projects';
-import { renderSocialLinks } from './social-links';
-import { renderAchievements } from './achievements';
-import { renderAnimations } from './animations';
-import { renderTemplates } from './templates';
-import { renderBadges, renderBadge, renderSupportBadge } from './badges';
-import { renderFooter } from './footer';
-
 // Re-export new renderers
 export * from './header';
 export * from './about';

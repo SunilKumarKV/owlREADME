@@ -2,10 +2,9 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, BarChart2, Cpu, HelpCircle, Sparkles, CheckCircle } from 'lucide-react';
+import { ArrowLeft, BarChart2, Cpu, Sparkles } from 'lucide-react';
 import { GitHubIcon } from '@/components/Icons';
 import Button from '@/components/Button';
-import { BRANDING } from '@/config/branding';
 import useWorkspaceStore from '@/stores/workspace-store';
 import useReadmeStore from '@/stores/readme-store';
 import useRoadmapStore from '@/stores/roadmap-store';
@@ -16,15 +15,12 @@ import AreaChart from '@/components/charts/AreaChart';
 
 const DeveloperAnalyticsPage: React.FC = () => {
   const workspaces = useWorkspaceStore((state) => state.workspaces);
-  const activeWorkspaceId = useWorkspaceStore((state) => state.activeWorkspaceId);
   const readmeState = useReadmeStore();
   const roadmapState = useRoadmapStore();
-  const theme = useThemeStore((state) => state.theme);
 
   const [activeChartTab, setActiveChartTab] = useState<'languages' | 'exports' | 'activity'>('languages');
 
   const {
-    name: readmeName,
     avatarUrl,
     followers,
     following,
@@ -115,13 +111,7 @@ const DeveloperAnalyticsPage: React.FC = () => {
     value: weekdayActivity[idx] || (hasGitHubData ? (idx % 2 === 0 ? 1 : 0) : 0),
   }));
 
-  // Color theme overrides for chart fills
-  const getThemeColorClass = () => {
-    if (theme === 'terminal') return 'border-[#39ff14]/30 text-[#39ff14]';
-    if (theme === 'gradient') return 'border-purple-500/20 text-white';
-    if (theme === 'dark') return 'border-gray-800 text-white';
-    return 'border-gray-200 text-gray-800';
-  };
+
 
   return (
     <div className="min-h-screen py-12 px-4 bg-gray-100 dark:bg-[#1e1e1e] text-black dark:text-white transition-colors duration-300">
@@ -168,6 +158,7 @@ const DeveloperAnalyticsPage: React.FC = () => {
                   <GitHubIcon className="h-5 w-5 text-blue-500" /> GitHub Insights
                 </h3>
                 {avatarUrl && (
+                  /* eslint-disable-next-line @next/next/no-img-element */
                   <img src={avatarUrl} alt="Avatar" className="w-8 h-8 rounded-full border border-blue-500 shadow-sm" />
                 )}
               </div>

@@ -101,7 +101,7 @@ export async function fetchPinnedRepos(username: string): Promise<GitHubRepo[]> 
 
     setCachedValue(cacheKey, repos);
     return repos;
-  } catch (e) {
+  } catch {
     // Fallback to top-starred repos if GraphQL fails
     const repos = await fetchGithubRepos(username);
     const pinned = repos

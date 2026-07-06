@@ -4,7 +4,6 @@ import { useTemplateStore } from '../template-store';
 describe('useTemplateStore state management', () => {
   beforeEach(() => {
     // Reset state before each test if necessary
-    const store = useTemplateStore.getState();
     // Re-initialize with standard state
   });
 

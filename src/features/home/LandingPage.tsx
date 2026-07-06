@@ -204,6 +204,7 @@ const LandingPage: React.FC = () => {
         <Container size="lg" className="py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2.5 group">
             <div className="p-1 bg-gradient-to-tr from-indigo-500 to-blue-500 rounded-lg shadow-md group-hover:scale-102 transition-transform duration-200">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/branding/owlreadme-icon.svg" className="h-6 w-6" alt="OwlREADME Icon" />
             </div>
             <span className="font-extrabold text-md tracking-tight bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
@@ -651,6 +652,7 @@ const LandingPage: React.FC = () => {
         <Container size="lg" className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center space-x-2.5 text-gray-500 dark:text-gray-400 select-none">
             <div className="p-1.5 bg-gradient-to-tr from-indigo-500 to-blue-500 rounded-lg shadow-sm">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/branding/owlreadme-icon.svg" className="h-5 w-5" alt="OwlREADME Icon" />
             </div>
             <div>

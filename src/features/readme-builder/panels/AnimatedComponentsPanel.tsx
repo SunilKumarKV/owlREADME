@@ -134,6 +134,7 @@ export const AnimatedComponentsPanel: React.FC<AnimatedComponentsPanelProps> = (
                     {comp.enabled && (
                       <div className="p-3.5 bg-gray-55 dark:bg-gray-955/40 border border-dashed border-gray-200 dark:border-gray-800/80 rounded-lg flex items-center justify-center min-h-16 overflow-hidden">
                         {comp.type === 'typing' && (
+                          /* eslint-disable-next-line @next/next/no-img-element */
                           <img
                             src={`https://readme-typing-svg.demolab.com?font=Fira+Code&width=400&speed=${comp.config.speed || 10}&pause=${comp.config.delay || 1000}&color=${(comp.config.color || '36BCF7').replace('#','')}&lines=${(comp.config.lines || []).map((l: string) => encodeURIComponent(l)).join(';')}`}
                             alt="Typing preview"
@@ -141,6 +142,7 @@ export const AnimatedComponentsPanel: React.FC<AnimatedComponentsPanelProps> = (
                           />
                         )}
                         {comp.type === 'waveHeader' && (
+                          /* eslint-disable-next-line @next/next/no-img-element */
                           <img
                             src={`https://capsule-render.vercel.app/api?type=${comp.config.animation || 'wave'}&color=${comp.config.theme === 'auto' ? 'auto' : (comp.config.theme || 'auto').replace('#','')}&height=100&section=header&text=${encodeURIComponent(comp.config.text || 'Welcome')}&fontSize=24`}
                             alt="Header preview"
@@ -178,12 +180,14 @@ export const AnimatedComponentsPanel: React.FC<AnimatedComponentsPanelProps> = (
                           </svg>
                         )}
                         {comp.type === 'badge' && (
+                          /* eslint-disable-next-line @next/next/no-img-element */
                           <img
                             src={`https://img.shields.io/badge/Status-${encodeURIComponent(comp.config.label || 'Open to Work')}-${(comp.config.color || '10b981').replace('#','') || 'emerald'}?style=for-the-badge`}
                             alt="Status badge preview"
                           />
                         )}
                         {comp.type === 'footer' && (
+                          /* eslint-disable-next-line @next/next/no-img-element */
                           <img
                             src={`https://capsule-render.vercel.app/api?type=waving&color=${comp.config.theme === 'auto' ? 'auto' : (comp.config.theme || 'auto').replace('#','')}&height=80&section=footer&text=${encodeURIComponent(comp.config.text || 'Thanks')}&fontSize=18`}
                             alt="Footer preview"
