@@ -75,7 +75,10 @@ describe('fetchGithubReadmeFromRawUrl', () => {
     global.fetch = mockFetch as any;
     const result = await fetchGithubReadmeFromRawUrl('https://raw.githubusercontent.com/octocat/hello-world/main/README.md');
     expect(result).toBe('# README');
-    expect(mockFetch).toHaveBeenCalledWith('https://raw.githubusercontent.com/octocat/hello-world/main/README.md');
+    expect(mockFetch).toHaveBeenCalledWith(
+      'https://raw.githubusercontent.com/octocat/hello-world/main/README.md',
+      expect.any(Object)
+    );
   });
 
   it('should throw when the raw URL is invalid', async () => {

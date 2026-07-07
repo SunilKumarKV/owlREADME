@@ -5,6 +5,7 @@ import {
   fetchGithubRepos as newFetchGithubRepos,
   fetchGithubReadme as newFetchGithubReadme,
 } from '../packages/github';
+import { apiClient } from '../packages/api-client';
 
 export interface GitHubProfile {
   login: string;
@@ -57,12 +58,12 @@ export async function fetchGithubReadmeFromRawUrl(rawUrl: string): Promise<strin
     throw new Error('Please enter a valid raw URL starting with https:// or http://.');
   }
 
-  const res = await fetch(trimmed);
-  if (!res.ok) {
+  const res = await apiClient.get<string>(trimmed);
+  if (!res.success) {
     throw new Error('Failed to fetch content from the specified URL. Please check the URL and try again.');
   }
 
-  return res.text();
+  return res.data;
 }
 
 export async function fetchGithubProfile(username: string): Promise<GitHubProfile> {

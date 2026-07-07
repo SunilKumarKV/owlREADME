@@ -3,6 +3,7 @@ import { validateGithubUsername, validateGithubRepoName } from '../validators';
 import { getCachedValue, setCachedValue } from '../cache';
 import { callGithubApi, callGithubGraphQL } from '../api';
 import type { GitHubRepo } from '../types';
+import { apiClient } from '../../api-client';
 
 export async function fetchGithubRepos(username: string): Promise<GitHubRepo[]> {
   validateGithubUsername(username);
@@ -123,9 +124,9 @@ export async function fetchGithubReadme(owner: string, repo: string): Promise<st
 
   const tryRawUrl = async (branch: 'main' | 'master') => {
     const url = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/README.md`;
-    const res = await fetch(url);
-    if (res.ok) {
-      return await res.text();
+    const res = await apiClient.get<string>(url);
+    if (res.success) {
+      return res.data;
     }
     return null;
   };
