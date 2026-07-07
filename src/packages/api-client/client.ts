@@ -37,12 +37,16 @@ class ApiClient {
     const {
       timeout,
       useCache,
-      cacheTtl: _cacheTtl,
+      cacheTtl: _unusedCacheTtl,
       retry,
-      retryDelay: _retryDelay,
+      retryDelay: _unusedRetryDelay,
       validator,
       ...fetchOptions
     } = config;
+    void useCache;
+    void _unusedCacheTtl;
+    void retry;
+    void _unusedRetryDelay;
 
     const cacheKey = responseCache.generateKey(method, url, fetchOptions.headers, fetchOptions.body);
 
