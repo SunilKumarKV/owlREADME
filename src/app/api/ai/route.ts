@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
-import { apiClient } from '@/packages/api-client';
+import { AIPlatform } from '@/packages/ai-platform';
 
 /** Maximum request body size we will proxy to Gemini (50 KB). */
 const MAX_BODY_BYTES = 50 * 1024;
@@ -47,66 +47,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    let prompt = '';
-    if (action === 'readme') {
-      const { profileData, repoData } = payload as any;
-      prompt = `Analyze this profile: ${JSON.stringify(profileData)} and repo stats: ${JSON.stringify(
-        repoData
-      )}. Write developer README suggestions. Output strictly a JSON object with keys: introduction, aboutMe, skills, projects. Do not include markdown wraps or backticks outside of the JSON syntax itself.`;
-    } else if (action === 'roadmap') {
-      const { roadmapTitle, currentSteps } = payload as any;
-      prompt = `Based on roadmap title "${roadmapTitle}" and current items: ${JSON.stringify(
-        currentSteps
-      )}, suggest learning roadmap improvements. Return strictly a JSON object matching keys: nextTopics (array of strings), technologies (array of strings), roadmapSteps (array of strings). Do not include markdown wraps or backticks outside of the JSON syntax itself.`;
-    } else if (action === 'profile') {
-      const { profileData, repoData } = payload as any;
-      prompt = `Analyze this profile: ${JSON.stringify(profileData)} and repo stats: ${JSON.stringify(
-        repoData
-      )}. Write profile optimization advice. Return strictly a JSON object matching keys: improvedBio, portfolioDescription, githubImprovements (array of strings). Do not include markdown wraps or backticks outside of the JSON syntax itself.`;
-    } else if (action === 'improve') {
-      const { text, tone, type } = payload as any;
-      prompt = `Rewrite the following text: "${text}". Make it fit the tone "${tone}". It belongs to the "${type}" section of a developer GitHub profile README. Output strictly a JSON object with a single key "alternatives" which is an array of 3 distinct, high-quality rephrased alternatives. Do not include markdown wraps or backticks outside of the JSON syntax itself.`;
-    }
-
-    const result = await apiClient.post<any>(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
-      {
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt,
-              },
-            ],
-          },
-        ],
-        generationConfig: {
-          responseMimeType: 'application/json',
-        },
-      },
-      {
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
-
-    if (!result.success) {
-      console.error('Gemini API call failed:', result.error.message);
-      return NextResponse.json(
-        { error: 'Failed to communicate with Gemini API.', useLocalFallback: true },
-        { status: 500 }
-      );
-    }
-
-    const text = result.data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    
-    // Parse to ensure it is valid JSON before returning
     try {
-      const parsedResult = JSON.parse(text.trim());
+      const parsedResult = await AIPlatform.generate(action as any, payload as any);
       return NextResponse.json({ data: parsedResult });
-    } catch (parseErr) {
-      console.error('Failed to parse Gemini output text:', text, parseErr);
+    } catch (err: any) {
+      console.error('AI Platform call failed:', err);
       return NextResponse.json(
-        { error: 'Invalid JSON response received from AI model.', useLocalFallback: true },
+        { error: 'Failed to communicate with AI platform.', useLocalFallback: true },
         { status: 500 }
       );
     }
