@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- Legacy codebase types rely on explicit any, refactoring would require major architecture changes */
+import { apiClient } from '@/packages/api-client';
 export interface ReadmeSuggestions {
   aboutMe: string;
   introduction: string;
@@ -168,21 +169,17 @@ export class SecureAPIAIService implements AIService {
   private localService = new DynamicLocalAIService();
 
   private async callSecureAPI(action: string, payload: any): Promise<any> {
-    const res = await fetch('/api/ai', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action, payload }),
-    });
+    const res = await apiClient.post<any>('/api/ai', { action, payload });
 
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      if (data.useLocalFallback) {
+    if (!res.success) {
+      const errorData = res.error.data || {};
+      if (errorData.useLocalFallback || res.error.status === 500) {
         throw new Error('FALLBACK_TRIGGERED');
       }
-      throw new Error(data.error || 'Failed secure API call');
+      throw new Error(errorData.error || 'Failed secure API call');
     }
 
-    const result = await res.json();
+    const result = res.data;
     if (result.data) {
       return result.data;
     }

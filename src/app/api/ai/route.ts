@@ -1,5 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- Legacy codebase types rely on explicit any, refactoring would require major architecture changes */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
+import { apiClient } from '@/packages/api-client';
 
 /** Maximum request body size we will proxy to Gemini (50 KB). */
 const MAX_BODY_BYTES = 50 * 1024;
@@ -67,39 +68,36 @@ export async function POST(req: NextRequest) {
       prompt = `Rewrite the following text: "${text}". Make it fit the tone "${tone}". It belongs to the "${type}" section of a developer GitHub profile README. Output strictly a JSON object with a single key "alternatives" which is an array of 3 distinct, high-quality rephrased alternatives. Do not include markdown wraps or backticks outside of the JSON syntax itself.`;
     }
 
-    const response = await fetch(
+    const result = await apiClient.post<any>(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
       {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: prompt,
-                },
-              ],
-            },
-          ],
-          generationConfig: {
-            responseMimeType: 'application/json',
+        contents: [
+          {
+            parts: [
+              {
+                text: prompt,
+              },
+            ],
           },
-        }),
+        ],
+        generationConfig: {
+          responseMimeType: 'application/json',
+        },
+      },
+      {
+        headers: { 'Content-Type': 'application/json' },
       }
     );
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Gemini API call failed:', errorText);
+    if (!result.success) {
+      console.error('Gemini API call failed:', result.error.message);
       return NextResponse.json(
         { error: 'Failed to communicate with Gemini API.', useLocalFallback: true },
         { status: 500 }
       );
     }
 
-    const result = await response.json();
-    const text = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const text = result.data.candidates?.[0]?.content?.parts?.[0]?.text || '';
     
     // Parse to ensure it is valid JSON before returning
     try {
