@@ -104,4 +104,46 @@ describe('useTemplateStore state management', () => {
     expect(res.success).toBe(false);
     expect(res.error).toContain('Invalid category');
   });
+
+  it('should reject importing when required fields are missing', () => {
+    const store = useTemplateStore.getState();
+    const missingName = JSON.stringify({ category: 'ai', config: {} });
+    const res = store.importTemplate(missingName);
+    expect(res.success).toBe(false);
+    expect(res.error).toContain('Invalid schema');
+  });
+
+  it('should return an error for malformed JSON', () => {
+    const store = useTemplateStore.getState();
+    const res = store.importTemplate('{ this is not json }');
+    expect(res.success).toBe(false);
+    expect(res.error).toBeDefined();
+  });
+
+  it('should increment downloads on a template', () => {
+    const store = useTemplateStore.getState();
+    const targetId = 'comm-ai-engineer';
+    const initialDownloads = store.templates.find((t) => t.id === targetId)?.downloads || 0;
+
+    store.incrementDownloads(targetId);
+    const updated = useTemplateStore.getState().templates.find((t) => t.id === targetId);
+    expect(updated?.downloads).toBe(initialDownloads + 1);
+  });
+
+  it('should cap recentlyUsed list at 8 entries', () => {
+    const store = useTemplateStore.getState();
+    for (let i = 0; i < 10; i++) {
+      store.addRecentlyUsed(`template-${i}`);
+    }
+    expect(useTemplateStore.getState().recentlyUsed.length).toBeLessThanOrEqual(8);
+  });
+
+  it('should not duplicate entries in recentlyUsed when adding same id', () => {
+    const store = useTemplateStore.getState();
+    store.addRecentlyUsed('comm-ai-engineer');
+    store.addRecentlyUsed('comm-ai-engineer');
+    const recents = useTemplateStore.getState().recentlyUsed;
+    const count = recents.filter((id) => id === 'comm-ai-engineer').length;
+    expect(count).toBe(1);
+  });
 });

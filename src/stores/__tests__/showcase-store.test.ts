@@ -123,4 +123,56 @@ describe('useShowcaseStore state management', () => {
     expect(res.success).toBe(false);
     expect(res.error).toContain('Invalid category');
   });
+
+  it('should delete a custom showcase but not a seed showcase', () => {
+    const store = useShowcaseStore.getState();
+    // Publish a custom showcase first
+    store.addShowcase({
+      name: 'Custom To Delete',
+      description: 'Will be removed',
+      author: 'test_author',
+      category: 'minimal',
+      technologies: ['Go'],
+      theme: 'minimal',
+      config: {
+        name: 'Test',
+        role: 'Dev',
+        about: '',
+        skills: '',
+        projects: '',
+        socials: '',
+        avatarUrl: '',
+        template: 'minimal',
+        githubStats: { enabled: false, username: '', theme: '', hideBorder: false, showIcons: false, compactMode: false, layout: 'default', cardOrder: [], cardConfigs: { stats: { enabled: false }, languages: { enabled: false }, streak: { enabled: false } } },
+        techStack: { enabled: false, style: 'flat', iconOnly: false, groupByCategory: false, hideEmptyCategories: false, selectedIds: [] },
+        socialLinks: { enabled: false, style: 'flat', iconOnly: false, platforms: {}, order: [] },
+      },
+    });
+
+    const state = useShowcaseStore.getState();
+    const custom = state.showcases.find((s) => s.author === 'test_author');
+    expect(custom).toBeDefined();
+
+    store.deleteShowcase(custom!.id);
+    const afterDelete = useShowcaseStore.getState();
+    expect(afterDelete.showcases.find((s) => s.id === custom!.id)).toBeUndefined();
+
+    // Seed showcases should remain untouched
+    expect(afterDelete.showcases.find((s) => s.id === 'show-ai-researcher')).toBeDefined();
+  });
+
+  it('should fail import when required schema fields are missing', () => {
+    const store = useShowcaseStore.getState();
+    const missingFields = JSON.stringify({ category: 'ai' }); // missing name and config
+    const res = store.importShowcases(missingFields);
+    expect(res.success).toBe(false);
+    expect(res.error).toContain('Invalid schema');
+  });
+
+  it('should return an error for malformed JSON during import', () => {
+    const store = useShowcaseStore.getState();
+    const res = store.importShowcases('{ bad json }');
+    expect(res.success).toBe(false);
+    expect(res.error).toBeDefined();
+  });
 });
