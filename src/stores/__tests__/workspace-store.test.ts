@@ -247,4 +247,30 @@ describe('useWorkspaceStore', () => {
     expect(state.workspaces[0].theme).toBe('gradient');
     expect(state.activeWorkspaceId).toBe('default-workspace');
   });
+
+  it('should set activeWorkspaceId to null when the last workspace is deleted', () => {
+    const store = useWorkspaceStore.getState();
+    const id = store.createWorkspace('Only Workspace', 'readme');
+    expect(useWorkspaceStore.getState().activeWorkspaceId).toBe(id);
+
+    store.deleteWorkspace(id);
+
+    const state = useWorkspaceStore.getState();
+    expect(state.workspaces).toHaveLength(0);
+    expect(state.activeWorkspaceId).toBeNull();
+  });
+
+  it('should not change activeWorkspaceId when deleting a non-active workspace', () => {
+    const store = useWorkspaceStore.getState();
+    const id1 = store.createWorkspace('WS Active', 'readme');
+    const id2 = store.createWorkspace('WS Other', 'roadmap');
+    // id2 is now active after creation; manually set id1 as active
+    useWorkspaceStore.setState({ activeWorkspaceId: id1 });
+
+    store.deleteWorkspace(id2);
+
+    const state = useWorkspaceStore.getState();
+    expect(state.workspaces).toHaveLength(1);
+    expect(state.activeWorkspaceId).toBe(id1); // unchanged
+  });
 });

@@ -23,4 +23,21 @@ if (typeof window !== 'undefined') {
   
   // Mock document.createElement a element click & download triggers
   // HTMLAnchorElement click method does nothing in jsdom, but we can spy/stub it.
+
+  // Mock ResizeObserver — required by components using layout APIs
+  global.ResizeObserver = vi.fn().mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  }));
+
+  // Mock IntersectionObserver — required by components using visibility APIs
+  global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+    root: null,
+    rootMargin: '',
+    thresholds: [],
+  }));
 }
