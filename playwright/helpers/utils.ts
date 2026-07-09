@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 
 /**
  * Registers listeners on the page to intercept console errors and page errors.
@@ -27,4 +27,39 @@ export async function clearLocalStorage(page: Page): Promise<void> {
   await page.evaluate(() => {
     localStorage.clear();
   });
+}
+
+/**
+ * Helper to wait for toast messages to render.
+ */
+export async function waitForToast(page: Page, message?: string): Promise<void> {
+  const locator = page.locator('.fixed.bottom-6 .flex.items-center');
+  await locator.first().waitFor({ state: 'visible', timeout: 5000 });
+  if (message) {
+    await expect(page.locator('.fixed.bottom-6')).toContainText(message);
+  }
+}
+
+/**
+ * Helper to wait for standard text-based loading fallbacks to finish.
+ */
+export async function waitForLoadingToFinish(page: Page): Promise<void> {
+  const loader = page.locator('text=Loading');
+  if (await loader.count() > 0) {
+    await loader.first().waitFor({ state: 'hidden', timeout: 10000 });
+  }
+}
+
+/**
+ * Helper to wait for API request responses.
+ */
+export async function waitForApi(page: Page, urlPattern: string | RegExp): Promise<void> {
+  await page.waitForResponse(urlPattern);
+}
+
+/**
+ * Asserts no console errors occurred.
+ */
+export function expectNoErrors(consoleErrors: string[]): void {
+  expect(consoleErrors).toEqual([]);
 }
