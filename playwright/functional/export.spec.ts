@@ -9,35 +9,57 @@ test.describe('Export Studio E2E Tests', () => {
   test.beforeEach(async ({ page }) => {
     consoleErrors = listenForConsoleErrors(page);
     
-    // Stub print dialogs globally before page loads/evaluates
-    await page.evaluateOnNewDocument(() => {
+    // Mock the profile API call so we have github data loaded (prerequisite for README markdown generation)
+    await page.route('https://api.github.com/users/octocat', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          login: 'octocat',
+          name: 'The Octocat',
+          bio: 'GitHub mascot',
+          avatar_url: 'https://avatars.githubusercontent.com/u/5832347?v=4',
+          html_url: 'https://github.com/octocat',
+          followers: 10,
+          following: 10,
+          public_repos: 5,
+        }),
+      });
+    });
+
+    await page.route('https://api.github.com/users/octocat/repos?sort=updated&per_page=100', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify([
+          {
+            name: 'octocat-react-project',
+            html_url: 'https://github.com/octocat/octocat-react-project',
+            description: 'React project description.',
+            stargazers_count: 5,
+            forks_count: 1,
+            fork: false,
+            language: 'TypeScript',
+          },
+        ]),
+      });
+    });
+
+    // Intercept document.write calls globally to stub window.print() inside the sandboxed PDF iframe
+    await page.addInitScript(() => {
       (window as any).__pdfPrinted = false;
-      window.print = () => {
-        (window as any).__pdfPrinted = true;
-        console.log('Mocked window.print called');
-      };
-      
-      const originalCreate = document.createElement;
-      document.createElement = function(tagName: string, options?: any) {
-        const el = originalCreate.call(document, tagName, options);
-        if (tagName.toLowerCase() === 'iframe') {
-          setTimeout(() => {
-            try {
-              const win = (el as HTMLIFrameElement).contentWindow;
-              if (win) {
-                win.print = () => {
-                  (window as any).__pdfPrinted = true;
-                  console.log('Mocked iframe print called');
-                };
-              }
-            } catch (err) {
-              console.error(err);
-            }
-          }, 0);
+      const originalWrite = Document.prototype.write;
+      Document.prototype.write = function(this: Document, ...args: any[]) {
+        if (typeof args[0] === 'string' && args[0].includes('window.print()')) {
+          args[0] = args[0].replace('window.print()', 'if (window.parent) { window.parent.__pdfPrinted = true; }');
         }
-        return el;
+        return originalWrite.apply(this, args);
       };
     });
+
+    // Navigate to dashboard with query param to trigger import and markdown compile
+    await page.goto('/dashboard?username=octocat');
+    await page.locator('h3', { hasText: 'The Octocat' }).waitFor({ state: 'visible' });
   });
 
   test.afterEach(async () => {
@@ -83,7 +105,9 @@ test.describe('Export Studio E2E Tests', () => {
     await exportPage.clickPrintPdf();
 
     // Check if the stubbed print flag is set to true on the window object
-    const printed = await page.evaluate(() => (window as any).__pdfPrinted);
-    expect(printed).toBe(true);
+    await expect(async () => {
+      const printed = await page.evaluate(() => (window as any).__pdfPrinted);
+      expect(printed).toBe(true);
+    }).toPass({ timeout: 5000 });
   });
 });

@@ -46,44 +46,44 @@ export class ReadmeBuilderPage extends BasePage {
   constructor(page: Page) {
     super(page);
     this.logoText = page.locator('span', { hasText: 'OwlREADME' }).first();
-    this.templateSelect = page.locator('#builder-template-select').first();
-    this.themeSelect = page.locator('#builder-theme-select').first();
+    this.templateSelect = page.locator('#builder-template-select:visible').first();
+    this.themeSelect = page.locator('#builder-theme-select:visible').first();
     this.dashboardButton = page.getByRole('link', { name: 'Dashboard' }).first();
     this.importReadmeButton = page.getByRole('button', { name: 'Import README' }).first();
     this.resetViewButton = page.getByRole('button', { name: 'Reset View' }).first();
 
-    // About Panel Inputs (Resolve strict mode violations by taking first visible element)
-    this.aboutBioInput = page.locator('#readme-about').first();
-    this.aboutSkillsInput = page.locator('#readme-skills').first();
+    // About Panel Inputs (Filters by visibility to handle separate responsive desktop/mobile sidebars)
+    this.aboutBioInput = page.locator('#readme-about:visible').first();
+    this.aboutSkillsInput = page.locator('#readme-skills:visible').first();
 
-    // Section checkboxes (finding first input inside matching header section)
-    this.techStackCheckbox = page.locator('div').filter({ has: page.locator('h3', { hasText: 'Tech Stack Builder' }) }).locator('input[type="checkbox"]').first();
-    this.socialsCheckbox = page.locator('div').filter({ has: page.locator('h3', { hasText: 'Social Links & Contact Builder' }) }).locator('input[type="checkbox"]').first();
-    this.githubStatsCheckbox = page.locator('div').filter({ has: page.locator('h3', { hasText: 'GitHub Stats Builder' }) }).locator('input[type="checkbox"]').first();
-    this.visitorCounterCheckbox = page.locator('div').filter({ has: page.locator('h3', { hasText: 'Standalone Visitor Counter' }) }).locator('input[type="checkbox"]').first();
+    // Section checkboxes (finding checkbox inside the active visible panel container)
+    this.techStackCheckbox = page.locator('div:visible').filter({ has: page.locator('h3', { hasText: 'Tech Stack Builder' }) }).locator('input[type="checkbox"]').first();
+    this.socialsCheckbox = page.locator('div:visible').filter({ has: page.locator('h3', { hasText: 'Social Links & Contact Builder' }) }).locator('input[type="checkbox"]').first();
+    this.githubStatsCheckbox = page.locator('div:visible').filter({ has: page.locator('h3', { hasText: 'GitHub Stats Builder' }) }).locator('input[type="checkbox"]').first();
+    this.visitorCounterCheckbox = page.locator('div:visible').filter({ has: page.locator('h3', { hasText: 'Standalone Visitor Counter' }) }).locator('input[type="checkbox"]').first();
 
     // Projects elements
-    this.showProjectFormButton = page.getByRole('button', { name: 'Toggle manual project form' }).first();
-    this.projectTitleInput = page.locator('input[placeholder="Project name"]').first();
-    this.projectLangInput = page.locator('input[placeholder="TypeScript"]').first();
-    this.projectRepoUrlInput = page.locator('input[placeholder="https://github.com/user/repo"]').first();
-    this.projectDemoUrlInput = page.locator('input[placeholder="https://myproject.vercel.app"]').first();
-    this.projectDescInput = page.locator('textarea[placeholder="Short project description…"]').first();
-    this.projectTechInput = page.locator('input[placeholder="React, Node.js, PostgreSQL"]').first();
-    this.addProjectButton = page.locator('button', { hasText: 'Add Custom Project' }).first();
+    this.showProjectFormButton = page.locator('button:visible', { hasText: 'Toggle manual project form' }).first();
+    this.projectTitleInput = page.locator('input[placeholder="Project name"]:visible').first();
+    this.projectLangInput = page.locator('input[placeholder="TypeScript"]:visible').first();
+    this.projectRepoUrlInput = page.locator('input[placeholder="https://github.com/user/repo"]:visible').first();
+    this.projectDemoUrlInput = page.locator('input[placeholder="https://myproject.vercel.app"]:visible').first();
+    this.projectDescInput = page.locator('textarea[placeholder="Short project description…"]:visible').first();
+    this.projectTechInput = page.locator('input[placeholder="React, Node.js, PostgreSQL"]:visible').first();
+    this.addProjectButton = page.locator('button:visible', { hasText: 'Add Custom Project' }).first();
 
     // Tech Stack Elements
-    this.techSearchInput = page.locator('#tech-search-input').first();
+    this.techSearchInput = page.locator('#tech-search-input:visible').first();
 
     // Social Links search
-    this.socialSearchInput = page.locator('#social-search-input').first();
+    this.socialSearchInput = page.locator('#social-search-input:visible').first();
 
     // Visitor counter inputs
-    this.visitorUsernameInput = page.locator('div').filter({ has: page.locator('h3', { hasText: 'Standalone Visitor Counter' }) }).locator('input[type="text"]').first();
-    this.visitorColorInput = page.locator('div').filter({ has: page.locator('h3', { hasText: 'Standalone Visitor Counter' }) }).locator('input[placeholder="green"]').first();
+    this.visitorUsernameInput = page.locator('div:visible').filter({ has: page.locator('h3', { hasText: 'Standalone Visitor Counter' }) }).locator('input[type="text"]').first();
+    this.visitorColorInput = page.locator('div:visible').filter({ has: page.locator('h3', { hasText: 'Standalone Visitor Counter' }) }).locator('input[placeholder="green"]').first();
 
     // Raw markdown preview textarea
-    this.rawMarkdownEditor = page.locator('.raw-markdown-editor').first();
+    this.rawMarkdownEditor = page.locator('.raw-markdown-editor:visible').first();
   }
 
   async navigate(): Promise<void> {
@@ -165,19 +165,19 @@ export class ReadmeBuilderPage extends BasePage {
   }
 
   async deleteProject(title: string): Promise<void> {
-    const deleteButton = this.page.getByRole('button', { name: `Remove ${title}`, exact: true }).first();
+    const deleteButton = this.page.locator('button:visible').filter({ hasText: `Remove ${title}` }).first();
     await deleteButton.click();
   }
 
   async addTechStackBadge(techName: string): Promise<void> {
     await this.techSearchInput.fill(techName);
-    const badgeButton = this.page.locator('button').filter({ hasText: techName }).first();
+    const badgeButton = this.page.locator('button:visible').filter({ hasText: techName }).first();
     await badgeButton.click();
   }
 
   async toggleSocialPlatform(platformName: string, enable: boolean): Promise<void> {
     await this.socialSearchInput.fill(platformName);
-    const checkbox = this.page.getByRole('checkbox', { name: `Toggle ${platformName}`, exact: true }).first();
+    const checkbox = this.page.locator('div:visible').locator('label').filter({ hasText: platformName }).locator('input[type="checkbox"]').first();
     const isChecked = await checkbox.isChecked();
     if (isChecked !== enable) {
       await checkbox.click({ force: true });
@@ -185,7 +185,7 @@ export class ReadmeBuilderPage extends BasePage {
   }
 
   async fillSocialUsername(platformName: string, value: string): Promise<void> {
-    const container = this.page.locator('div').filter({ has: this.page.locator('span', { hasText: platformName }) }).first();
+    const container = this.page.locator('div:visible').filter({ has: this.page.locator('span', { hasText: platformName }) }).first();
     const input = container.locator('input[type="text"]').first();
     await input.fill(value);
   }

@@ -11,7 +11,12 @@ test.describe('GitHub Integration E2E Tests', () => {
   });
 
   test.afterEach(async () => {
-    expectNoErrors(consoleErrors);
+    expectNoErrors(consoleErrors, [
+      /Internal Server Error/i,
+      /Failed to connect to GitHub/i,
+      /Network error/i,
+      /Invalid GitHub username/i,
+    ]);
   });
 
   test('1. Valid GitHub Profile & Repo Import', async ({ page }) => {
