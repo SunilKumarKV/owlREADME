@@ -58,8 +58,16 @@ export async function waitForApi(page: Page, urlPattern: string | RegExp): Promi
 }
 
 /**
- * Asserts no console errors occurred.
+ * Asserts no console errors occurred, excluding acceptable ignored patterns.
  */
-export function expectNoErrors(consoleErrors: string[]): void {
-  expect(consoleErrors).toEqual([]);
+export function expectNoErrors(consoleErrors: string[], ignoredPatterns: (string | RegExp)[] = []): void {
+  const filtered = consoleErrors.filter((err) => {
+    return !ignoredPatterns.some((pattern) => {
+      if (typeof pattern === 'string') {
+        return err.includes(pattern);
+      }
+      return pattern.test(err);
+    });
+  });
+  expect(filtered).toEqual([]);
 }

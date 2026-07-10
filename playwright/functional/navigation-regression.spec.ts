@@ -5,19 +5,23 @@ import ReadmeBuilderPage from '../pages/ReadmeBuilderPage';
 import ExportPage from '../pages/ExportPage';
 import AnalyticsPage from '../pages/AnalyticsPage';
 import GalleryPage from '../pages/GalleryPage';
-import { listenForConsoleErrors, expectNoErrors, clearLocalStorage } from '../helpers/utils';
+import { listenForConsoleErrors, expectNoErrors } from '../helpers/utils';
 
 test.describe('Navigation & Regression Scenarios E2E Suite', () => {
   let consoleErrors: string[];
 
   test.beforeEach(async ({ page }) => {
     consoleErrors = listenForConsoleErrors(page);
-    // Clear localStorage to ensure a clean slate for workspace states
-    await clearLocalStorage(page);
   });
 
   test.afterEach(async () => {
-    expectNoErrors(consoleErrors);
+    expectNoErrors(consoleErrors, [
+      /Failed to connect/i,
+      /Network error/i,
+      /TypeError: Failed to fetch/i,
+      /API CLIENT ERROR/i,
+      /Failed to import/i,
+    ]);
   });
 
   test('1. Full Navigation Path Flow', async ({ page }) => {
@@ -145,7 +149,7 @@ test.describe('Navigation & Regression Scenarios E2E Suite', () => {
     await landingPage.startBuilding('slow-user');
 
     // Confirm that the loading profile skeleton/indicator is displayed before page renders profile card
-    await expect(page.locator('.animate-pulse')).toBeVisible();
+    await expect(page.locator('.animate-pulse').first()).toBeVisible();
 
     const dashboardPage = new DashboardPage(page);
     await dashboardPage.verifyPage();

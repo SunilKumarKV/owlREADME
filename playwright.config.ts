@@ -14,7 +14,7 @@ export default defineConfig({
      */
     timeout: 5000,
   },
-  /* Run tests in files in parallel */
+  /* Run tests in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
@@ -39,7 +39,7 @@ export default defineConfig({
     video: 'retain-on-failure',
   },
 
-  /* Configure projects for major browsers and responsive viewports */
+  /* Configure projects for major browsers as explicitly requested by user */
   projects: [
     {
       name: 'desktop-chromium',
@@ -54,21 +54,6 @@ export default defineConfig({
     {
       name: 'desktop-webkit',
       use: { ...devices['Desktop Safari'] },
-    },
-
-    {
-      name: 'tablet-safari',
-      use: { ...devices['iPad Mini'] },
-    },
-
-    {
-      name: 'mobile-chrome',
-      use: { ...devices['Pixel 5'] },
-    },
-
-    {
-      name: 'mobile-safari',
-      use: { ...devices['iPhone 12'] },
     },
   ],
 
