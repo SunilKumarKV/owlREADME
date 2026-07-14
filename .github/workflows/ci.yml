@@ -1,29 +1,86 @@
-name: CI
+name: Enterprise CI Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
+    branches: [main, master]
 
 jobs:
-  quality:
+  build-and-test:
+    name: Build & Test Suite
+    timeout-minutes: 30
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
           version: 9
-      - uses: actions/setup-node@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Typecheck
+
+      - name: TypeScript Type Checking
         run: pnpm exec tsc --noEmit
-      - name: Lint
+
+      - name: ESLint Static Analysis
         run: pnpm lint
-      - name: Test
-        run: pnpm test
-      - name: Build
+
+      - name: Vitest Unit & Integration Tests (with Coverage)
+        run: pnpm test:coverage
+
+      - name: Install Playwright Browsers & Dependencies
+        run: pnpm exec playwright install --with-deps
+
+      - name: Playwright E2E Smoke Tests
+        run: pnpm test:smoke
+
+      - name: Playwright E2E Functional Tests
+        run: pnpm test:functional
+
+      - name: Playwright E2E Accessibility Tests
+        run: pnpm test:a11y
+
+      - name: Playwright E2E Visual Regression Tests
+        run: pnpm test:visual
+
+      - name: Build Next.js Application
         run: pnpm build
+
+      - name: Generate Quality Dashboard Summary
+        if: always()
+        run: node scripts/generate-dashboard.mjs
+
+      - name: Upload Playwright HTML Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-html-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload E2E Test Failures (Screenshots, Videos, Traces)
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-test-failures
+          path: test-results/
+          retention-days: 14
+
+      - name: Upload Vitest Coverage Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vitest-coverage-report
+          path: coverage/
+          retention-days: 14

@@ -29,10 +29,10 @@ export class BasePage {
 
   // Common E2E helper Actions
   async waitForToast(message?: string): Promise<void> {
-    const locator = this.page.locator('.fixed.bottom-6 .flex.items-center');
+    const locator = this.page.locator('.fixed.bottom-6.flex.items-center, .fixed.bottom-6');
     await locator.first().waitFor({ state: 'visible', timeout: 5000 });
     if (message) {
-      await expect(this.page.locator('.fixed.bottom-6')).toContainText(message);
+      await expect(locator.first()).toContainText(message);
     }
   }
 

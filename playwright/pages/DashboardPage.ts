@@ -92,14 +92,14 @@ export class DashboardPage extends BasePage {
     else if (section === 'Skills') title = 'Suggested Core Skills';
     else if (section === 'Projects') title = 'Suggested Projects Section';
 
-    const container = this.page.locator('div:visible').filter({ has: this.page.locator('span', { hasText: title }) }).first();
+    const container = this.page.locator('div.flex.justify-between:visible').filter({ has: this.page.locator('span', { hasText: title }) }).first();
     const applyBtn = container.locator('button', { hasText: 'Apply' });
     await applyBtn.click();
   }
 
   async applyRoadmapSuggestion(): Promise<void> {
     await this.selectAiTab('roadmap');
-    const container = this.page.locator('div:visible').filter({ has: this.page.locator('span', { hasText: 'Recommended Steps Workflow' }) }).first();
+    const container = this.page.locator('div.flex.justify-between:visible').filter({ has: this.page.locator('span', { hasText: 'Recommended Steps Workflow' }) }).first();
     const applyBtn = container.locator('button', { hasText: 'Apply Steps' });
     await applyBtn.click();
   }
@@ -110,7 +110,7 @@ export class DashboardPage extends BasePage {
     if (section === 'Bio') title = 'Suggested Bio Improvement';
     else if (section === 'Tagline') title = 'Portfolio Tagline Suggestion';
 
-    const container = this.page.locator('div:visible').filter({ has: this.page.locator('span', { hasText: title }) }).first();
+    const container = this.page.locator('div.flex.justify-between:visible').filter({ has: this.page.locator('span', { hasText: title }) }).first();
     const applyBtn = container.locator('button', { hasText: 'Apply' });
     await applyBtn.click();
   }

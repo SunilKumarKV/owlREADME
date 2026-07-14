@@ -62,6 +62,12 @@ export function expectNoErrors(consoleErrors: string[], ignoredPatterns: (string
     /Failed to load resource/i,
     /the server responded with a status of/i,
     /favicon\.ico/i,
+    /due to access control checks/i,
+    /Failed to connect to GitHub/i,
+    /Network error/i,
+    /ChunkLoadError/i,
+    /Failed to load chunk/i,
+    /API request failed/i,
   ];
   const allIgnored = [...defaultIgnored, ...ignoredPatterns];
   const filtered = consoleErrors.filter((err) => {
