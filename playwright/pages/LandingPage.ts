@@ -45,6 +45,7 @@ export class LandingPage extends BasePage {
 
   async startBuilding(username: string): Promise<void> {
     await this.enterUsername(username);
+    await expect(this.getStartedButton).toBeEnabled();
     await this.clickGetStarted();
   }
 }

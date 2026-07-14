@@ -11,7 +11,7 @@ export default defineConfig({
     exclude: [...configDefaults.exclude, '**/playwright/**'],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'lcov', 'html'],
+      reporter: ['text', 'lcov', 'html', 'json-summary'],
       include: [
         'src/stores/**',
         'src/utils/**',

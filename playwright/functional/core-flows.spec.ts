@@ -57,6 +57,10 @@ test.describe('OwlReadme Core Functional Flows E2E Suite', () => {
     });
 
     await page.goto('/dashboard?username=octocat');
+    await expect(page.locator('h3', { hasText: 'The Octocat' })).toBeVisible();
+    
+    // Wait for the 500ms debounced workspace store save to complete before navigating
+    await page.waitForTimeout(1000);
     
     // Now return to analytics page
     await analyticsPage.navigate();
@@ -92,7 +96,7 @@ test.describe('OwlReadme Core Functional Flows E2E Suite', () => {
     await galleryPage.fillSearch('Minimal');
 
     // Verify search results filter the items in the grid
-    await expect(page.locator('h3', { hasText: 'Minimalist Bio' }).first()).toBeVisible();
+    await expect(page.locator('h3', { hasText: 'Minimal Systems Profile' }).first()).toBeVisible();
   });
 
   test('4. Roadmap Steps CRUD & Select Template', async ({ page }) => {

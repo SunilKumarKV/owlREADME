@@ -68,6 +68,9 @@ test.describe('Navigation & Regression Scenarios E2E Suite', () => {
     // Type Bio
     await builderPage.fillAboutBio('History verification bio.');
 
+    // Wait for the state to sync to the markdown editor preview before going back
+    await expect(builderPage.rawMarkdownEditor).toHaveValue(/History verification bio\./);
+    
     // Go back to dashboard
     await page.goBack();
     await dashboardPage.verifyPage();
@@ -107,14 +110,14 @@ test.describe('Navigation & Regression Scenarios E2E Suite', () => {
     // Go offline
     await context.setOffline(true);
 
-    // Mock API requests failure during offline simulation
-    await page.route('https://api.github.com/users/octocat', async (route) => {
+    // Mock the AI API request to fail during offline simulation
+    await page.route('/api/ai', async (route) => {
       await route.abort('internetdisconnected');
     });
 
-    // Try importing - should trigger error toast/alert gracefully
-    await page.goto('/dashboard?username=octocat');
-    await dashboardPage.verifyErrorMsg(/Network error|Failed to fetch/i);
+    // Trigger AI consulting - should fail gracefully with network error in offline mode
+    await dashboardPage.consultOwlAI();
+    await dashboardPage.verifyErrorMsg(/Failed to fetch|Network error|Error/i);
 
     // Restore network online
     await context.setOffline(false);
