@@ -38,6 +38,8 @@ export const useBuilderDialogs = () => {
 
   // 2. README Import Wizard Modal
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isImportOptionsModalOpen, setIsImportOptionsModalOpen] = useState(false);
+  const [selectedImportMode, setSelectedImportMode] = useState<'replace' | 'merge'>('replace');
   const [importMethod, setImportMethod] = useState<ImportMethod>('username');
   const [importUsernameInput, setImportUsernameInput] = useState('');
   const [importRepoUrlInput, setImportRepoUrlInput] = useState('');
@@ -46,8 +48,24 @@ export const useBuilderDialogs = () => {
   const [importStatus, setImportStatus] = useState<'idle' | 'fetching' | 'parsing' | 'summary' | 'success' | 'error'>('idle');
   const [importStatusMessage, setImportStatusMessage] = useState('');
   const [parsedImportResult, setParsedImportResult] = useState<any | null>(null);
-  const [selectedImportSections, setSelectedImportSections] = useState<SectionId[]>([]);
+  const [selectedImportSections, setSelectedImportSections] = useState<string[]>([]);
   const [conflictResolution, setConflictResolution] = useState<ConflictResolution>('new');
+  const [importSummaryInfo, setImportSummaryInfo] = useState<{ structuredCount: number; customCount: number } | null>(null);
+
+  const isBuilderHasContent = (): boolean => {
+    const state = readmeStore;
+    if (state.name && state.name.trim() !== '') return true;
+    if (state.role && state.role.trim() !== '') return true;
+    if (state.about && state.about.trim() !== '') return true;
+    if (state.skills && state.skills.trim() !== '') return true;
+    if (state.header?.name || state.header?.title || state.header?.intro) return true;
+    if (state.githubStats?.username) return true;
+    if (state.techStack?.selectedIds?.length > 0) return true;
+    if (state.customMarkdown?.blocks?.length > 0) return true;
+    if (state.featuredProjects?.projects?.length > 0) return true;
+    if (state.socialLinks?.platforms && Object.values(state.socialLinks.platforms).some((p: any) => p.enabled && Boolean(p.value))) return true;
+    return false;
+  };
 
   const executeImportReadme = async (markdownText: string) => {
     try {
@@ -58,37 +76,37 @@ export const useBuilderDialogs = () => {
       setParsedImportResult(parsed);
       setSelectedImportSections(parsed.detectedSections);
       
-      if (conflictResolution === 'new') {
-        const workspaceName = prompt('Enter a name for the imported workspace:', 'Imported GitHub Profile');
-        if (workspaceName && workspaceName.trim()) {
-          const wsId = createWorkspace(workspaceName.trim(), 'readme');
-          setActiveWorkspaceId(wsId);
-          readmeStore.importReadmeData(parsed.data, parsed.detectedSections);
-          setIsImportModalOpen(false);
-          setImportStatus('idle');
-          alert(`Successfully imported README into new workspace "${workspaceName.trim()}"!`);
-        } else {
-          setImportStatus('idle');
-        }
-      } else if (conflictResolution === 'overwrite') {
-        if (confirm('Are you sure you want to overwrite your active workspace? This will replace your current workspace content.')) {
-          readmeStore.importReadmeData(parsed.data, parsed.detectedSections);
-          setIsImportModalOpen(false);
-          setImportStatus('idle');
-          alert('Active workspace overwritten with imported README successfully!');
-        } else {
-          setImportStatus('idle');
-        }
-      } else if (conflictResolution === 'merge') {
-        readmeStore.importReadmeData(parsed.data, parsed.detectedSections);
-        setIsImportModalOpen(false);
-        setImportStatus('idle');
-        alert('README sections merged into active workspace successfully!');
+      const structuredCount = parsed.detectedSections.filter((id) => !id.startsWith('custom')).length;
+      const customCount = parsed.detectedSections.filter((id) => id.startsWith('custom')).length;
+      setImportSummaryInfo({ structuredCount, customCount });
+
+      if (isBuilderHasContent()) {
+        setSelectedImportMode('replace');
+        setIsImportOptionsModalOpen(true);
+      } else {
+        readmeStore.importReadmeData(parsed.data, parsed.detectedSections, 'replace');
+        setImportStatus('summary');
       }
     } catch (err: any) {
       setImportStatus('error');
       setImportStatusMessage(err.message || 'Failed to parse Markdown content.');
     }
+  };
+
+  const handleConfirmImportOptions = () => {
+    if (!parsedImportResult) return;
+    readmeStore.importReadmeData(
+      parsedImportResult.data,
+      parsedImportResult.detectedSections,
+      selectedImportMode
+    );
+    setIsImportOptionsModalOpen(false);
+    setImportStatus('summary');
+  };
+
+  const handleCancelImportOptions = () => {
+    setIsImportOptionsModalOpen(false);
+    setImportStatus('idle');
   };
 
   const handleFetchReadme = async () => {
@@ -305,5 +323,13 @@ export const useBuilderDialogs = () => {
     handleUndoCapture,
     compareSnapshotMarkdown,
     compareCurrentMarkdown,
+    importSummaryInfo,
+    setImportSummaryInfo,
+    isImportOptionsModalOpen,
+    setIsImportOptionsModalOpen,
+    selectedImportMode,
+    setSelectedImportMode,
+    handleConfirmImportOptions,
+    handleCancelImportOptions,
   };
 };

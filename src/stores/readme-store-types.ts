@@ -280,14 +280,24 @@ export const DEFAULT_QUOTES: QuotesConfig = {
   quoteType: 'programming',
 };
 
+export interface CustomMarkdownBlock {
+  id: string;
+  title: string;
+  content: string;
+  enabled: boolean;
+  collapsed: boolean;
+}
+
 export interface CustomMarkdownConfig {
   enabled: boolean;
   content: string;
+  blocks: CustomMarkdownBlock[];
 }
 
 export const DEFAULT_CUSTOM_MARKDOWN: CustomMarkdownConfig = {
   enabled: false,
   content: '',
+  blocks: [],
 };
 
 export interface StandaloneVisitorConfig {

@@ -115,6 +115,11 @@ const READMEBuilderPage = () => {
     applyPreset,
     applyTemplate,
     reset,
+    addCustomMarkdownBlock,
+    updateCustomMarkdownBlock,
+    duplicateCustomMarkdownBlock,
+    deleteCustomMarkdownBlock,
+    moveSection,
   } = useReadmeStore(
     useShallow((state) => ({
       name: state.name,
@@ -159,6 +164,11 @@ const READMEBuilderPage = () => {
       applyPreset: state.applyPreset,
       applyTemplate: state.applyTemplate,
       reset: state.reset,
+      addCustomMarkdownBlock: state.addCustomMarkdownBlock,
+      updateCustomMarkdownBlock: state.updateCustomMarkdownBlock,
+      duplicateCustomMarkdownBlock: state.duplicateCustomMarkdownBlock,
+      deleteCustomMarkdownBlock: state.deleteCustomMarkdownBlock,
+      moveSection: state.moveSection,
     }))
   );
 
@@ -314,6 +324,14 @@ const READMEBuilderPage = () => {
     handleUndoCapture,
     compareSnapshotMarkdown,
     compareCurrentMarkdown,
+    importSummaryInfo,
+    setImportSummaryInfo,
+    isImportOptionsModalOpen,
+    setIsImportOptionsModalOpen,
+    selectedImportMode,
+    setSelectedImportMode,
+    handleConfirmImportOptions,
+    handleCancelImportOptions,
   } = useBuilderDialogs();
 
   const {
@@ -710,8 +728,29 @@ const READMEBuilderPage = () => {
         return (
           <CustomMarkdownPanel
             sectionId={sectionId}
-            customMarkdown={customMarkdown}
-            setCustomMarkdown={setCustomMarkdown}
+            title={sections.sections[sectionId]?.name || 'Custom Markdown'}
+            setTitle={(val) => setSections({
+              sections: {
+                ...sections.sections,
+                [sectionId]: { ...sections.sections[sectionId], name: val }
+              }
+            })}
+            content={customMarkdown.content}
+            setContent={(val) => setCustomMarkdown({ content: val })}
+            enabled={sections.sections[sectionId]?.enabled ?? false}
+            setEnabled={(val) => setSections({
+              sections: {
+                ...sections.sections,
+                [sectionId]: { ...sections.sections[sectionId], enabled: val }
+              }
+            })}
+            collapsed={sections.sections[sectionId]?.collapsed ?? false}
+            setCollapsed={(val) => setSections({
+              sections: {
+                ...sections.sections,
+                [sectionId]: { ...sections.sections[sectionId], collapsed: val }
+              }
+            })}
           />
         );
 
@@ -732,6 +771,28 @@ const READMEBuilderPage = () => {
         );
 
       default:
+        if (sectionId.startsWith('custom_')) {
+          const block = customMarkdown.blocks?.find((b) => b.id === sectionId);
+          if (!block) return null;
+
+          return (
+            <CustomMarkdownPanel
+              sectionId={sectionId}
+              title={block.title}
+              setTitle={(val) => updateCustomMarkdownBlock(sectionId, { title: val })}
+              content={block.content}
+              setContent={(val) => updateCustomMarkdownBlock(sectionId, { content: val })}
+              enabled={block.enabled}
+              setEnabled={(val) => updateCustomMarkdownBlock(sectionId, { enabled: val })}
+              collapsed={block.collapsed}
+              setCollapsed={(val) => updateCustomMarkdownBlock(sectionId, { collapsed: val })}
+              onMoveUp={() => moveSection(sectionId, 'up')}
+              onMoveDown={() => moveSection(sectionId, 'down')}
+              onDuplicate={() => duplicateCustomMarkdownBlock(sectionId)}
+              onDelete={() => deleteCustomMarkdownBlock(sectionId)}
+            />
+          );
+        }
         return null;
     }
   };
@@ -889,6 +950,13 @@ const READMEBuilderPage = () => {
                     );
                   })}
               </Reorder.Group>
+              <button
+                type="button"
+                onClick={() => addCustomMarkdownBlock()}
+                className="w-full mt-2.5 py-1.5 px-3 flex items-center justify-center gap-2 rounded border border-dashed border-blue-300 dark:border-blue-800 text-blue-500 hover:text-blue-600 bg-blue-50/5 hover:bg-blue-50/15 text-[10px] font-extrabold uppercase tracking-wider transition cursor-pointer select-none"
+              >
+                ➕ Custom Markdown
+              </button>
             </div>
 
             {/* Section forms lists */}
@@ -906,7 +974,7 @@ const READMEBuilderPage = () => {
                 if (sectionConfig.collapsed) {
                   return (
                     <div
-                      key={sectionId}
+                      key={`collapsed-${sectionId}`}
                       className="p-3 bg-gray-50/50 dark:bg-[#151518] border border-gray-200 dark:border-gray-800 rounded-lg flex items-center justify-between text-xs"
                     >
                       <div className="flex items-center gap-2">
@@ -933,7 +1001,7 @@ const READMEBuilderPage = () => {
 
                 // Render builder forms
                 return (
-                  <div key={sectionId} className="relative">
+                  <div key={`section-form-${sectionId}`} className="relative">
                     {renderSectionConfigForm(sectionId)}
                   </div>
                 );
@@ -1210,6 +1278,34 @@ const READMEBuilderPage = () => {
 
               {/* Content */}
               <div className="p-6 overflow-y-auto custom-editor-scrollbar flex-1 text-xs space-y-4">
+                {importStatus === 'summary' ? (
+                  <div className="space-y-4 select-none">
+                    <div className="flex flex-col items-center justify-center text-center p-4 bg-green-500/5 border border-green-500/10 rounded-lg space-y-2">
+                      <span className="text-3xl">✅</span>
+                      <h3 className="font-bold text-sm text-green-600 dark:text-green-400">Import Complete!</h3>
+                      <p className="text-[11px] text-gray-550 dark:text-gray-400">
+                        Your README has been parsed and imported into the builder sections.
+                      </p>
+                    </div>
+
+                    <div className="bg-gray-50 dark:bg-gray-900/50 p-4 border border-gray-150 dark:border-gray-800 rounded-lg space-y-3">
+                      <h4 className="font-bold text-[10px] uppercase tracking-wider text-gray-400">Detection Metrics</h4>
+                      <div className="grid grid-cols-2 gap-3 text-center">
+                        <div className="p-3 bg-white dark:bg-gray-800/20 border border-gray-150 dark:border-gray-800 rounded-lg">
+                          <span className="text-lg font-extrabold text-blue-500 block">{importSummaryInfo?.structuredCount || 0}</span>
+                          <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">Structured Sections</span>
+                        </div>
+                        <div className="p-3 bg-white dark:bg-gray-800/20 border border-gray-150 dark:border-gray-800 rounded-lg">
+                          <span className="text-lg font-extrabold text-purple-500 block">{importSummaryInfo?.customCount || 0}</span>
+                          <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">Custom Markdown</span>
+                        </div>
+                      </div>
+                      <div className="pt-2 flex items-center justify-center gap-2 text-xs font-bold text-green-600 dark:text-green-400">
+                        🛡️ <span>100% Content Preserved</span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
                   <div className="space-y-4">
                     {/* Step 1: Input source selector tabs */}
                     <div className="flex border-b border-gray-150 dark:border-gray-800 flex-shrink-0 select-none">
@@ -1220,7 +1316,7 @@ const READMEBuilderPage = () => {
                           className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-wider border-b-2 cursor-pointer transition ${
                             importMethod === method
                               ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                              : 'border-transparent text-gray-400 hover:text-gray-600'
+                              : 'border-transparent text-gray-400 hover:text-gray-655'
                           }`}
                         >
                           {method === 'username' && '👤 Username'}
@@ -1244,7 +1340,7 @@ const READMEBuilderPage = () => {
                             onChange={(e) => setImportUsernameInput(e.target.value)}
                             className="w-full px-3 py-2 text-xs rounded border border-gray-200 dark:bg-[#1e1e1e] dark:border-gray-700 focus:border-blue-500 focus:outline-none"
                           />
-                          <p className="text-[10px] text-gray-400">Fetches the README from your personal profile repository (e.g. username/username).</p>
+                          <p className="text-[10px] text-gray-405">Fetches the README from your personal profile repository (e.g. username/username).</p>
                         </div>
                       )}
 
@@ -1258,7 +1354,7 @@ const READMEBuilderPage = () => {
                             onChange={(e) => setImportRepoUrlInput(e.target.value)}
                             className="w-full px-3 py-2 text-xs rounded border border-gray-200 dark:bg-[#1e1e1e] dark:border-gray-700 focus:border-blue-500 focus:outline-none"
                           />
-                           <p className="text-[10px] text-gray-400">Fetches the README.md file directly from the repository&apos;s root directory.</p>
+                           <p className="text-[10px] text-gray-455">Fetches the README.md file directly from the repository&apos;s root directory.</p>
                         </div>
                       )}
 
@@ -1289,68 +1385,14 @@ const READMEBuilderPage = () => {
 
                       {importMethod === 'upload' && (
                         <div className="space-y-2 select-none">
-                          <label className="font-semibold text-gray-550 block">Upload README.md File</label>
-                          <label className="h-32 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-lg flex flex-col items-center justify-center gap-2 bg-gray-50/20 hover:bg-gray-55/35 cursor-pointer transition">
+                          <label className="font-semibold text-gray-555 block">Upload README.md File</label>
+                          <label className="h-32 border-2 border-dashed border-gray-205 dark:border-gray-800 rounded-lg flex flex-col items-center justify-center gap-2 bg-gray-50/20 hover:bg-gray-55/35 cursor-pointer transition">
                             <span className="text-xl">📂</span>
                             <span className="text-2xs font-bold text-gray-400">Click or drop README.md file here</span>
                             <input type="file" accept=".md" onChange={handleFileUploadImport} className="hidden" />
                           </label>
                         </div>
                       )}
-                    </div>
-
-                    {/* Conflict Resolution Options */}
-                    <div className="border-t border-gray-150 dark:border-gray-800 pt-3 space-y-2">
-                      <div>
-                        <label className="font-semibold text-gray-550 block">Conflict Resolution</label>
-                        <p className="text-[10px] text-gray-400 mt-0.5">Choose how to apply the imported README to your workspace:</p>
-                      </div>
-                      <div className="grid grid-cols-1 gap-2 select-none">
-                        <label className="flex items-start gap-3 p-2.5 rounded-lg border border-gray-200 dark:border-gray-850 cursor-pointer bg-gray-50/10 hover:bg-gray-55/30">
-                          <input
-                            type="radio"
-                            name="conflict"
-                            value="new"
-                            checked={conflictResolution === 'new'}
-                            onChange={() => setConflictResolution('new')}
-                            className="mt-0.5 text-blue-600 cursor-pointer"
-                          />
-                          <div>
-                            <span className="font-bold text-gray-700 dark:text-gray-300 block">✨ Create new workspace</span>
-                            <span className="text-[10px] text-gray-400">Imports into a clean, new workspace to keep your current active workspace safe.</span>
-                          </div>
-                        </label>
-
-                        <label className="flex items-start gap-3 p-2.5 rounded-lg border border-gray-200 dark:border-gray-850 cursor-pointer bg-gray-50/10 hover:bg-gray-55/30">
-                          <input
-                            type="radio"
-                            name="conflict"
-                            value="merge"
-                            checked={conflictResolution === 'merge'}
-                            onChange={() => setConflictResolution('merge')}
-                            className="mt-0.5 text-blue-600 cursor-pointer"
-                          />
-                          <div>
-                            <span className="font-bold text-gray-700 dark:text-gray-300 block">⚡ Merge into active workspace</span>
-                            <span className="text-[10px] text-gray-400">Updates settings for the imported sections, leaving other sections untouched.</span>
-                          </div>
-                        </label>
-
-                        <label className="flex items-start gap-3 p-2.5 rounded-lg border border-gray-200 dark:border-gray-850 cursor-pointer bg-gray-50/10 hover:bg-gray-55/30">
-                          <input
-                            type="radio"
-                            name="conflict"
-                            value="overwrite"
-                            checked={conflictResolution === 'overwrite'}
-                            onChange={() => setConflictResolution('overwrite')}
-                            className="mt-0.5 text-blue-600 cursor-pointer"
-                          />
-                          <div>
-                            <span className="font-bold text-gray-700 dark:text-gray-300 block">⚠️ Overwrite active workspace</span>
-                            <span className="text-[10px] text-gray-400">Replaces the active workspace's configuration with the imported README.</span>
-                          </div>
-                        </label>
-                      </div>
                     </div>
 
                     {/* Status Indicator */}
@@ -1367,26 +1409,151 @@ const READMEBuilderPage = () => {
                       </div>
                     )}
                   </div>
+                )}
               </div>
 
               {/* Footer */}
               <div className="px-6 py-4 bg-gray-50/50 dark:bg-gray-900/5 border-t border-gray-100 dark:border-gray-800 flex items-center justify-end gap-3 flex-shrink-0 select-none">
+                {importStatus === 'summary' ? (
+                  <button
+                    onClick={() => {
+                      setIsImportModalOpen(false);
+                      setImportStatus('idle');
+                    }}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-bold cursor-pointer transition shadow-xs"
+                  >
+                    Done
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => {
+                        setIsImportModalOpen(false);
+                        setImportStatus('idle');
+                      }}
+                      className="px-4 py-2 border border-gray-200 dark:border-gray-800 rounded font-bold text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition"
+                    >
+                      Cancel
+                    </button>
+                    {importMethod !== 'upload' && (
+                      <button
+                        onClick={handleFetchReadme}
+                        disabled={importStatus === 'fetching' || importStatus === 'parsing'}
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded font-bold cursor-pointer transition shadow-xs flex items-center gap-2"
+                      >
+                        📥 Import README
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          </FocusTrap>
+        </div>
+      )}
+
+      {/* ── README Import Options Modal ── */}
+      {isImportOptionsModalOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center z-50 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="import-options-title"
+        >
+          <FocusTrap active={isImportOptionsModalOpen}>
+            <div className="bg-white dark:bg-[#121212] border border-gray-205 dark:border-gray-800 rounded-xl shadow-2xl max-w-md w-full overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150">
+              {/* Header */}
+              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/10 flex-shrink-0 select-none">
+                <h2 id="import-options-title" className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                  Import Options
+                </h2>
                 <button
-                  onClick={() => {
-                    setIsImportModalOpen(false);
-                    setImportStatus('idle');
-                  }}
-                  className="px-4 py-2 rounded text-xs font-bold bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 cursor-pointer"
+                  onClick={handleCancelImportOptions}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition font-bold cursor-pointer text-sm"
+                  aria-label="Close import options"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Body */}
+              <div className="p-6 space-y-4">
+                <p className="text-xs font-semibold text-gray-700 dark:text-gray-200">
+                  How would you like to import this README?
+                </p>
+
+                <div className="space-y-3">
+                  {/* Replace Option */}
+                  <label
+                    onClick={() => setSelectedImportMode('replace')}
+                    className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition select-none ${
+                      selectedImportMode === 'replace'
+                        ? 'border-blue-500 bg-blue-50/30 dark:bg-blue-950/20 shadow-xs'
+                        : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="importMode"
+                      value="replace"
+                      checked={selectedImportMode === 'replace'}
+                      onChange={() => setSelectedImportMode('replace')}
+                      className="mt-0.5 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                    />
+                    <div className="space-y-1">
+                      <span className="font-bold text-xs text-gray-900 dark:text-gray-100 block">
+                        Replace Current Project (Recommended)
+                      </span>
+                      <span className="text-[11px] text-gray-550 dark:text-gray-400 leading-normal block">
+                        This clears the current builder and imports the README exactly as it exists.
+                      </span>
+                    </div>
+                  </label>
+
+                  {/* Merge Option */}
+                  <label
+                    onClick={() => setSelectedImportMode('merge')}
+                    className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition select-none ${
+                      selectedImportMode === 'merge'
+                        ? 'border-blue-500 bg-blue-50/30 dark:bg-blue-950/20 shadow-xs'
+                        : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="importMode"
+                      value="merge"
+                      checked={selectedImportMode === 'merge'}
+                      onChange={() => setSelectedImportMode('merge')}
+                      className="mt-0.5 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                    />
+                    <div className="space-y-1">
+                      <span className="font-bold text-xs text-gray-900 dark:text-gray-100 block">
+                        Merge with Current Project
+                      </span>
+                      <span className="text-[11px] text-gray-550 dark:text-gray-400 leading-normal block">
+                        Updates existing sections and imports additional content without duplicating singleton sections.
+                      </span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              {/* Footer Buttons */}
+              <div className="px-6 py-4 bg-gray-50/50 dark:bg-gray-900/10 border-t border-gray-100 dark:border-gray-800 flex items-center justify-end gap-3 select-none">
+                <button
+                  type="button"
+                  onClick={handleCancelImportOptions}
+                  className="px-4 py-2 text-xs font-semibold rounded-lg border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition cursor-pointer"
                 >
                   Cancel
                 </button>
-
                 <button
-                  onClick={handleFetchReadme}
-                  disabled={importStatus === 'fetching' || importStatus === 'parsing'}
-                  className="px-4 py-2 rounded text-xs font-extrabold bg-blue-600 hover:bg-blue-700 text-white cursor-pointer disabled:opacity-50"
+                  type="button"
+                  onClick={handleConfirmImportOptions}
+                  className="px-4 py-2 text-xs font-bold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition cursor-pointer"
                 >
-                  {importStatus === 'fetching' || importStatus === 'parsing' ? 'Importing...' : 'Import README'}
+                  Continue
                 </button>
               </div>
             </div>
