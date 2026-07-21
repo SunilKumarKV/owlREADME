@@ -102,9 +102,37 @@ Some description of weird stuff.
     `;
 
     const result = parseReadmeMarkdown(rawMarkdown);
-    expect(result.detectedSections).toContain('custom');
+    expect(result.detectedSections.some((id) => id.startsWith('custom_'))).toBe(true);
     expect(result.data.customMarkdown.enabled).toBe(true);
-    expect(result.data.customMarkdown.content).toContain('Some custom markdown');
+    expect(result.data.customMarkdown.blocks.length).toBe(1);
+    expect(result.data.customMarkdown.blocks[0].content).toContain('Some custom markdown');
+  });
+
+  it('should preserve lossless sequence order for interspersed custom and structured blocks', () => {
+    const rawMarkdown = `
+# Hi, I'm John
+Welcome to my profile!
+
+## 🧜‍♀️ Mermaid
+\`\`\`mermaid
+graph TD
+  A -> B
+\`\`\`
+
+## 📊 My Stats
+![Stats](https://github-readme-stats.vercel.app/api?username=john)
+    `;
+
+    const result = parseReadmeMarkdown(rawMarkdown);
+    // Sequence must be: header -> custom block (mermaid) -> stats
+    expect(result.detectedSections.length).toBe(3);
+    expect(result.detectedSections[0]).toBe('header');
+    expect(result.detectedSections[1].startsWith('custom_')).toBe(true);
+    expect(result.detectedSections[2]).toBe('stats');
+
+    expect(result.data.customMarkdown.blocks.length).toBe(1);
+    expect(result.data.customMarkdown.blocks[0].title).toBe('🧜‍♀️ Mermaid');
+    expect(result.data.customMarkdown.blocks[0].content).toContain('mermaid');
   });
 
   it('should parse projects, visitor counters, support links, and quotes correctly', () => {
@@ -140,5 +168,37 @@ If you like my work, buy me a coffee!
     expect(result.data.standaloneVisitor.username).toBe('octocat');
     expect(result.data.standaloneVisitor.color).toBe('blue');
     expect(result.data.standaloneVisitor.style).toBe('flat');
+  });
+
+  it('should ensure structured sections are singletons with zero duplicate entries in detectedSections', () => {
+    const rawMarkdown = `
+# Hi 👋, I'm Jane Doe
+Welcome!
+
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=tokyonight&text=Header" />
+</p>
+
+## 🔗 Connect with me
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?logo=linkedin)](https://linkedin.com/in/janedoe)
+
+Custom notes in between.
+
+[![Twitter](https://img.shields.io/badge/Twitter-1DA1F2?logo=twitter)](https://twitter.com/janedoe)
+
+## 📊 Stats
+![Stats](https://github-readme-stats.vercel.app/api?username=janedoe)
+![Streak](https://github-readme-streak-stats.herokuapp.com/?user=janedoe)
+    `;
+
+    const result = parseReadmeMarkdown(rawMarkdown);
+    const headerCount = result.detectedSections.filter((id) => id === 'header').length;
+    const socialsCount = result.detectedSections.filter((id) => id === 'socials').length;
+    const statsCount = result.detectedSections.filter((id) => id === 'stats').length;
+
+    expect(headerCount).toBe(1);
+    expect(socialsCount).toBe(1);
+    expect(statsCount).toBe(1);
+    expect(result.detectedSections.length).toBe(new Set(result.detectedSections).size);
   });
 });

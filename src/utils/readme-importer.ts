@@ -17,7 +17,7 @@ export interface DetectedSectionInfo {
 }
 
 export interface ParsedReadmeResult {
-  detectedSections: SectionId[];
+  detectedSections: (SectionId | string)[];
   analysis: {
     sections: DetectedSectionInfo[];
     totalDetected: number;
@@ -134,6 +134,7 @@ export interface ParsedReadmeResult {
     customMarkdown: {
       enabled: boolean;
       content: string;
+      blocks: any[];
     };
     animatedComponents: {
       enabled: boolean;
@@ -218,63 +219,132 @@ function matchesTechOrSocial(url: string, key: string, logo: string): boolean {
   return checkMatch(keyLower) || checkMatch(logoLower);
 }
 
+// Helper to test if a URL represents a specific widget
+const isWidgetUrl = (url: string) => {
+  return (
+    url.includes('github-readme-stats') ||
+    url.includes('github-readme-streak-stats') ||
+    url.includes('github-profile-trophy') ||
+    url.includes('github-readme-activity-graph') ||
+    url.includes('github-contribution-grid-snake') ||
+    url.includes('readme-typing-svg') ||
+    url.includes('komarev.com/ghpvc') ||
+    url.includes('visitor-badge') ||
+    url.includes('github-readme-quotes') ||
+    url.includes('buymeacoffee.com') ||
+    url.includes('ko-fi.com')
+  );
+};
+
+const isSocialUrl = (url: string) => {
+  const urlLower = url.toLowerCase();
+  return SOCIAL_PLATFORM_REGISTRY.some((p) => {
+    const isTwitter = p.id === 'x' && (urlLower.includes('twitter.com') || urlLower.includes('logo=twitter') || urlLower.includes('x.com'));
+    return isTwitter || matchesTechOrSocial(url, p.id, p.logo);
+  });
+};
+
+const isTechUrl = (url: string) => {
+  return TECHNOLOGY_REGISTRY.some((t) => matchesTechOrSocial(url, t.id, t.logo || ''));
+};
+
+function detectBlockType(node: any, isFirst: boolean, inAbout: boolean, inHeader: boolean): string | 'unsupported' {
+  const images = findNodes(node, ['image']);
+  const links = findNodes(node, ['link']);
+  const htmls = findNodes(node, ['html']);
+
+  const imageUrls: string[] = [];
+  const linkUrls: string[] = [];
+
+  for (const img of images) if (img.url) imageUrls.push(img.url);
+  for (const lnk of links) if (lnk.url) linkUrls.push(lnk.url);
+  for (const html of htmls) {
+    const parsed = parseHtmlTags(html.value);
+    imageUrls.push(...parsed.images);
+    linkUrls.push(...parsed.links);
+  }
+
+  // 1. Quotes
+  if (imageUrls.some((u) => u.includes('github-readme-quotes'))) {
+    return 'quotes';
+  }
+
+  // 2. Visitor
+  if (imageUrls.some((u) => u.includes('komarev.com/ghpvc') || u.includes('visitor-badge'))) {
+    return 'visitor';
+  }
+
+  // 3. Support
+  if (linkUrls.some((u) => u.includes('buymeacoffee.com') || u.includes('ko-fi.com'))) {
+    return 'support';
+  }
+
+  // 4. Stats
+  if (imageUrls.some((u) => u.includes('github-readme-stats') || u.includes('github-readme-streak-stats'))) {
+    return 'stats';
+  }
+
+  // 5. Achievements
+  if (imageUrls.some((u) => u.includes('github-profile-trophy') || u.includes('github-readme-activity-graph') || u.includes('github-contribution-grid-snake'))) {
+    return 'achievements';
+  }
+
+  // 6. Header
+  if (
+    imageUrls.some((u) => u.includes('capsule-render') || u.includes('readme-typing-svg')) ||
+    (node.type === 'heading' && /hi\s|hello|welcome/i.test(toString(node))) ||
+    (isFirst && /hi\s|hello|welcome|i'm|i am/i.test(toString(node))) ||
+    (inHeader && (node.type === 'heading' || node.type === 'paragraph'))
+  ) {
+    return 'header';
+  }
+
+  // 7. Projects
+  if (node.type === 'heading' && /project|portfolio|repos/i.test(toString(node))) {
+    return 'projects';
+  }
+  if (node.type === 'list') {
+    const listItems = findNodes(node, ['listItem']);
+    const hasGithubLinks = listItems.some((item) => findNodes(item, ['link']).some((l) => l.url?.includes('github.com/')));
+    if (hasGithubLinks) {
+      return 'projects';
+    }
+  }
+  if (imageUrls.some((u) => u.includes('github-readme-stats') && u.includes('pin/'))) {
+    return 'projects';
+  }
+
+  // 8. Socials
+  const hasSocials = linkUrls.some(isSocialUrl);
+  const allLinksAreSocials = linkUrls.length > 0 && linkUrls.every((u) => isSocialUrl(u) || isWidgetUrl(u));
+  if (hasSocials && allLinksAreSocials) {
+    return 'socials';
+  }
+
+  // 9. Tech Stack
+  const hasTech = imageUrls.some(isTechUrl);
+  const allImagesAreTech = imageUrls.length > 0 && imageUrls.every((u) => isTechUrl(u) || isWidgetUrl(u));
+  if (hasTech && allImagesAreTech) {
+    return 'techStack';
+  }
+
+  // 10. About Me
+  if (node.type === 'heading' && /about|bio|introduction|who\s+i\s+am/i.test(toString(node))) {
+    return 'about';
+  }
+  if (inAbout && node.type === 'paragraph') {
+    return 'about';
+  }
+
+  return 'unsupported';
+}
+
 export function parseReadmeMarkdown(markdown: string): ParsedReadmeResult {
   // 1. Initialize MDAST Parser
   const processor = unified().use(remarkParse);
   const ast = processor.parse(markdown);
 
-  // 2. Group MDAST nodes into segments delimited by headings
-  interface ASTSegment {
-    headingNode?: any;
-    nodes: any[];
-    startLine: number;
-    endLine: number;
-    startOffset: number;
-    endOffset: number;
-  }
-
-  const segments: ASTSegment[] = [];
-  let currentSegment: ASTSegment = {
-    nodes: [],
-    startLine: 1,
-    endLine: 1,
-    startOffset: 0,
-    endOffset: 0,
-  };
-
-  for (const child of ast.children) {
-    const nodeStartLine = child.position?.start?.line || 1;
-    const nodeEndLine = child.position?.end?.line || nodeStartLine;
-    const nodeStartOffset = child.position?.start?.offset ?? 0;
-    const nodeEndOffset = child.position?.end?.offset ?? markdown.length;
-
-    if (child.type === 'heading') {
-      if (currentSegment.nodes.length > 0 || currentSegment.headingNode) {
-        segments.push(currentSegment);
-      }
-      currentSegment = {
-        headingNode: child,
-        nodes: [],
-        startLine: nodeStartLine,
-        endLine: nodeEndLine,
-        startOffset: nodeStartOffset,
-        endOffset: nodeEndOffset,
-      };
-    } else {
-      if (currentSegment.nodes.length === 0 && !currentSegment.headingNode) {
-        currentSegment.startLine = nodeStartLine;
-        currentSegment.startOffset = nodeStartOffset;
-      }
-      currentSegment.nodes.push(child);
-      currentSegment.endLine = Math.max(currentSegment.endLine, nodeEndLine);
-      currentSegment.endOffset = Math.max(currentSegment.endOffset, nodeEndOffset);
-    }
-  }
-  if (currentSegment.nodes.length > 0 || currentSegment.headingNode) {
-    segments.push(currentSegment);
-  }
-
-  // 3. Initialize default output builder state
+  // 2. Initialize default output builder state
   const resultData: ParsedReadmeResult['data'] = {
     name: '',
     role: '',
@@ -364,6 +434,7 @@ export function parseReadmeMarkdown(markdown: string): ParsedReadmeResult {
     customMarkdown: {
       enabled: false,
       content: '',
+      blocks: [],
     },
     animatedComponents: {
       enabled: false,
@@ -371,80 +442,26 @@ export function parseReadmeMarkdown(markdown: string): ParsedReadmeResult {
     },
   };
 
-  const detectedSections = new Set<SectionId>();
-  const sectionLines = new Map<SectionId, [number, number]>();
-  const parsedNodes = new Set<any>(); // Track which AST nodes were processed
-  const unsupportedContentBlocks: string[] = [];
-  const sectionNameMap: Record<SectionId, string> = {
-    header: 'Profile Header',
-    about: 'About Me & Skills',
-    socials: 'Social Links',
-    techStack: 'Tech Stack & Badges',
-    stats: 'GitHub Stats',
-    achievements: 'GitHub Achievements',
-    projects: 'Featured Projects',
-    visitor: 'Visitor Counter',
-    support: 'Support Me',
-    quotes: 'Quotes Card',
-    custom: 'Custom Markdown',
-    animatedComponents: 'Animated Components',
-  };
+  const detectedSectionsSet = new Set<string>();
 
-  const trackLine = (secId: SectionId, node: any) => {
-    if (!node || !node.position) return;
-    const start = node.position.start.line;
-    const end = node.position.end.line;
-    const current = sectionLines.get(secId);
-    if (current) {
-      sectionLines.set(secId, [Math.min(current[0], start), Math.max(current[1], end)]);
-    } else {
-      sectionLines.set(secId, [start, end]);
-    }
-  };
-
-  // Helper to test if a URL represents a specific widget
-  const isWidgetUrl = (url: string) => {
-    return (
-      url.includes('github-readme-stats') ||
-      url.includes('github-readme-streak-stats') ||
-      url.includes('github-profile-trophy') ||
-      url.includes('github-readme-activity-graph') ||
-      url.includes('github-contribution-grid-snake') ||
-      url.includes('readme-typing-svg') ||
-      url.includes('komarev.com/ghpvc') ||
-      url.includes('visitor-badge') ||
-      url.includes('github-readme-quotes') ||
-      url.includes('buymeacoffee.com') ||
-      url.includes('ko-fi.com')
-    );
-  };
-
-  // --- GLOBAL NODE SCANNING STAGE ---
-  // A. Parse and scan links (strictly mapping anchor URLs to social platform templates)
+  // --- GLOBAL CONFIG EXTRACTORS ---
+  // Scan globally to populate settings like usernames, styles, platforms, selected tech stack IDs, support links, etc.
   const allLinkNodes = findNodes(ast, ['link']);
   const allHtmlNodes = findNodes(ast, ['html']);
+  const allImageNodes = findNodes(ast, ['image']);
 
-  const extractedLinks: { url: string; node: any }[] = [];
-  for (const node of allLinkNodes) {
-    if (node.url) extractedLinks.push({ url: node.url, node });
-  }
+  const extractedLinks: { url: string }[] = [];
+  for (const node of allLinkNodes) if (node.url) extractedLinks.push({ url: node.url });
   for (const node of allHtmlNodes) {
     const parsed = parseHtmlTags(node.value);
-    for (const link of parsed.links) {
-      extractedLinks.push({ url: link, node });
-    }
+    for (const link of parsed.links) extractedLinks.push({ url: link });
   }
 
-  for (const { url, node } of extractedLinks) {
+  for (const { url } of extractedLinks) {
     const urlLower = url.toLowerCase();
-
-    // E. Support
     if (urlLower.includes('buymeacoffee.com') || urlLower.includes('ko-fi.com')) {
-      detectedSections.add('support');
-      trackLine('support', node);
-      parsedNodes.add(node);
+      detectedSectionsSet.add('support');
       resultData.support.enabled = true;
-
       if (urlLower.includes('buymeacoffee.com')) {
         const match = url.match(/buymeacoffee\.com\/([^/?#]+)/);
         if (match) resultData.support.buyMeACoffeeUsername = match[1];
@@ -455,7 +472,6 @@ export function parseReadmeMarkdown(markdown: string): ParsedReadmeResult {
       }
       continue;
     }
-
     if (isWidgetUrl(url)) continue;
 
     const platform = SOCIAL_PLATFORM_REGISTRY.find((p) => {
@@ -464,11 +480,8 @@ export function parseReadmeMarkdown(markdown: string): ParsedReadmeResult {
     });
 
     if (platform) {
-      detectedSections.add('socials');
-      trackLine('socials', node);
-      parsedNodes.add(node);
+      detectedSectionsSet.add('socials');
       resultData.socialLinks.enabled = true;
-
       let val = url;
       if (platform.urlTemplate.includes('{value}')) {
         const prefix = platform.urlTemplate.split('{value}')[0];
@@ -482,36 +495,24 @@ export function parseReadmeMarkdown(markdown: string): ParsedReadmeResult {
     }
   }
 
-  // B. Parse and scan images (for widgets and tech badges)
-  const allImageNodes = findNodes(ast, ['image']);
-  const extractedImages: { url: string; node: any }[] = [];
-  for (const node of allImageNodes) {
-    if (node.url) extractedImages.push({ url: node.url, node });
-  }
+  const extractedImages: { url: string }[] = [];
+  for (const node of allImageNodes) if (node.url) extractedImages.push({ url: node.url });
   for (const node of allHtmlNodes) {
     const parsed = parseHtmlTags(node.value);
-    for (const img of parsed.images) {
-      extractedImages.push({ url: img, node });
-    }
+    for (const img of parsed.images) extractedImages.push({ url: img });
   }
 
-  for (const { url, node } of extractedImages) {
+  for (const { url } of extractedImages) {
     const urlLower = url.toLowerCase();
-
-    // Stats Card
     if (urlLower.includes('github-readme-stats') || urlLower.includes('github-readme-streak-stats')) {
-      detectedSections.add('stats');
-      trackLine('stats', node);
-      parsedNodes.add(node);
+      detectedSectionsSet.add('stats');
       resultData.githubStats.enabled = true;
-
       if (urlLower.includes('github-readme-stats')) {
         const uName = getQueryParam(url, 'username');
         if (uName) resultData.githubStats.username = uName;
         resultData.githubStats.theme = getQueryParam(url, 'theme') || 'default';
         resultData.githubStats.hideBorder = getQueryParam(url, 'hide_border') === 'true';
         resultData.githubStats.showIcons = getQueryParam(url, 'show_icons') === 'true';
-        
         if (urlLower.includes('top-langs')) {
           resultData.githubStats.layout = 'languages';
         } else if (getQueryParam(url, 'layout') === 'compact') {
@@ -524,28 +525,19 @@ export function parseReadmeMarkdown(markdown: string): ParsedReadmeResult {
           resultData.githubStats.username = uName;
         }
       }
-    }
-    // Visitor counter
-    else if (urlLower.includes('komarev.com/ghpvc') || urlLower.includes('visitor-badge')) {
-      detectedSections.add('visitor');
-      trackLine('visitor', node);
-      parsedNodes.add(node);
+    } else if (urlLower.includes('komarev.com/ghpvc') || urlLower.includes('visitor-badge')) {
+      detectedSectionsSet.add('visitor');
       resultData.standaloneVisitor.enabled = true;
       resultData.standaloneVisitor.username = getQueryParam(url, 'username') || '';
       resultData.standaloneVisitor.color = getQueryParam(url, 'color') || 'green';
       resultData.standaloneVisitor.style = getQueryParam(url, 'style') || 'flat';
-    }
-    // Trophies / Activity graph
-    else if (
+    } else if (
       urlLower.includes('github-profile-trophy') ||
       urlLower.includes('github-readme-activity-graph') ||
       urlLower.includes('github-contribution-grid-snake.svg')
     ) {
-      detectedSections.add('achievements');
-      trackLine('achievements', node);
-      parsedNodes.add(node);
+      detectedSectionsSet.add('achievements');
       resultData.achievements.enabled = true;
-
       if (urlLower.includes('github-profile-trophy')) {
         resultData.achievements.widgets.trophy.enabled = true;
         resultData.achievements.widgets.trophy.theme = getQueryParam(url, 'theme') || 'flat';
@@ -563,39 +555,24 @@ export function parseReadmeMarkdown(markdown: string): ParsedReadmeResult {
       if (urlLower.includes('github-contribution-grid-snake')) {
         resultData.achievements.widgets.snake.enabled = true;
       }
-    }
-    // Quotes Card
-    else if (urlLower.includes('github-readme-quotes')) {
-      detectedSections.add('quotes');
-      trackLine('quotes', node);
-      parsedNodes.add(node);
+    } else if (urlLower.includes('github-readme-quotes')) {
+      detectedSectionsSet.add('quotes');
       resultData.quotes.enabled = true;
       resultData.quotes.theme = getQueryParam(url, 'theme') || 'radical';
-    }
-    // Tech Stack Badges
-    else if (!isWidgetUrl(url) && TECHNOLOGY_REGISTRY.some((t) => matchesTechOrSocial(url, t.id, t.logo || ''))) {
+    } else if (!isWidgetUrl(url) && TECHNOLOGY_REGISTRY.some((t) => matchesTechOrSocial(url, t.id, t.logo || ''))) {
       const tech = TECHNOLOGY_REGISTRY.find((t) => matchesTechOrSocial(url, t.id, t.logo || ''));
       if (tech) {
-        detectedSections.add('techStack');
-        trackLine('techStack', node);
-        parsedNodes.add(node);
+        detectedSectionsSet.add('techStack');
         resultData.techStack.enabled = true;
-
         if (!resultData.techStack.selectedIds.includes(tech.id)) {
           resultData.techStack.selectedIds.push(tech.id);
         }
-
         const style = getQueryParam(url, 'style');
         if (style) {
           resultData.techStack.style = style as any;
         }
       }
-    }
-    // Social Links Badges (to extract style)
-    else if (!isWidgetUrl(url) && SOCIAL_PLATFORM_REGISTRY.some((p) => {
-      const isTwitter = p.id === 'x' && (urlLower.includes('twitter.com') || urlLower.includes('logo=twitter'));
-      return isTwitter || matchesTechOrSocial(url, p.id, p.logo);
-    })) {
+    } else if (!isWidgetUrl(url) && SOCIAL_PLATFORM_REGISTRY.some((p) => matchesTechOrSocial(url, p.id, p.logo))) {
       const style = getQueryParam(url, 'style');
       if (style) {
         resultData.socialLinks.style = style as any;
@@ -603,126 +580,154 @@ export function parseReadmeMarkdown(markdown: string): ParsedReadmeResult {
     }
   }
 
-  // --- SEGMENT SCANNING STAGE: PROJECTS, ABOUT, HEADER ---
-  for (let idx = 0; idx < segments.length; idx++) {
-    const seg = segments[idx];
-    const headingText = seg.headingNode ? toString(seg.headingNode).trim() : '';
-    const headingTextLower = headingText.toLowerCase();
-    const segmentText = (seg.headingNode ? toString(seg.headingNode) + '\n' : '') + toString({ type: 'root', children: seg.nodes });
+  // --- SEQUENTIAL LAYOUT FLOW SCANNER ---
+  const order: string[] = [];
+  const customBlocks: any[] = [];
 
-    const mediaUrls: string[] = [];
-    const linkUrls: string[] = [];
+  let inAbout = false;
+  let inHeader = false;
+  let isFirst = true;
+  let unsupportedStartOffset = -1;
+  let unsupportedEndOffset = -1;
 
-    const allSegmentNodes = [...(seg.headingNode ? [seg.headingNode] : []), ...seg.nodes];
-    for (const node of allSegmentNodes) {
-      const imageNodes = findNodes(node, ['image']);
-      for (const img of imageNodes) {
-        if (img.url) mediaUrls.push(img.url);
+  const pushCustomBlock = () => {
+    if (unsupportedStartOffset !== -1) {
+      const rawContent = markdown.slice(unsupportedStartOffset, unsupportedEndOffset).trim();
+      if (rawContent) {
+        const newId = `custom_${Math.random().toString(36).substr(2, 9)}`;
+        const headingMatch = rawContent.match(/^#+\s+(.+)$/m);
+        const title = headingMatch ? headingMatch[1].trim() : 'Custom Section';
+
+        customBlocks.push({
+          id: newId,
+          title,
+          content: rawContent,
+          enabled: true,
+          collapsed: false,
+        });
+        order.push(newId);
       }
+      unsupportedStartOffset = -1;
+      unsupportedEndOffset = -1;
+    }
+  };
 
-      const linkNodes = findNodes(node, ['link']);
-      for (const lnk of linkNodes) {
-        if (lnk.url) linkUrls.push(lnk.url);
-      }
+  for (const child of ast.children) {
+    const start = child.position?.start?.offset ?? 0;
+    const end = child.position?.end?.offset ?? markdown.length;
 
-      const htmlNodes = findNodes(node, ['html']);
-      for (const html of htmlNodes) {
-        const parsed = parseHtmlTags(html.value);
-        mediaUrls.push(...parsed.images);
-        linkUrls.push(...parsed.links);
+    if (child.type === 'heading') {
+      const headingText = toString(child).trim().toLowerCase();
+      const depth = child.depth || 1;
+
+      if (headingText.includes('hi ') || headingText.includes('hello') || headingText.includes('welcome')) {
+        inHeader = true;
+        inAbout = false;
+      } else if (headingText.includes('about') || headingText.includes('bio') || headingText.includes('introduction') || headingText.includes('who i am')) {
+        inAbout = true;
+        inHeader = false;
+      } else if (
+        headingText.includes('project') ||
+        headingText.includes('portfolio') ||
+        headingText.includes('repos') ||
+        headingText.includes('social') ||
+        headingText.includes('contact') ||
+        headingText.includes('tech') ||
+        headingText.includes('stack') ||
+        headingText.includes('stats') ||
+        headingText.includes('achievements') ||
+        depth <= 2
+      ) {
+        inAbout = false;
+        inHeader = false;
       }
     }
 
-    let isMatchedSegment = false;
+    const blockType = detectBlockType(child, isFirst, inAbout, inHeader);
+    isFirst = false;
 
-    // A. Projects
-    if (headingTextLower.includes('project') || headingTextLower.includes('portfolio') || headingTextLower.includes('repos')) {
-      detectedSections.add('projects');
-      trackLine('projects', seg.headingNode);
-      if (seg.headingNode) parsedNodes.add(seg.headingNode);
-      resultData.featuredProjects.enabled = true;
-      isMatchedSegment = true;
-
-      const listItems = findNodes({ type: 'root', children: seg.nodes }, ['listItem']);
-      for (const item of listItems) {
-        trackLine('projects', item);
-        parsedNodes.add(item);
-        const linksInItem = findNodes(item, ['link']);
-        const ghLink = linksInItem.find((l) => l.url?.includes('github.com/'));
-        if (ghLink) {
-          const match = ghLink.url.match(/github\.com\/([^\/]+)\/([^\/]+)/);
-          if (match) {
-            const rName = match[2].replace(/\/$/, '');
-            const fullText = toString(item).trim();
-            const linkText = toString(ghLink);
-            const desc = fullText.replace(linkText, '').replace(/^[\s—\-:]+/, '').trim();
-
-            resultData.featuredProjects.projects.push({
-              id: Math.random().toString(36).substr(2, 9),
-              source: 'github',
-              repoName: rName,
-              title: linkText || rName,
-              repoUrl: ghLink.url,
-              description: desc,
-              stars: 0,
-              forks: 0,
-            });
-          }
-        }
-      }
-
-      // Check GPRM pinned image cards
-      const imagesInSegment = findNodes({ type: 'root', children: seg.nodes }, ['image', 'html']);
-      for (const imgNode of imagesInSegment) {
-        const urls = imgNode.type === 'image' ? [imgNode.url] : parseHtmlTags(imgNode.value).images;
-        for (const u of urls) {
-          if (u.includes('github-readme-stats') && u.includes('pin/')) {
-            parsedNodes.add(imgNode);
-            const repoParam = getQueryParam(u, 'repo');
-            const usernameParam = getQueryParam(u, 'username');
-            if (repoParam && usernameParam) {
-              resultData.featuredProjects.projects.push({
-                id: Math.random().toString(36).substr(2, 9),
-                source: 'github',
-                repoName: repoParam,
-                title: repoParam,
-                repoUrl: `https://github.com/${usernameParam}/${repoParam}`,
-                stars: 0,
-                forks: 0,
-              });
-            }
-          }
-        }
-      }
+    if (blockType === 'header') {
+      inHeader = true;
     }
-    // B. Header (Banner, greeting details)
-    else if (
-      mediaUrls.some((u) => u.includes('capsule-render') || u.includes('readme-typing-svg')) ||
-      headingTextLower.includes('hi ') ||
-      headingTextLower.includes('hello') ||
-      headingTextLower.includes('welcome') ||
-      (idx === 0 && (segmentText.toLowerCase().includes("hi 👋") || segmentText.toLowerCase().includes("i'm") || segmentText.toLowerCase().includes("i am") || segmentText.toLowerCase().includes("welcome")))
-    ) {
-      detectedSections.add('header');
-      trackLine('header', seg.headingNode);
-      if (seg.headingNode) parsedNodes.add(seg.headingNode);
-      resultData.header.enabled = true;
-      isMatchedSegment = true;
 
-      for (const child of seg.nodes) {
+    if (blockType === 'unsupported') {
+      if (unsupportedStartOffset === -1) {
+        unsupportedStartOffset = start;
+      }
+      unsupportedEndOffset = end;
+    } else {
+      pushCustomBlock();
+
+      const STRUCTURED_SECTIONS = new Set([
+        'header',
+        'about',
+        'socials',
+        'techStack',
+        'stats',
+        'achievements',
+        'projects',
+        'animatedComponents',
+        'support',
+        'quotes',
+        'visitor',
+      ]);
+
+      if (STRUCTURED_SECTIONS.has(blockType)) {
+        if (!order.includes(blockType)) {
+          order.push(blockType);
+        }
+      } else if (order[order.length - 1] !== blockType) {
+        order.push(blockType);
+      }
+
+      if (blockType === 'about') {
+        detectedSectionsSet.add('about');
+        if (child.type === 'paragraph') {
+          const pText = toString(child).trim();
+          if (pText) {
+            resultData.about = resultData.about ? `${resultData.about}\n\n${pText}` : pText;
+          }
+        }
+      } else if (blockType === 'header') {
+        detectedSectionsSet.add('header');
+        resultData.header.enabled = true;
+
+        const blockText = toString(child);
+        const greetingMatch = blockText.match(/(?:Hi 👋, I'm|Hello, I'm|I am|I'm)\s+([^<\n\r]+)/i);
+        if (greetingMatch) {
+          let rawName = greetingMatch[1].trim().replace(/^#+\s+/, '');
+          const pronounsMatch = rawName.match(/\(([^)]+)\)/);
+          if (pronounsMatch) {
+            resultData.header.pronouns = pronounsMatch[1];
+            rawName = rawName.replace(/\(([^)]+)\)/, '').trim();
+          }
+          resultData.header.name = rawName;
+          resultData.name = rawName;
+        }
+
+        const locationMatch = blockText.match(/(?:based in|Based in)\s+([^<\n\r]+)/i);
+        if (locationMatch) {
+          resultData.header.location = locationMatch[1].trim();
+        }
+
+        const titleMatch = blockText.match(/(?:Software Engineer|Frontend Architect|Backend Engineer|Full Stack Developer|Developer|Architect|Designer|Student)/i);
+        if (titleMatch) {
+          resultData.header.title = titleMatch[0].trim();
+          resultData.role = titleMatch[0].trim();
+        }
+
+        // Search child images inside header block for banners
         const childImages = findNodes(child, ['image', 'html']);
         for (const img of childImages) {
           const urls = img.type === 'image' ? [img.url] : parseHtmlTags(img.value).images;
           for (const u of urls) {
             if (u.includes('capsule-render')) {
-              parsedNodes.add(img);
               const type = getQueryParam(u, 'type');
               resultData.header.bannerType = type === 'waving' ? 'capsule' : type === 'soft' ? 'wave' : 'gradient';
               resultData.header.bannerTheme = getQueryParam(u, 'color') || 'default';
               resultData.header.bannerText = getQueryParam(u, 'text') || '';
             }
             if (u.includes('readme-typing-svg')) {
-              parsedNodes.add(img);
               resultData.header.typingEnabled = true;
               const linesStr = getQueryParam(u, 'lines');
               if (linesStr) {
@@ -735,141 +740,105 @@ export function parseReadmeMarkdown(markdown: string): ParsedReadmeResult {
             }
           }
         }
-      }
+      } else if (blockType === 'projects') {
+        detectedSectionsSet.add('projects');
+        resultData.featuredProjects.enabled = true;
 
-      const greetingMatch = segmentText.match(/(?:Hi 👋, I'm|Hello, I'm|I am|I'm)\s+([^<\n\r]+)/i);
-      if (greetingMatch) {
-        let rawName = greetingMatch[1].trim().replace(/^#+\s+/, '');
-        const pronounsMatch = rawName.match(/\(([^)]+)\)/);
-        if (pronounsMatch) {
-          resultData.header.pronouns = pronounsMatch[1];
-          rawName = rawName.replace(/\(([^)]+)\)/, '').trim();
+        if (child.type === 'list') {
+          const listItems = findNodes(child, ['listItem']);
+          for (const item of listItems) {
+            const links = findNodes(item, ['link']);
+            const ghLink = links.find((l) => l.url?.includes('github.com/'));
+            if (ghLink) {
+              const match = ghLink.url.match(/github\.com\/([^\/]+)\/([^\/]+)/);
+              if (match) {
+                const rName = match[2].replace(/\/$/, '');
+                const fullText = toString(item).trim();
+                const linkText = toString(ghLink);
+                const desc = fullText.replace(linkText, '').replace(/^[\s—\-:]+/, '').trim();
+                resultData.featuredProjects.projects.push({
+                  id: Math.random().toString(36).substr(2, 9),
+                  source: 'github',
+                  repoName: rName,
+                  title: linkText || rName,
+                  repoUrl: ghLink.url,
+                  description: desc,
+                  stars: 0,
+                  forks: 0,
+                });
+              }
+            }
+          }
         }
-        resultData.header.name = rawName;
-        resultData.name = rawName;
-      }
 
-      const locationMatch = segmentText.match(/(?:based in|Based in)\s+([^<\n\r]+)/i);
-      if (locationMatch) {
-        resultData.header.location = locationMatch[1].trim();
-      }
-
-      const titleMatch = segmentText.match(/(?:Software Engineer|Frontend Architect|Backend Engineer|Full Stack Developer|Developer|Architect|Designer|Student)/i);
-      if (titleMatch) {
-        resultData.header.title = titleMatch[0].trim();
-        resultData.role = titleMatch[0].trim();
-      }
-    }
-    // C. About Me Bio
-    else if (headingTextLower.includes('about') || headingTextLower.includes('bio') || headingTextLower.includes('introduction')) {
-      detectedSections.add('about');
-      trackLine('about', seg.headingNode);
-      if (seg.headingNode) parsedNodes.add(seg.headingNode);
-      resultData.about = seg.nodes
-        .filter((n) => n.type === 'paragraph')
-        .map((n) => {
-          parsedNodes.add(n);
-          return toString(n).trim();
-        })
-        .filter(Boolean)
-        .join('\n\n');
-      isMatchedSegment = true;
-    }
-
-    // D. Header subheadings lookahead (helps resolve sub-headings containing title/location/pronouns)
-    if (resultData.header.enabled) {
-      if (!resultData.header.title) {
-        const titleMatch = segmentText.match(/(?:Software Engineer|Frontend Architect|Backend Engineer|Full Stack Developer|Developer|Architect|Designer|Student)/i);
-        if (titleMatch) {
-          resultData.header.title = titleMatch[0].trim();
-          resultData.role = titleMatch[0].trim();
-          if (seg.headingNode) parsedNodes.add(seg.headingNode);
+        const images = findNodes(child, ['image', 'html']);
+        for (const imgNode of images) {
+          const urls = imgNode.type === 'image' ? [imgNode.url] : parseHtmlTags(imgNode.value).images;
+          for (const u of urls) {
+            if (u.includes('github-readme-stats') && u.includes('pin/')) {
+              const repoParam = getQueryParam(u, 'repo');
+              const usernameParam = getQueryParam(u, 'username');
+              if (repoParam && usernameParam) {
+                resultData.featuredProjects.projects.push({
+                  id: Math.random().toString(36).substr(2, 9),
+                  source: 'github',
+                  repoName: repoParam,
+                  title: repoParam,
+                  repoUrl: `https://github.com/${usernameParam}/${repoParam}`,
+                  stars: 0,
+                  forks: 0,
+                });
+              }
+            }
+          }
         }
-      }
-      if (!resultData.header.location) {
-        const locationMatch = segmentText.match(/(?:based in|Based in)\s+([^<\n\r]+)/i);
-        if (locationMatch) {
-          resultData.header.location = locationMatch[1].trim();
-          if (seg.headingNode) parsedNodes.add(seg.headingNode);
-        }
-      }
-    }
-
-    if (isMatchedSegment) {
-      for (const node of seg.nodes) {
-        parsedNodes.add(node);
       }
     }
   }
 
-  // --- CLEANUP AND FALLBACK TO CUSTOM MARKDOWN ---
-  let isGroupingCustom = false;
-  let customStartOffset = 0;
-  let customEndOffset = 0;
+  // Push final custom block if any
+  pushCustomBlock();
 
-  for (const child of ast.children) {
-    const hasChildren = 'children' in child && Array.isArray((child as any).children);
-    const isNodeParsed = parsedNodes.has(child) || (hasChildren && (child as any).children.every((c: any) => parsedNodes.has(c)));
-    if (!isNodeParsed) {
-      const start = child.position?.start?.offset ?? 0;
-      const end = child.position?.end?.offset ?? markdown.length;
-
-      if (!isGroupingCustom) {
-        isGroupingCustom = true;
-        customStartOffset = start;
-        customEndOffset = end;
-      } else {
-        customEndOffset = Math.max(customEndOffset, end);
-      }
-    } else {
-      if (isGroupingCustom) {
-        const slice = markdown.slice(customStartOffset, customEndOffset).trim();
-        if (slice) {
-          unsupportedContentBlocks.push(slice);
-        }
-        isGroupingCustom = false;
-      }
-    }
-  }
-  if (isGroupingCustom) {
-    const slice = markdown.slice(customStartOffset, customEndOffset).trim();
-    if (slice) {
-      unsupportedContentBlocks.push(slice);
-    }
-  }
-
-  if (unsupportedContentBlocks.length > 0) {
-    resultData.customMarkdown.content = unsupportedContentBlocks.join('\n\n');
+  resultData.customMarkdown.blocks = customBlocks;
+  if (customBlocks.length > 0) {
     resultData.customMarkdown.enabled = true;
-    detectedSections.add('custom');
   }
 
   // 5. Build final analysis reports
-  const enabledSections = Array.from(detectedSections);
-  const analysisSections: DetectedSectionInfo[] = [];
+  const sectionNameMap: Record<string, string> = {
+    header: 'Profile Header',
+    about: 'About Me & Skills',
+    socials: 'Social Links',
+    techStack: 'Tech Stack & Badges',
+    stats: 'GitHub Stats',
+    achievements: 'GitHub Achievements',
+    projects: 'Featured Projects',
+    visitor: 'Visitor Counter',
+    support: 'Support Me',
+    quotes: 'Quotes Card',
+    animatedComponents: 'Animated Components',
+  };
 
-  for (const secId of enabledSections) {
-    const lineRange = sectionLines.get(secId) || [1, ast.children[ast.children.length - 1]?.position?.end?.line || 1];
-    let status: 'Imported' | 'Unsupported' | 'Partial' = 'Imported';
-    if (secId === 'custom') {
-      status = 'Unsupported';
-    } else if (secId === 'projects' && resultData.featuredProjects.projects.length === 0) {
-      status = 'Partial';
-    }
+  const analysisSections: DetectedSectionInfo[] = [];
+  for (const secId of order) {
+    const isCustom = secId.startsWith('custom_');
+    const name = isCustom
+      ? (customBlocks.find((b) => b.id === secId)?.title || 'Custom Section')
+      : (sectionNameMap[secId] || secId);
 
     analysisSections.push({
-      id: sectionNameMap[secId] || secId,
-      sectionId: secId,
-      name: sectionNameMap[secId] || secId,
-      confidence: secId === 'custom' ? 100 : 95,
-      lines: lineRange,
-      status,
-      details: secId === 'custom' ? 'Preserved custom layout markup.' : undefined,
+      id: secId,
+      sectionId: (isCustom ? 'custom' : secId) as SectionId,
+      name,
+      confidence: 100,
+      lines: [1, ast.children[ast.children.length - 1]?.position?.end?.line || 1],
+      status: 'Imported',
+      details: isCustom ? 'Preserved custom layout markup.' : undefined,
     });
   }
 
   return {
-    detectedSections: enabledSections,
+    detectedSections: Array.from(new Set(order)),
     analysis: {
       sections: analysisSections,
       totalDetected: analysisSections.length,

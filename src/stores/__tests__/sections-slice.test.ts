@@ -192,4 +192,94 @@ describe('sections-slice actions', () => {
     expect(state.techStack.selectedIds).toEqual([]);
     expect(state.header.name).toBe('');
   });
+
+  // ── importReadmeData singletons test ───────────────────────────────────────
+
+  it('importReadmeData maintains structured section singletons when importing multiple times', () => {
+    const store = useReadmeStore.getState();
+    const mockData = {
+      name: 'John Doe',
+      header: { enabled: true, title: 'Developer' },
+      socialLinks: { enabled: true, platforms: { linkedin: { enabled: true, value: 'johndoe' } } },
+      githubStats: { enabled: true, username: 'johndoe' },
+    };
+    const importedSectionIds: any[] = ['header', 'socials', 'stats', 'header', 'socials'];
+
+    store.importReadmeData(mockData, importedSectionIds);
+    let state = useReadmeStore.getState();
+
+    const headerInstances = state.sections.order.filter((id) => id === 'header');
+    const socialsInstances = state.sections.order.filter((id) => id === 'socials');
+    const statsInstances = state.sections.order.filter((id) => id === 'stats');
+
+    expect(headerInstances.length).toBe(1);
+    expect(socialsInstances.length).toBe(1);
+    expect(statsInstances.length).toBe(1);
+    expect(state.sections.order.length).toBe(new Set(state.sections.order).size);
+
+    // Import a second time
+    store.importReadmeData(mockData, ['header', 'socials', 'stats']);
+    state = useReadmeStore.getState();
+
+    expect(state.sections.order.filter((id) => id === 'header').length).toBe(1);
+    expect(state.sections.order.filter((id) => id === 'socials').length).toBe(1);
+    expect(state.sections.order.filter((id) => id === 'stats').length).toBe(1);
+    expect(state.sections.order.length).toBe(new Set(state.sections.order).size);
+  });
+
+  it('importReadmeData in replace mode produces a clean builder clearing existing state', () => {
+    const store = useReadmeStore.getState();
+    // Populate builder with pre-existing data
+    store.setHeader({ name: 'Old User', title: 'Old Title' });
+    store.addCustomMarkdownBlock('Old Custom Block', 'Old content');
+
+    const mockImport = {
+      name: 'New User',
+      header: { title: 'New Architect' },
+      githubStats: { username: 'newuser' },
+      customMarkdown: {
+        blocks: [{ id: 'custom_123', title: 'New Custom', content: 'New content', enabled: true }],
+      },
+    };
+
+    store.importReadmeData(mockImport, ['header', 'stats', 'custom_123'], 'replace');
+    const state = useReadmeStore.getState();
+
+    expect(state.header.name).toBe('New User');
+    expect(state.header.title).toBe('New Architect');
+    expect(state.githubStats.username).toBe('newuser');
+    expect(state.customMarkdown.blocks.length).toBe(1);
+    expect(state.customMarkdown.blocks[0].id).toBe('custom_123');
+    expect(state.sections.order).not.toContain('custom_old');
+  });
+
+  it('importReadmeData in merge mode merges singletons and list items without creating duplicate structured sections', () => {
+    const store = useReadmeStore.getState();
+    store.setHeader({ name: 'Existing User', title: 'Senior Dev' });
+    store.setTechStack({ enabled: true, selectedIds: ['react'] });
+
+    const mockImport = {
+      header: { title: 'Lead Architect' },
+      techStack: { selectedIds: ['typescript', 'react'] },
+      githubStats: { username: 'mergeduser' },
+      customMarkdown: {
+        blocks: [{ id: 'custom_merged_1', title: 'Merged Section', content: 'Merged content', enabled: true }],
+      },
+    };
+
+    store.importReadmeData(mockImport, ['header', 'techStack', 'stats', 'custom_merged_1'], 'merge');
+    const state = useReadmeStore.getState();
+
+    expect(state.header.name).toBe('Existing User'); // Preserved
+    expect(state.header.title).toBe('Lead Architect'); // Updated
+    expect(state.techStack.selectedIds).toEqual(['react', 'typescript']); // Merged
+    expect(state.githubStats.username).toBe('mergeduser');
+
+    // Singletons must appear at most once in order
+    const headerCount = state.sections.order.filter((id) => id === 'header').length;
+    const statsCount = state.sections.order.filter((id) => id === 'stats').length;
+    expect(headerCount).toBe(1);
+    expect(statsCount).toBe(1);
+    expect(state.sections.order.length).toBe(new Set(state.sections.order).size);
+  });
 });

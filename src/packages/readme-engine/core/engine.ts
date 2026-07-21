@@ -81,6 +81,9 @@ export const generateREADME = (data: READMEData): string => {
           data.role ? `## ${data.role}` : '',
           statsMarkdown,
         ].filter(Boolean).join('\n\n');
+      } else if (sectionId.startsWith('custom_')) {
+        const block = data.customMarkdown?.blocks?.find((b: any) => b.id === sectionId);
+        sectionMarkdown = block?.content || '';
       } else {
         // Resolve standard section config mapping dynamically
         let config: any = undefined;
