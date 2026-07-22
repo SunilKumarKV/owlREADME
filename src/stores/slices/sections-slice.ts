@@ -63,7 +63,7 @@ export interface SectionsSlice {
   reorderAnimatedComponents: (items: AnimatedComponentItem[]) => void;
   applyPreset: (presetName: string) => void;
   applyTemplate: (template: any) => void;
-  importReadmeData: (importedData: any, selectedSectionIds: SectionId[], mode?: 'replace' | 'merge') => void;
+  importReadmeData: (importedData: any, selectedSectionIds: (SectionId | string)[], mode?: 'replace' | 'merge') => void;
   addCustomMarkdownBlock: (title?: string, content?: string) => void;
   updateCustomMarkdownBlock: (id: string, updates: Partial<CustomMarkdownBlock>) => void;
   duplicateCustomMarkdownBlock: (id: string) => void;
@@ -217,19 +217,18 @@ export const createSectionsSlice: StateCreator<
   applyPreset: (presetName) =>
     set((state) => {
       const activeIds = PRESETS[presetName] || PRESETS.minimal;
-      const updatedSections = { ...state.sections.sections };
+      const updatedSections: Record<string, any> = { ...state.sections.sections };
 
       Object.keys(updatedSections).forEach((key) => {
-        const sectionId = key as SectionId;
-        updatedSections[sectionId] = {
-          ...updatedSections[sectionId],
-          enabled: activeIds.includes(sectionId),
+        updatedSections[key] = {
+          ...updatedSections[key],
+          enabled: activeIds.includes(key as any),
         };
       });
 
       const newOrder = Array.from(new Set([
         ...activeIds,
-        ...state.sections.order.filter((id) => !activeIds.includes(id)),
+        ...state.sections.order.filter((id) => !activeIds.includes(id as any)),
       ]));
 
       return {
@@ -336,10 +335,9 @@ export const createSectionsSlice: StateCreator<
         });
 
         Object.keys(updatedSections).forEach((key) => {
-          const sectionId = key as SectionId;
-          updatedSections[sectionId] = {
-            ...updatedSections[sectionId],
-            enabled: activeIds.includes(sectionId),
+          updatedSections[key] = {
+            ...updatedSections[key],
+            enabled: activeIds.includes(key),
           };
         });
 
@@ -391,7 +389,7 @@ export const createSectionsSlice: StateCreator<
         return updates as Partial<READMEState>;
       } else {
         // MERGE MODE
-        const updatedSections = { ...state.sections.sections };
+        const updatedSections: Record<string, any> = { ...state.sections.sections };
 
         activeIds.forEach((id) => {
           if ((id.startsWith('custom_') || id.startsWith('custom-')) && !updatedSections[id]) {
@@ -595,7 +593,7 @@ export const createSectionsSlice: StateCreator<
       const blocks = state.customMarkdown?.blocks || [];
       const updatedBlocks = blocks.map((b) => (b.id === id ? { ...b, ...updates } : b));
 
-      const updatedSections = { ...state.sections.sections };
+      const updatedSections: Record<string, any> = { ...state.sections.sections };
       if (updates.title && updatedSections[id]) {
         updatedSections[id] = {
           ...updatedSections[id],
@@ -685,7 +683,7 @@ export const createSectionsSlice: StateCreator<
   deleteCustomMarkdownBlock: (id) =>
     set((state) => {
       const updatedBlocks = (state.customMarkdown?.blocks || []).filter((b) => b.id !== id);
-      const updatedSections = { ...state.sections.sections };
+      const updatedSections: Record<string, any> = { ...state.sections.sections };
       delete updatedSections[id];
       const updatedOrder = state.sections.order.filter((sId) => sId !== id);
 

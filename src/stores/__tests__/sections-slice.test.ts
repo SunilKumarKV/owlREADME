@@ -242,7 +242,7 @@ describe('sections-slice actions', () => {
       },
     };
 
-    store.importReadmeData(mockImport, ['header', 'stats', 'custom_123'], 'replace');
+    store.importReadmeData(mockImport, ['header', 'stats', 'custom_123'] as any, 'replace');
     const state = useReadmeStore.getState();
 
     expect(state.header.name).toBe('New User');
@@ -267,7 +267,7 @@ describe('sections-slice actions', () => {
       },
     };
 
-    store.importReadmeData(mockImport, ['header', 'techStack', 'stats', 'custom_merged_1'], 'merge');
+    store.importReadmeData(mockImport, ['header', 'techStack', 'stats', 'custom_merged_1'] as any, 'merge');
     const state = useReadmeStore.getState();
 
     expect(state.header.name).toBe('Existing User'); // Preserved

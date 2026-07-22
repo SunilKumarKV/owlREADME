@@ -220,7 +220,7 @@ export interface SectionConfig {
 
 export interface SectionOrderConfig {
   sections: Record<SectionId, SectionConfig>;
-  order: SectionId[];
+  order: (SectionId | string)[];
 }
 
 export const DEFAULT_SECTIONS: SectionOrderConfig = {

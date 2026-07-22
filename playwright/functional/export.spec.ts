@@ -68,15 +68,15 @@ test.describe('Export Studio E2E Tests', () => {
           const win = child.contentWindow;
           if (win) stubPrint(win);
         }
-        return result;
+        return result as T;
       };
 
       const originalOpen = Document.prototype.open;
       Document.prototype.open = function(this: Document, ...args: unknown[]) {
-        const result = originalOpen.apply(this, args as []);
+        const result = originalOpen.apply(this, args as any);
         const win = this.defaultView;
         if (win && win !== window.top) stubPrint(win);
-        return result;
+        return result as any;
       };
     });
 

@@ -62,7 +62,7 @@ export const generateREADME = (data: READMEData): string => {
     };
 
     for (const sectionId of order) {
-      const sectionConfig = sections[sectionId];
+      const sectionConfig = (sections as any)[sectionId];
       if (sectionConfig && !sectionConfig.enabled) continue;
 
       let sectionMarkdown = '';

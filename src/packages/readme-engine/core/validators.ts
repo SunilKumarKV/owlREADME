@@ -124,7 +124,7 @@ export const validateREADME = (data: READMEData): ValidationResult => {
   // 2. Dynamic Registry Validation
   if (data.sections && data.sections.order && data.sections.order.length > 0) {
     data.sections.order.forEach((sectionId) => {
-      const sectionConfig = data.sections?.sections[sectionId];
+      const sectionConfig = (data.sections?.sections as any)?.[sectionId];
       // Skip validation if the section is disabled
       if (sectionConfig && !sectionConfig.enabled) return;
 

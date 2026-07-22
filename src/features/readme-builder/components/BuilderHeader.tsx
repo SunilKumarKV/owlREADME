@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Button from '@/components/Button';
-import { Layout, FolderPlus } from 'lucide-react';
+import { Layout, FolderPlus, Save, Download, Upload } from 'lucide-react';
 import { BRANDING } from '@/config/branding';
 import type { Workspace } from '@/stores/workspace-store';
 import type { READMEStyleTemplate } from '@/stores/readme-store';
@@ -17,6 +17,9 @@ export interface BuilderHeaderProps {
   setTheme: (theme: Theme) => void;
   resetLayout: () => void;
   setIsImportModalOpen: (open: boolean) => void;
+  onSaveAsTemplate?: () => void;
+  onExportTemplate?: () => void;
+  onImportTemplate?: (content: string) => void;
 }
 
 export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
@@ -30,7 +33,27 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
   setTheme,
   resetLayout,
   setIsImportModalOpen,
+  onSaveAsTemplate,
+  onExportTemplate,
+  onImportTemplate,
 }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      if (onImportTemplate) {
+        onImportTemplate(content);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
   return (
     <header className="flex flex-wrap items-center justify-between px-6 py-2.5 bg-white dark:bg-[#121212] border-b border-gray-200 dark:border-gray-800 z-50 flex-shrink-0 gap-3">
       <div className="flex items-center gap-2.5">
@@ -117,6 +140,46 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
           <FolderPlus className="h-3.5 w-3.5" />
           <span className="hidden md:inline font-semibold">Import README</span>
         </button>
+
+        {onSaveAsTemplate && (
+          <button
+            onClick={onSaveAsTemplate}
+            className="p-1 rounded hover:bg-gray-150 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-600 flex items-center gap-1 cursor-pointer transition text-xs"
+            title="Save active layout as reusable template"
+          >
+            <Save className="h-3.5 w-3.5" />
+            <span className="hidden md:inline font-semibold">Save Template</span>
+          </button>
+        )}
+
+        {onImportTemplate && (
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="p-1 rounded hover:bg-gray-150 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-600 flex items-center gap-1 cursor-pointer transition text-xs"
+            title="Upload and load a template JSON file"
+          >
+            <Upload className="h-3.5 w-3.5" />
+            <span className="hidden md:inline font-semibold">Import JSON</span>
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept=".json"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+          </button>
+        )}
+
+        {onExportTemplate && (
+          <button
+            onClick={onExportTemplate}
+            className="p-1 rounded hover:bg-gray-150 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-600 flex items-center gap-1 cursor-pointer transition text-xs"
+            title="Download current design configuration as JSON"
+          >
+            <Download className="h-3.5 w-3.5" />
+            <span className="hidden md:inline font-semibold">Export JSON</span>
+          </button>
+        )}
 
         <Button href="/templates" variant="secondary" className="!py-1 !px-2.5 !text-xs">
           🛍️ Templates

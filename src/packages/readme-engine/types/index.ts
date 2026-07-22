@@ -24,7 +24,7 @@ export interface SectionConfig {
 
 export interface SectionOrderConfig {
   sections: Record<SectionId, SectionConfig>;
-  order: SectionId[];
+  order: (SectionId | string)[];
 }
 
 export interface SocialPlatformConfig {
@@ -122,6 +122,7 @@ export interface QuotesConfig {
 export interface CustomMarkdownConfig {
   enabled: boolean;
   content: string;
+  blocks?: any[];
 }
 
 export interface StandaloneVisitorConfig {

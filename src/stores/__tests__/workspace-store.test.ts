@@ -205,7 +205,7 @@ describe('useWorkspaceStore', () => {
             },
             support: { enabled: false, buyMeACoffeeUsername: '', kofiUsername: '', style: 'for-the-badge' },
             quotes: { enabled: false, theme: 'radical', quoteType: 'programming' },
-            customMarkdown: { enabled: false, content: '' },
+            customMarkdown: { enabled: false, content: '', blocks: [] },
             standaloneVisitor: { enabled: false, username: '', color: 'green', style: 'flat' },
             animatedComponents: { enabled: false, components: [] },
           },

@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { Reorder } from 'framer-motion';
 import { useTemplateStore, CommunityTemplate, TemplateCategory } from '@/stores/template-store';
+import { validateTemplateSchema } from '@/utils/template-validator';
+import { SaveAsTemplateModal } from '../community-templates/components/SaveAsTemplateModal';
 import usePanelStore from '@/stores/panel-store';
 import useThemeStore from '@/stores/theme-store';
 import { getAIService } from '@/utils/ai/ai-service';
@@ -380,6 +382,119 @@ const READMEBuilderPage = () => {
     handleImportConfig,
   } = useExportActions(localMarkdown);
 
+  const [isSaveAsTemplateOpen, setIsSaveAsTemplateOpen] = useState(false);
+
+  const handleSaveAsTemplateSubmit = (data: {
+    name: string;
+    description: string;
+    category: TemplateCategory;
+    tags: string[];
+    visibility: 'public' | 'private' | 'draft';
+  }) => {
+    const state = useReadmeStore.getState();
+    publishTemplate({
+      name: data.name,
+      description: data.description,
+      author: 'Me',
+      category: data.category,
+      tags: data.tags,
+      difficulty: 'Beginner',
+      technologies: state.techStack.selectedIds || [],
+      sections: state.sections.order as any,
+      theme: (state.template || 'minimal') as any,
+      visibility: data.visibility,
+      config: {
+        header: state.header,
+        githubStats: state.githubStats,
+        techStack: state.techStack,
+        socialLinks: state.socialLinks,
+        achievements: state.achievements,
+        sections: state.sections,
+        support: state.support,
+        quotes: state.quotes,
+        customMarkdown: state.customMarkdown,
+        standaloneVisitor: state.standaloneVisitor,
+        featuredProjects: state.featuredProjects,
+        animatedComponents: state.animatedComponents,
+      },
+    });
+    alert('Template saved to "My Templates" successfully!');
+  };
+
+  const handleExportTemplateJSON = () => {
+    const state = useReadmeStore.getState();
+    const payload = {
+      version: '1.0',
+      name: state.name || 'My Reusable Template',
+      sections: state.sections.order || [],
+      theme: state.template || 'minimal',
+      metadata: {
+        description: 'Design configuration template',
+        category: 'Developer',
+        difficulty: 'Intermediate',
+        tags: ['custom', 'exported'],
+        technologies: state.techStack.selectedIds || [],
+        visibility: 'private',
+        author: 'Me',
+        createdAt: new Date().toISOString(),
+      },
+      config: {
+        header: state.header,
+        githubStats: state.githubStats,
+        techStack: state.techStack,
+        socialLinks: state.socialLinks,
+        achievements: state.achievements,
+        sections: state.sections,
+        support: state.support,
+        quotes: state.quotes,
+        customMarkdown: state.customMarkdown,
+        standaloneVisitor: state.standaloneVisitor,
+        featuredProjects: state.featuredProjects,
+        animatedComponents: state.animatedComponents,
+      },
+    };
+
+    const dataStr = JSON.stringify(payload, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+    const fileName = `${payload.name.toLowerCase().replace(/\s+/g, '-')}.template.json`;
+
+    const link = document.createElement('a');
+    link.setAttribute('href', dataUri);
+    link.setAttribute('download', fileName);
+    link.click();
+  };
+
+  const handleImportTemplateJSON = (jsonString: string) => {
+    try {
+      const parsed = JSON.parse(jsonString);
+      const val = validateTemplateSchema(parsed);
+      if (!val.valid) {
+        alert(`Validation errors: ${val.errors.join(' ')}`);
+        return;
+      }
+
+      const config = parsed.config || {};
+      useReadmeStore.setState({
+        template: parsed.theme || 'minimal',
+        header: config.header || {},
+        githubStats: config.githubStats || {},
+        techStack: config.techStack || {},
+        socialLinks: config.socialLinks || {},
+        achievements: config.achievements || {},
+        sections: config.sections || {},
+        support: config.support || {},
+        quotes: config.quotes || {},
+        customMarkdown: config.customMarkdown || {},
+        standaloneVisitor: config.standaloneVisitor || {},
+        featuredProjects: config.featuredProjects || {},
+        animatedComponents: config.animatedComponents || {},
+      });
+      alert('Template JSON loaded successfully!');
+    } catch (e: any) {
+      alert(`Invalid JSON format: ${e.message}`);
+    }
+  };
+
   // ── Panel Resizing mouse/pointer drag handler ─────────────────────────────
   const startResizing = (e: React.PointerEvent<HTMLDivElement>, handle: 'left' | 'right') => {
     e.preventDefault();
@@ -482,8 +597,11 @@ const READMEBuilderPage = () => {
       author: publishForm.author || 'Developer',
       category: publishForm.category,
       tags: publishForm.tagsInput ? publishForm.tagsInput.split(',').map((t) => t.trim()).filter(Boolean) : [],
-      sections: state.sections.order.filter(id => state.sections.sections[id].enabled),
+      sections: state.sections.order.filter(id => (state.sections.sections as any)[id]?.enabled) as any,
       theme: state.template === 'minimal' ? 'minimal' : 'dark',
+      difficulty: 'Intermediate',
+      technologies: [],
+      visibility: 'public',
       config,
     });
 
@@ -902,11 +1020,11 @@ const READMEBuilderPage = () => {
               >
                 {sections.order
                   .filter(id => {
-                    const config = sections.sections[id];
+                    const config = (sections.sections as any)[id];
                     return !sectionsSearchQuery || (config && config.name.toLowerCase().includes(sectionsSearchQuery.toLowerCase()));
                   })
                   .map((sectionId) => {
-                    const sectionConfig = sections.sections[sectionId];
+                    const sectionConfig = (sections.sections as any)[sectionId];
                     if (!sectionConfig) return null;
 
                     return (
@@ -962,7 +1080,7 @@ const READMEBuilderPage = () => {
             {/* Section forms lists */}
             <div className="space-y-4">
               {sections.order.map((sectionId) => {
-                const sectionConfig = sections.sections[sectionId];
+                const sectionConfig = (sections.sections as any)[sectionId];
                 if (!sectionConfig) return null;
 
                 // Search filter matching
@@ -1049,6 +1167,9 @@ const READMEBuilderPage = () => {
             setTheme={setTheme}
             resetLayout={resetLayout}
             setIsImportModalOpen={setIsImportModalOpen}
+            onSaveAsTemplate={() => setIsSaveAsTemplateOpen(true)}
+            onExportTemplate={handleExportTemplateJSON}
+            onImportTemplate={handleImportTemplateJSON}
           />
         }
         mobileTabsHeader={
@@ -2258,9 +2379,16 @@ const READMEBuilderPage = () => {
                 Confirm Restore
               </button>
             </div>
-
           </div>
         </div>
+      )}
+
+      {isSaveAsTemplateOpen && (
+        <SaveAsTemplateModal
+          isOpen={isSaveAsTemplateOpen}
+          onClose={() => setIsSaveAsTemplateOpen(false)}
+          onSave={handleSaveAsTemplateSubmit}
+        />
       )}
 
     </>
