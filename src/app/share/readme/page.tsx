@@ -90,17 +90,17 @@ function ShareReadmeContent() {
         {/* Branding header banner */}
         <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white dark:bg-[#121212] border border-gray-200 dark:border-gray-800 rounded-xl shadow-sm gap-4">
           <div className="flex items-center space-x-2.5">
-            <div className="p-2 bg-blue-50 dark:bg-blue-950/20 text-blue-500 rounded-lg">
+            <div className="p-2 bg-blue-50 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 rounded-lg">
               <Sparkles className="h-5 w-5" />
             </div>
             <div>
-              <span className="text-[10px] uppercase tracking-wider font-extrabold text-blue-500 block">Shared Profile Workspace</span>
+              <span className="text-[10px] uppercase tracking-wider font-extrabold text-blue-700 dark:text-blue-400 block">Shared Profile Workspace</span>
               <h2 className="font-bold text-sm">Created via {BRANDING.name}</h2>
             </div>
           </div>
           <Link
             href="/"
-            className="inline-flex items-center text-xs font-semibold text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 transition"
+            className="inline-flex items-center text-xs font-semibold text-blue-700 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition"
           >
             Create Your Own Profile
             <ArrowRight className="h-3.5 w-3.5 ml-1" />
@@ -119,9 +119,9 @@ function ShareReadmeContent() {
           )}
           <div className="text-center md:text-left flex-1 space-y-1">
             <h1 className="text-2xl font-extrabold">{decodedData.name}</h1>
-            <p className="text-sm font-semibold text-gray-500 dark:text-gray-400">{decodedData.role}</p>
+            <p className="text-sm font-semibold text-gray-700 dark:text-gray-400">{decodedData.role}</p>
             {decodedData.followers !== undefined && (
-              <div className="flex items-center justify-center md:justify-start gap-4 text-xs text-gray-400 pt-2">
+              <div className="flex items-center justify-center md:justify-start gap-4 text-xs text-gray-600 dark:text-gray-400 pt-2">
                 <span>👥 <b>Followers:</b> {decodedData.followers}</span>
                 <span>📦 <b>Repos:</b> {decodedData.publicRepos}</span>
               </div>
@@ -132,8 +132,8 @@ function ShareReadmeContent() {
               onClick={() => setViewMode('preview')}
               className={`px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
                 viewMode === 'preview'
-                  ? 'bg-white dark:bg-gray-800 text-blue-500 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                  ? 'bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 shadow-sm font-bold'
+                  : 'text-gray-700 hover:text-gray-900 dark:text-gray-400'
               }`}
             >
               Rendered
@@ -142,8 +142,8 @@ function ShareReadmeContent() {
               onClick={() => setViewMode('source')}
               className={`px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
                 viewMode === 'source'
-                  ? 'bg-white dark:bg-gray-800 text-blue-500 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                  ? 'bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 shadow-sm font-bold'
+                  : 'text-gray-700 hover:text-gray-900 dark:text-gray-400'
               }`}
             >
               Raw Source
@@ -172,8 +172,8 @@ function ShareReadmeContent() {
           </div>
 
           <div className="border-t border-gray-100 dark:border-gray-800 mt-6 pt-4 flex justify-between items-center text-xs">
-            <span className="text-gray-400 flex items-center">
-              Theme Applied: <b className="text-gray-600 dark:text-gray-300 capitalize ml-1">{themeParam}</b>
+            <span className="text-gray-600 dark:text-gray-400 flex items-center">
+              Theme Applied: <b className="text-gray-800 dark:text-gray-200 capitalize ml-1">{themeParam}</b>
             </span>
             <Button onClick={handleCopy} variant={copied ? 'secondary' : 'primary'} className="py-1.5 px-4">
               <Copy className="h-3.5 w-3.5 mr-1" />

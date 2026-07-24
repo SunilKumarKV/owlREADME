@@ -40,6 +40,7 @@ export const SocialLinksPanel: React.FC<SocialLinksPanelProps> = ({
           <input
             type="checkbox"
             checked={socialLinks.enabled}
+            aria-label="Enable Social Links section"
             onChange={(e) => setSocialLinks({ enabled: e.target.checked })}
             className="sr-only peer"
           />

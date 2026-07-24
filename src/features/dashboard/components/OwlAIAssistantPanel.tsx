@@ -74,8 +74,8 @@ export const OwlAIAssistantPanel = ({
                 onClick={() => setAiTab('readme')}
                 className={`pb-2 px-4 border-b-2 transition cursor-pointer ${
                   aiTab === 'readme'
-                    ? 'border-blue-500 text-blue-500'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                    ? 'border-blue-700 text-blue-700 dark:border-blue-400 dark:text-blue-400 font-bold'
+                    : 'border-transparent text-gray-700 hover:text-gray-900 dark:text-gray-400'
                 }`}
               >
                 README
@@ -88,8 +88,8 @@ export const OwlAIAssistantPanel = ({
                 onClick={() => setAiTab('roadmap')}
                 className={`pb-2 px-4 border-b-2 transition cursor-pointer ${
                   aiTab === 'roadmap'
-                    ? 'border-blue-500 text-blue-500'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                    ? 'border-blue-700 text-blue-700 dark:border-blue-400 dark:text-blue-400 font-bold'
+                    : 'border-transparent text-gray-700 hover:text-gray-900 dark:text-gray-400'
                 }`}
               >
                 Roadmap
@@ -102,8 +102,8 @@ export const OwlAIAssistantPanel = ({
                 onClick={() => setAiTab('profile')}
                 className={`pb-2 px-4 border-b-2 transition cursor-pointer ${
                   aiTab === 'profile'
-                    ? 'border-blue-500 text-blue-500'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                    ? 'border-blue-700 text-blue-700 dark:border-blue-400 dark:text-blue-400 font-bold'
+                    : 'border-transparent text-gray-700 hover:text-gray-900 dark:text-gray-400'
                 }`}
               >
                 Profile & Bio
@@ -117,30 +117,30 @@ export const OwlAIAssistantPanel = ({
               <div className="p-3 rounded-lg border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-black/20">
                 <div className="flex justify-between items-center mb-1">
                   <span className="font-bold text-gray-700 dark:text-gray-200">Suggested Bio Intro</span>
-                  <button onClick={applyIntro} className="text-blue-500 hover:underline font-semibold cursor-pointer">Apply</button>
+                  <button onClick={applyIntro} className="text-blue-700 dark:text-blue-400 hover:underline font-bold cursor-pointer">Apply</button>
                 </div>
-                <p className="text-gray-500 dark:text-gray-400 italic">&quot;{aiSuggestions.readme.introduction}&quot;</p>
+                <p className="text-gray-600 dark:text-gray-400 italic">&quot;{aiSuggestions.readme.introduction}&quot;</p>
               </div>
               <div className="p-3 rounded-lg border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-black/20">
                 <div className="flex justify-between items-center mb-1">
                   <span className="font-bold text-gray-700 dark:text-gray-200">Suggested About Me Paragraph</span>
-                  <button onClick={applyAboutMe} className="text-blue-500 hover:underline font-semibold cursor-pointer">Apply</button>
+                  <button onClick={applyAboutMe} className="text-blue-700 dark:text-blue-400 hover:underline font-bold cursor-pointer">Apply</button>
                 </div>
-                <p className="text-gray-500 dark:text-gray-400 italic">&quot;{aiSuggestions.readme.aboutMe}&quot;</p>
+                <p className="text-gray-600 dark:text-gray-400 italic">&quot;{aiSuggestions.readme.aboutMe}&quot;</p>
               </div>
               <div className="p-3 rounded-lg border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-black/20">
                 <div className="flex justify-between items-center mb-1">
                   <span className="font-bold text-gray-700 dark:text-gray-200">Suggested Core Skills</span>
-                  <button onClick={applySkills} className="text-blue-500 hover:underline font-semibold cursor-pointer">Apply</button>
+                  <button onClick={applySkills} className="text-blue-700 dark:text-blue-400 hover:underline font-bold cursor-pointer">Apply</button>
                 </div>
-                <p className="text-gray-500 dark:text-gray-400 italic">&quot;{aiSuggestions.readme.skills}&quot;</p>
+                <p className="text-gray-600 dark:text-gray-400 italic">&quot;{aiSuggestions.readme.skills}&quot;</p>
               </div>
               <div className="p-3 rounded-lg border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-black/20">
                 <div className="flex justify-between items-center mb-1">
                   <span className="font-bold text-gray-700 dark:text-gray-200">Suggested Projects Section</span>
-                  <button onClick={applyProjects} className="text-blue-500 hover:underline font-semibold cursor-pointer">Apply</button>
+                  <button onClick={applyProjects} className="text-blue-700 dark:text-blue-400 hover:underline font-bold cursor-pointer">Apply</button>
                 </div>
-                <pre className="text-gray-500 dark:text-gray-400 italic font-mono text-[10px] overflow-auto whitespace-pre-wrap">
+                <pre className="text-gray-600 dark:text-gray-400 italic font-mono text-[10px] overflow-auto whitespace-pre-wrap">
                   {aiSuggestions.readme.projects}
                 </pre>
               </div>

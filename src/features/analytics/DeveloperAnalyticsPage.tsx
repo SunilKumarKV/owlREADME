@@ -141,13 +141,13 @@ const DeveloperAnalyticsPage: React.FC = () => {
           <div>
             <Link
               href="/dashboard"
-              className="inline-flex items-center text-sm font-semibold text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 transition mb-2"
+              className="inline-flex items-center text-sm font-semibold text-blue-700 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition mb-2"
             >
               <ArrowLeft className="h-4 w-4 mr-1" />
               Back to Workspace
             </Link>
             <h1 className="text-4xl font-extrabold tracking-tight">Developer Analytics</h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-gray-700 dark:text-gray-400 mt-1">
               Quantitative summaries of your GitHub repositories, technology stacks, and builder activities.
             </p>
           </div>
@@ -175,7 +175,7 @@ const DeveloperAnalyticsPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between mb-4 border-b pb-2 border-gray-100 dark:border-gray-800">
                 <h3 className="font-bold text-lg flex items-center gap-2">
-                  <GitHubIcon className="h-5 w-5 text-blue-500" /> GitHub Insights
+                  <GitHubIcon className="h-5 w-5 text-blue-700 dark:text-blue-400" /> GitHub Insights
                 </h3>
                 {avatarUrl && (
                   /* eslint-disable-next-line @next/next/no-img-element */
@@ -185,28 +185,28 @@ const DeveloperAnalyticsPage: React.FC = () => {
               {hasGitHubData ? (
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Public Repositories</span>
+                    <span className="text-gray-700 dark:text-gray-400">Public Repositories</span>
                     <span className="font-bold">{publicRepos ?? 0}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Stars Received</span>
-                    <span className="font-bold text-yellow-500">⭐ {totalStars}</span>
+                    <span className="text-gray-700 dark:text-gray-400">Stars Received</span>
+                    <span className="font-bold text-yellow-600 dark:text-yellow-400">⭐ {totalStars}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Forks Count</span>
+                    <span className="text-gray-700 dark:text-gray-400">Forks Count</span>
                     <span className="font-bold">{totalForks}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Followers / Following</span>
+                    <span className="text-gray-700 dark:text-gray-400">Followers / Following</span>
                     <span className="font-bold">{followers ?? 0} / {following ?? 0}</span>
                   </div>
                   <div className="flex justify-between border-t pt-2 border-gray-100 dark:border-gray-800">
-                    <span className="text-gray-500 font-medium">Estimated Contributions</span>
-                    <span className="font-extrabold text-blue-500">{estimatedContributions}</span>
+                    <span className="text-gray-700 dark:text-gray-400 font-medium">Estimated Contributions</span>
+                    <span className="font-extrabold text-blue-700 dark:text-blue-400">{estimatedContributions}</span>
                   </div>
                 </div>
               ) : (
-                <div className="py-8 text-center text-xs text-gray-400">
+                <div className="py-8 text-center text-xs text-gray-600 dark:text-gray-400">
                   No GitHub profile synced. Import to view metrics.
                 </div>
               )}
@@ -218,24 +218,24 @@ const DeveloperAnalyticsPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between mb-4 border-b pb-2 border-gray-100 dark:border-gray-800">
                 <h3 className="font-bold text-lg flex items-center gap-2">
-                  <Cpu className="h-5 w-5 text-green-500" /> Technology Stack
+                  <Cpu className="h-5 w-5 text-green-700 dark:text-green-400" /> Technology Stack
                 </h3>
-                <span className="px-2 py-0.5 text-[10px] font-bold bg-green-50 dark:bg-green-950/40 text-green-500 rounded-full">
+                <span className="px-2 py-0.5 text-[10px] font-bold bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-400 rounded-full">
                   {languagesData.length} languages
                 </span>
               </div>
               {hasGitHubData ? (
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Primary Language</span>
-                    <span className="font-bold text-blue-500">{languagesData[0]?.name || 'N/A'}</span>
+                    <span className="text-gray-700 dark:text-gray-400">Primary Language</span>
+                    <span className="font-bold text-blue-700 dark:text-blue-400">{languagesData[0]?.name || 'N/A'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Skill Tags Detected</span>
+                    <span className="text-gray-700 dark:text-gray-400">Skill Tags Detected</span>
                     <span className="font-bold">{skillCount}</span>
                   </div>
                   <div>
-                    <span className="text-xs text-gray-400 block mb-2 uppercase font-bold tracking-wider">Top 5 Skill Recommendations</span>
+                    <span className="text-xs text-gray-600 dark:text-gray-400 block mb-2 uppercase font-bold tracking-wider">Top 5 Skill Recommendations</span>
                     <div className="flex flex-wrap gap-1.5">
                       {(repoAnalysis?.suggestedSkills || []).slice(0, 5).map((skill: any) => (
                         <span key={skill} className="px-2 py-0.5 text-[11px] font-semibold bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded text-gray-700 dark:text-gray-300">
@@ -246,7 +246,7 @@ const DeveloperAnalyticsPage: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                <div className="py-8 text-center text-xs text-gray-400">
+                <div className="py-8 text-center text-xs text-gray-600 dark:text-gray-400">
                   No stack data available. Import profile to calculate.
                 </div>
               )}
@@ -258,31 +258,31 @@ const DeveloperAnalyticsPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between mb-4 border-b pb-2 border-gray-100 dark:border-gray-800">
                 <h3 className="font-bold text-lg flex items-center gap-2">
-                  <BarChart2 className="h-5 w-5 text-purple-500" /> Usage Telemetry
+                  <BarChart2 className="h-5 w-5 text-purple-700 dark:text-purple-400" /> Usage Telemetry
                 </h3>
-                <span className="px-2 py-0.5 text-[10px] font-bold bg-purple-50 dark:bg-purple-950/40 text-purple-500 rounded-full">
+                <span className="px-2 py-0.5 text-[10px] font-bold bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-400 rounded-full">
                   Local Store
                 </span>
               </div>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Active Project Workspaces</span>
+                  <span className="text-gray-700 dark:text-gray-400">Active Project Workspaces</span>
                   <span className="font-bold">{workspaceCount}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Total Studio Exports</span>
-                  <span className="font-bold text-purple-500">{totalExports}</span>
+                  <span className="text-gray-700 dark:text-gray-400">Total Studio Exports</span>
+                  <span className="font-bold text-purple-700 dark:text-purple-400">{totalExports}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Builder Styles Applied</span>
+                  <span className="text-gray-700 dark:text-gray-400">Builder Styles Applied</span>
                   <span className="font-bold">{totalTemplates}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">AI Assistant Generations</span>
-                  <span className="font-bold text-blue-500">{aiGenerationsCount}</span>
+                  <span className="text-gray-700 dark:text-gray-400">AI Assistant Generations</span>
+                  <span className="font-bold text-blue-700 dark:text-blue-400">{aiGenerationsCount}</span>
                 </div>
                 <div className="flex justify-between border-t pt-2 border-gray-100 dark:border-gray-800">
-                  <span className="text-gray-500 font-medium">Roadmap Milestones</span>
+                  <span className="text-gray-700 dark:text-gray-400 font-medium">Roadmap Milestones</span>
                   <span className="font-bold">{totalSteps} steps</span>
                 </div>
               </div>
@@ -305,8 +305,8 @@ const DeveloperAnalyticsPage: React.FC = () => {
                 disabled={!hasGitHubData}
                 className={`px-3 py-1.5 rounded-md font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
                   activeChartTab === 'languages'
-                    ? 'bg-white dark:bg-gray-800 text-blue-500 shadow-sm'
-                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                    ? 'bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 shadow-sm font-bold'
+                    : 'text-gray-700 hover:text-gray-900 dark:text-gray-400'
                 }`}
               >
                 Languages
@@ -315,8 +315,8 @@ const DeveloperAnalyticsPage: React.FC = () => {
                 onClick={() => setActiveChartTab('exports')}
                 className={`px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
                   activeChartTab === 'exports'
-                    ? 'bg-white dark:bg-gray-800 text-blue-500 shadow-sm'
-                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                    ? 'bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 shadow-sm font-bold'
+                    : 'text-gray-700 hover:text-gray-900 dark:text-gray-400'
                 }`}
               >
                 Studio Exports
@@ -326,8 +326,8 @@ const DeveloperAnalyticsPage: React.FC = () => {
                 disabled={!hasGitHubData}
                 className={`px-3 py-1.5 rounded-md font-medium transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
                   activeChartTab === 'activity'
-                    ? 'bg-white dark:bg-gray-800 text-blue-500 shadow-sm'
-                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                    ? 'bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 shadow-sm font-bold'
+                    : 'text-gray-700 hover:text-gray-900 dark:text-gray-400'
                 }`}
               >
                 Activity Timeline

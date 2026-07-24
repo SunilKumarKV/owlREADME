@@ -74,6 +74,7 @@ export const ProjectWorkspacesPanel = ({
                       <div className="flex items-center gap-2">
                         <input
                           type="text"
+                          aria-label="Edit project name"
                           value={editingName}
                           onChange={(e) => setEditingName(e.target.value)}
                           className="px-2 py-0.5 text-sm border rounded bg-white dark:bg-gray-800 dark:border-gray-700 text-black dark:text-white"
@@ -85,13 +86,13 @@ export const ProjectWorkspacesPanel = ({
                         />
                         <button
                           onClick={() => handleRenameSave(w.id)}
-                          className="text-xs text-green-500 hover:underline font-bold"
+                          className="text-xs text-green-600 dark:text-green-500 hover:underline font-bold"
                         >
                           Save
                         </button>
                         <button
                           onClick={() => setEditingWorkspaceId(null)}
-                          className="text-xs text-gray-500 hover:underline"
+                          className="text-xs text-gray-600 dark:text-gray-400 hover:underline"
                         >
                           Cancel
                         </button>
@@ -104,7 +105,7 @@ export const ProjectWorkspacesPanel = ({
                             setEditingWorkspaceId(w.id);
                             setEditingName(w.name);
                           }}
-                          className="text-xs text-gray-400 hover:text-blue-500 transition cursor-pointer"
+                          className="text-xs text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition cursor-pointer"
                           title="Rename project"
                           aria-label={`Rename project ${w.name}`}
                         >
@@ -117,26 +118,26 @@ export const ProjectWorkspacesPanel = ({
                     <span
                       className={`px-2 py-0.5 rounded-full font-bold text-[9px] uppercase tracking-wide ${
                         w.type === 'readme'
-                          ? 'bg-blue-100 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400'
+                          ? 'bg-blue-100 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400'
                           : w.type === 'roadmap'
-                          ? 'bg-green-100 dark:bg-green-950/40 text-green-600 dark:text-green-400'
-                          : 'bg-purple-100 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400'
+                          ? 'bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400'
+                          : 'bg-purple-100 dark:bg-purple-950/40 text-purple-700 dark:text-purple-400'
                       }`}
                     >
                       {w.type}
                     </span>
 
                     {isActive && (
-                      <span className="px-2 py-0.5 rounded-full font-bold text-[9px] bg-blue-500 text-white uppercase tracking-wide">
+                      <span className="px-2 py-0.5 rounded-full font-bold text-[9px] bg-blue-600 text-white uppercase tracking-wide">
                         Active
                       </span>
                     )}
                   </div>
 
-                  <p className="text-[11px] text-gray-400">
+                  <p className="text-[11px] text-gray-600 dark:text-gray-400">
                     Updated: {new Date(w.updatedAt).toLocaleString()}
                   </p>
-                  <p className="text-[11px] text-gray-500">
+                  <p className="text-[11px] text-gray-700 dark:text-gray-400">
                     Theme: <span className="capitalize">{w.theme}</span>
                     {w.type !== 'roadmap' && ` | Template: ${w.readmeData.template || 'minimal'}`}
                   </p>

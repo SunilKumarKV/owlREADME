@@ -23,6 +23,7 @@ export const QuotesPanel: React.FC<QuotesPanelProps> = ({
           <input
             type="checkbox"
             checked={quotes.enabled}
+            aria-label="Enable Quotes section"
             onChange={(e) => setQuotes({ enabled: e.target.checked })}
             className="sr-only peer"
           />

@@ -69,9 +69,10 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
       <div className="flex items-center gap-4 flex-wrap sm:flex-nowrap">
         {workspaces.length > 0 && (
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Workspace:</span>
+            <span className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-400 tracking-wider">Workspace:</span>
             <select
               value={activeWorkspaceId || ''}
+              aria-label="Select active workspace"
               onChange={(e) => {
                 if (e.target.value === 'new-workspace-trigger') {
                   const name = prompt('Enter workspace name:');
@@ -93,7 +94,7 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
         )}
 
         <div className="flex items-center gap-1.5">
-          <label htmlFor="builder-template-select" className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Template:</label>
+          <label htmlFor="builder-template-select" className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-400 tracking-wider">Template:</label>
           <select
             id="builder-template-select"
             value={template}
@@ -109,7 +110,7 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
         </div>
 
         <div className="flex items-center gap-1.5">
-          <label htmlFor="builder-theme-select" className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Theme:</label>
+          <label htmlFor="builder-theme-select" className="text-[10px] uppercase font-bold text-gray-600 dark:text-gray-400 tracking-wider">Theme:</label>
           <select
             id="builder-theme-select"
             value={theme}
@@ -125,7 +126,7 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
 
         <button
           onClick={resetLayout}
-          className="p-1 rounded hover:bg-gray-150 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-600 flex items-center gap-1 cursor-pointer transition text-xs"
+          className="p-1 rounded hover:bg-gray-150 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 flex items-center gap-1 cursor-pointer transition text-xs"
           title="Reset panel layouts to defaults"
         >
           <Layout className="h-3.5 w-3.5" />
@@ -134,7 +135,7 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
 
         <button
           onClick={() => setIsImportModalOpen(true)}
-          className="p-1 rounded hover:bg-gray-150 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-600 flex items-center gap-1 cursor-pointer transition text-xs"
+          className="p-1 rounded hover:bg-gray-150 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 flex items-center gap-1 cursor-pointer transition text-xs"
           title="Import an existing GitHub Profile README"
         >
           <FolderPlus className="h-3.5 w-3.5" />
@@ -144,7 +145,7 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
         {onSaveAsTemplate && (
           <button
             onClick={onSaveAsTemplate}
-            className="p-1 rounded hover:bg-gray-150 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-600 flex items-center gap-1 cursor-pointer transition text-xs"
+            className="p-1 rounded hover:bg-gray-150 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 flex items-center gap-1 cursor-pointer transition text-xs"
             title="Save active layout as reusable template"
           >
             <Save className="h-3.5 w-3.5" />
@@ -155,7 +156,7 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
         {onImportTemplate && (
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="p-1 rounded hover:bg-gray-150 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-600 flex items-center gap-1 cursor-pointer transition text-xs"
+            className="p-1 rounded hover:bg-gray-150 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 flex items-center gap-1 cursor-pointer transition text-xs"
             title="Upload and load a template JSON file"
           >
             <Upload className="h-3.5 w-3.5" />
@@ -164,6 +165,7 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
               type="file"
               ref={fileInputRef}
               accept=".json"
+              aria-label="Upload template JSON file"
               onChange={handleFileChange}
               className="hidden"
             />
@@ -173,7 +175,7 @@ export const BuilderHeader: React.FC<BuilderHeaderProps> = ({
         {onExportTemplate && (
           <button
             onClick={onExportTemplate}
-            className="p-1 rounded hover:bg-gray-150 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-600 flex items-center gap-1 cursor-pointer transition text-xs"
+            className="p-1 rounded hover:bg-gray-150 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 flex items-center gap-1 cursor-pointer transition text-xs"
             title="Download current design configuration as JSON"
           >
             <Download className="h-3.5 w-3.5" />

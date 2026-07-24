@@ -62,6 +62,7 @@ export const ProjectsPanel: React.FC<ProjectsPanelProps> = ({
           <input
             type="checkbox"
             checked={featuredProjects.enabled}
+            aria-label="Enable Featured Projects section"
             onChange={(e) => setFeaturedProjects({ enabled: e.target.checked })}
             className="sr-only peer"
           />

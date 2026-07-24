@@ -240,6 +240,5 @@ export async function runAxeCheck(page: Page) {
 
   return await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22a', 'wcag22aa'])
-    .disableRules(['color-contrast', 'link-name', 'select-name', 'label'])
     .analyze();
 }

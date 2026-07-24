@@ -25,6 +25,7 @@ export const AchievementsPanel: React.FC<AchievementsPanelProps> = ({
           <input
             type="checkbox"
             checked={achievements.enabled}
+            aria-label="Enable Achievements section"
             onChange={(e) => setAchievements({ enabled: e.target.checked })}
             className="sr-only peer"
           />

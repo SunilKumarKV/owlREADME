@@ -39,6 +39,7 @@ export const TechStackPanel: React.FC<TechStackPanelProps> = ({
           <input
             type="checkbox"
             checked={techStack.enabled}
+            aria-label="Enable Tech Stack section"
             onChange={(e) => setTechStack({ enabled: e.target.checked })}
             className="sr-only peer"
           />

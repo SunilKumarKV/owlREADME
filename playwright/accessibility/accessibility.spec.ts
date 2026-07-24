@@ -45,17 +45,12 @@ test.describe('OwlReadme Accessibility Audits (WCAG 2.2 AA)', () => {
 
       const results = await runAxeCheck(page);
 
-      // Filter for serious and critical violations
-      const violations = results.violations.filter(
-        v => v.impact === 'critical' || v.impact === 'serious'
-      );
-
-      if (violations.length > 0) {
-        console.error(`Serious/Critical accessibility violations found on ${route.name}:`);
-        console.error(JSON.stringify(violations, null, 2));
+      if (results.violations.length > 0) {
+        console.error(`Accessibility violations found on ${route.name}:`);
+        console.error(JSON.stringify(results.violations, null, 2));
       }
 
-      expect(violations).toEqual([]);
+      expect(results.violations).toEqual([]);
     });
   }
 

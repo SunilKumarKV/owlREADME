@@ -86,6 +86,7 @@ export const HeaderPanel: React.FC<HeaderPanelProps> = ({
           <input
             type="checkbox"
             checked={header.enabled}
+            aria-label="Enable Header section"
             onChange={(e) => setHeader({ enabled: e.target.checked })}
             className="sr-only peer"
           />
@@ -277,6 +278,7 @@ export const HeaderPanel: React.FC<HeaderPanelProps> = ({
               <input
                 type="checkbox"
                 checked={header.typingEnabled}
+                aria-label="Enable Typing SVG effect"
                 onChange={(e) => setHeader({ typingEnabled: e.target.checked })}
                 className="sr-only peer"
               />

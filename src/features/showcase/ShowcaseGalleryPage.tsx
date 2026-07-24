@@ -223,7 +223,7 @@ const ShowcaseGalleryPage = () => {
       {/* ── Top Header Bar ── */}
       <header className="border-b border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-[#0d0d11]/70 backdrop-blur-md sticky top-0 z-40 px-6 py-4 flex items-center justify-between transition-colors">
         <div className="flex items-center gap-3">
-          <Link href="/dashboard" className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 hover:text-gray-700 dark:text-gray-400 transition cursor-pointer">
+          <Link href="/dashboard" aria-label="Back to Dashboard" className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 hover:text-gray-900 dark:text-gray-400 transition cursor-pointer min-h-[24px] min-w-[24px] inline-flex items-center justify-center">
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
@@ -291,9 +291,10 @@ const ShowcaseGalleryPage = () => {
 
           {/* Sorting */}
           <div className="flex items-center gap-2 select-none justify-end">
-            <span className="text-3xs uppercase font-extrabold tracking-wider text-gray-400">Sort By:</span>
+            <span className="text-3xs uppercase font-extrabold tracking-wider text-gray-600 dark:text-gray-400">Sort By:</span>
             <select
               value={sortBy}
+              aria-label="Sort showcases"
               onChange={(e) => setSortBy(e.target.value as any)}
               className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 dark:bg-[#16161b] dark:border-gray-700 focus:outline-none cursor-pointer font-medium"
             >
@@ -362,9 +363,9 @@ const ShowcaseGalleryPage = () => {
                     </p>
 
                     {/* Developer info */}
-                    <div className="flex items-center gap-1.5 text-xs text-gray-400 font-mono mb-4">
+                    <div className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400 font-mono mb-4">
                       <span>By:</span>
-                      <span className="font-semibold text-blue-500 hover:underline">@{show.author}</span>
+                      <span className="font-semibold text-blue-700 dark:text-blue-400 hover:underline">@{show.author}</span>
                     </div>
 
                     {/* Technologies list */}
@@ -383,7 +384,7 @@ const ShowcaseGalleryPage = () => {
 
                     {/* Popularity Metrics and actions */}
                     <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-850 mt-auto select-none">
-                      <div className="flex items-center gap-3 text-xs text-gray-400">
+                      <div className="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-400">
                         <button
                           onClick={() => likeShowcase(show.id)}
                           className={`flex items-center gap-1 cursor-pointer transition ${isLiked ? 'text-red-500 font-bold hover:scale-105' : 'hover:text-red-500'}`}

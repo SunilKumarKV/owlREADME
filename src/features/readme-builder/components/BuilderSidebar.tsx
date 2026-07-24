@@ -42,8 +42,8 @@ export const BuilderSidebar: React.FC<BuilderSidebarProps> = ({
             onClick={() => setActiveBuilderTab('editor')}
             className={`flex-1 py-2.5 text-xs font-bold border-b-2 cursor-pointer transition ${
               activeBuilderTab === 'editor'
-                ? 'border-blue-500 text-blue-500 bg-blue-500/5'
-                : 'border-transparent text-gray-400 hover:text-gray-600'
+                ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-500/5'
+                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900'
             }`}
           >
             ✏️ Section Editor
@@ -52,8 +52,8 @@ export const BuilderSidebar: React.FC<BuilderSidebarProps> = ({
             onClick={() => setActiveBuilderTab('marketplace')}
             className={`flex-1 py-2.5 text-xs font-bold border-b-2 cursor-pointer transition ${
               activeBuilderTab === 'marketplace'
-                ? 'border-blue-500 text-blue-500 bg-blue-500/5'
-                : 'border-transparent text-gray-400 hover:text-gray-600'
+                ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-500/5'
+                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900'
             }`}
           >
             🛍️ Marketplace ({marketplaceLength})
@@ -62,8 +62,8 @@ export const BuilderSidebar: React.FC<BuilderSidebarProps> = ({
             onClick={() => setActiveBuilderTab('community')}
             className={`flex-1 py-2.5 text-xs font-bold border-b-2 cursor-pointer transition ${
               activeBuilderTab === 'community'
-                ? 'border-blue-500 text-blue-500 bg-blue-500/5'
-                : 'border-transparent text-gray-400 hover:text-gray-600'
+                ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-500/5'
+                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900'
             }`}
           >
             👥 Community
@@ -72,8 +72,8 @@ export const BuilderSidebar: React.FC<BuilderSidebarProps> = ({
             onClick={() => setActiveBuilderTab('analyzer')}
             className={`flex-1 py-2.5 text-xs font-bold border-b-2 cursor-pointer transition ${
               activeBuilderTab === 'analyzer'
-                ? 'border-blue-500 text-blue-500 bg-blue-500/5'
-                : 'border-transparent text-gray-400 hover:text-gray-600'
+                ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-500/5'
+                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900'
             }`}
           >
             📊 Quality
@@ -82,8 +82,8 @@ export const BuilderSidebar: React.FC<BuilderSidebarProps> = ({
             onClick={() => setActiveBuilderTab('improver')}
             className={`flex-1 py-2.5 text-xs font-bold border-b-2 cursor-pointer transition ${
               activeBuilderTab === 'improver'
-                ? 'border-blue-500 text-blue-500 bg-blue-500/5'
-                : 'border-transparent text-gray-400 hover:text-gray-600'
+                ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-500/5'
+                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900'
             }`}
           >
             ✨ AI
@@ -116,8 +116,8 @@ export const BuilderSidebar: React.FC<BuilderSidebarProps> = ({
         className="w-9 bg-white dark:bg-[#121212] border-r border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800/40 flex flex-col items-center py-4 cursor-pointer select-none gap-2 flex-shrink-0 transition"
         title="Expand Section Builder"
       >
-        <PanelLeft className="h-4 w-4 text-gray-400" />
-        <span className="text-[10px] font-bold tracking-widest text-gray-400 uppercase mt-4 [writing-mode:vertical-lr] rotate-180 select-none">
+        <PanelLeft className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+        <span className="text-[10px] font-bold tracking-widest text-gray-600 dark:text-gray-400 uppercase mt-4 [writing-mode:vertical-lr] rotate-180 select-none">
           Section Builder
         </span>
       </div>
@@ -141,7 +141,7 @@ export const BuilderSidebar: React.FC<BuilderSidebarProps> = ({
             className={`px-3 py-2 text-[11px] font-bold uppercase tracking-wider border-b-2 cursor-pointer transition ${
               activeBuilderTab === 'editor'
                 ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-500/5'
-                : 'border-transparent text-gray-400'
+                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900'
             }`}
           >
             ✏️ Edit Sections
@@ -151,7 +151,7 @@ export const BuilderSidebar: React.FC<BuilderSidebarProps> = ({
             className={`px-3 py-2 text-[11px] font-bold uppercase tracking-wider border-b-2 cursor-pointer transition ${
               activeBuilderTab === 'marketplace'
                 ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-500/5'
-                : 'border-transparent text-gray-400'
+                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900'
             }`}
           >
             🛍️ Marketplace ({marketplaceLength})
@@ -161,7 +161,7 @@ export const BuilderSidebar: React.FC<BuilderSidebarProps> = ({
             className={`px-3 py-2 text-[11px] font-bold uppercase tracking-wider border-b-2 cursor-pointer transition ${
               activeBuilderTab === 'community'
                 ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-500/5'
-                : 'border-transparent text-gray-400'
+                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900'
             }`}
           >
             👥 Community
@@ -171,7 +171,7 @@ export const BuilderSidebar: React.FC<BuilderSidebarProps> = ({
             className={`px-3 py-2 text-[11px] font-bold uppercase tracking-wider border-b-2 cursor-pointer transition ${
               activeBuilderTab === 'analyzer'
                 ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-500/5'
-                : 'border-transparent text-gray-400'
+                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900'
             }`}
           >
             📊 Quality Analyzer
@@ -181,7 +181,7 @@ export const BuilderSidebar: React.FC<BuilderSidebarProps> = ({
             className={`px-3 py-2 text-[11px] font-bold uppercase tracking-wider border-b-2 cursor-pointer transition ${
               activeBuilderTab === 'improver'
                 ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-500/5'
-                : 'border-transparent text-gray-400'
+                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900'
             }`}
           >
             ✨ AI Improve
@@ -191,7 +191,7 @@ export const BuilderSidebar: React.FC<BuilderSidebarProps> = ({
         <div className="flex items-center gap-1">
           <button
             onClick={() => setFullscreenPanel?.(fullscreenPanel === 'builder' ? null : 'builder')}
-            className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-850 text-gray-400 hover:text-gray-600 transition cursor-pointer"
+            className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-850 text-gray-600 dark:text-gray-400 hover:text-gray-900 transition cursor-pointer"
             title={fullscreenPanel === 'builder' ? 'Minimize Panel' : 'Maximize Panel'}
           >
             {fullscreenPanel === 'builder' ? (
@@ -202,7 +202,7 @@ export const BuilderSidebar: React.FC<BuilderSidebarProps> = ({
           </button>
           <button
             onClick={() => setBuilderCollapsed?.(true)}
-            className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-850 text-gray-400 hover:text-gray-600 transition cursor-pointer"
+            className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-850 text-gray-600 dark:text-gray-400 hover:text-gray-900 transition cursor-pointer"
             title="Collapse Panel"
           >
             <PanelLeftClose className="h-3.5 w-3.5" />

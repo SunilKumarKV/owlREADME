@@ -83,17 +83,17 @@ function ShareRoadmapContent() {
         {/* Branding header banner */}
         <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white dark:bg-[#121212] border border-gray-200 dark:border-gray-800 rounded-xl shadow-sm gap-4">
           <div className="flex items-center space-x-2.5">
-            <div className="p-2 bg-blue-50 dark:bg-blue-950/20 text-blue-500 rounded-lg">
+            <div className="p-2 bg-blue-50 dark:bg-blue-950/20 text-blue-700 dark:text-blue-400 rounded-lg">
               <ListChecks className="h-5 w-5" />
             </div>
             <div>
-              <span className="text-[10px] uppercase tracking-wider font-extrabold text-blue-500 block">Shared Learning Roadmap</span>
+              <span className="text-[10px] uppercase tracking-wider font-extrabold text-blue-700 dark:text-blue-400 block">Shared Learning Roadmap</span>
               <h2 className="font-bold text-sm">Created via {BRANDING.name}</h2>
             </div>
           </div>
           <Link
             href="/"
-            className="inline-flex items-center text-xs font-semibold text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 transition"
+            className="inline-flex items-center text-xs font-semibold text-blue-700 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition"
           >
             Create Your Own Roadmap
             <ArrowRight className="h-3.5 w-3.5 ml-1" />
@@ -103,17 +103,17 @@ function ShareRoadmapContent() {
         {/* Roadmap Title Panel */}
         <div className="bg-white dark:bg-[#121212] border border-gray-200 dark:border-gray-800 p-6 rounded-xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-center sm:text-left">
-            <span className="text-xs font-bold text-blue-500 uppercase tracking-widest">Roadmap Title</span>
+            <span className="text-xs font-bold text-blue-700 dark:text-blue-400 uppercase tracking-widest">Roadmap Title</span>
             <h1 className="text-2xl font-extrabold mt-1">{decodedData.title || 'Custom Learning Roadmap'}</h1>
-            <p className="text-xs text-gray-400 mt-1">{validSteps.length} milestones structured</p>
+            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{validSteps.length} milestones structured</p>
           </div>
           <div className="flex bg-gray-100 dark:bg-black/30 rounded-lg p-1 text-xs shrink-0 self-center">
             <button
               onClick={() => setViewMode('visual')}
               className={`px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
                 viewMode === 'visual'
-                  ? 'bg-white dark:bg-gray-800 text-blue-500 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                  ? 'bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 shadow-sm font-bold'
+                  : 'text-gray-700 hover:text-gray-900 dark:text-gray-400'
               }`}
             >
               Visual Flow
@@ -122,8 +122,8 @@ function ShareRoadmapContent() {
               onClick={() => setViewMode('source')}
               className={`px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
                 viewMode === 'source'
-                  ? 'bg-white dark:bg-gray-800 text-blue-500 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                  ? 'bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 shadow-sm font-bold'
+                  : 'text-gray-700 hover:text-gray-900 dark:text-gray-400'
               }`}
             >
               Raw Markdown
@@ -173,8 +173,8 @@ function ShareRoadmapContent() {
           )}
 
           <div className="border-t border-gray-100 dark:border-gray-800 mt-6 pt-4 flex justify-between items-center text-xs">
-            <span className="text-gray-400">
-              Theme Applied: <b className="text-gray-600 dark:text-gray-300 capitalize ml-1">{themeParam}</b>
+            <span className="text-gray-600 dark:text-gray-400">
+              Theme Applied: <b className="text-gray-800 dark:text-gray-200 capitalize ml-1">{themeParam}</b>
             </span>
             <Button onClick={handleCopy} variant={copied ? 'secondary' : 'primary'} className="py-1.5 px-4">
               <Copy className="h-3.5 w-3.5 mr-1" />

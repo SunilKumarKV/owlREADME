@@ -25,6 +25,7 @@ export const VisitorCounterPanel: React.FC<VisitorCounterPanelProps> = ({
           <input
             type="checkbox"
             checked={standaloneVisitor.enabled}
+            aria-label="Enable Visitor Counter section"
             onChange={(e) => setStandaloneVisitor({ enabled: e.target.checked })}
             className="sr-only peer"
           />

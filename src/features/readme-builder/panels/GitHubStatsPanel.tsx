@@ -33,6 +33,7 @@ export const GitHubStatsPanel: React.FC<GitHubStatsPanelProps> = ({
           <input
             type="checkbox"
             checked={githubStats.enabled}
+            aria-label="Enable GitHub Stats section"
             onChange={(e) => setGithubStats({ enabled: e.target.checked })}
             className="sr-only peer"
           />

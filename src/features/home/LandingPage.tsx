@@ -322,7 +322,7 @@ const LandingPage: React.FC = () => {
               </form>
 
               {/* Quick checklist indicators */}
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-3xs font-bold text-gray-400 dark:text-gray-500 pt-2">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-3xs font-bold text-gray-600 dark:text-gray-400 pt-2">
                 <span className="flex items-center gap-1">
                   <CheckCircle className="h-3.5 w-3.5 text-green-500" /> Free & Open Source
                 </span>
@@ -396,19 +396,19 @@ const LandingPage: React.FC = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
               <div>
                 <span className="block text-2xl sm:text-3xl font-black text-blue-600 dark:text-blue-500">100%</span>
-                <span className="text-3xs uppercase font-extrabold tracking-wider text-gray-400">Client-Side Logic</span>
+                <span className="text-3xs uppercase font-extrabold tracking-wider text-gray-600 dark:text-gray-400">Client-Side Logic</span>
               </div>
               <div>
                 <span className="block text-2xl sm:text-3xl font-black text-purple-600 dark:text-purple-500">0</span>
-                <span className="text-3xs uppercase font-extrabold tracking-wider text-gray-400">Databases Needed</span>
+                <span className="text-3xs uppercase font-extrabold tracking-wider text-gray-600 dark:text-gray-400">Databases Needed</span>
               </div>
               <div>
                 <span className="block text-2xl sm:text-3xl font-black text-indigo-600 dark:text-indigo-500">1-Click</span>
-                <span className="text-3xs uppercase font-extrabold tracking-wider text-gray-400">Package Export</span>
+                <span className="text-3xs uppercase font-extrabold tracking-wider text-gray-600 dark:text-gray-400">Package Export</span>
               </div>
               <div>
                 <span className="block text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-500">MIT</span>
-                <span className="text-3xs uppercase font-extrabold tracking-wider text-gray-400">License Authority</span>
+                <span className="text-3xs uppercase font-extrabold tracking-wider text-gray-600 dark:text-gray-400">License Authority</span>
               </div>
             </div>
           </Container>
@@ -474,7 +474,7 @@ const LandingPage: React.FC = () => {
                 <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm leading-relaxed">
                   OwlREADME provides a complete side-by-side workspace split. Write descriptions on the left, review formatted HTML output live in the center, and edit raw markdown codes directly on the right.
                 </p>
-                <div className="flex items-center gap-4 text-3xs font-bold text-gray-400 pt-2">
+                <div className="flex items-center gap-4 text-3xs font-bold text-gray-600 dark:text-gray-400 pt-2">
                   <span className="flex items-center gap-1">
                     <MousePointerClick className="h-4 w-4 text-blue-500" /> Interactive controls
                   </span>
@@ -661,7 +661,7 @@ const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-8 text-3xs font-extrabold uppercase tracking-wider text-gray-400 dark:text-gray-500">
+          <div className="flex flex-wrap justify-center gap-8 text-3xs font-extrabold uppercase tracking-wider text-gray-600 dark:text-gray-400">
             <a
               href={BRANDING.socialLinks.github}
               target="_blank"

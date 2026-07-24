@@ -43,12 +43,12 @@ export const GithubProfilePanel = ({
           {readmeAbout && <p className="text-xs text-gray-600 dark:text-gray-400 px-4 line-clamp-3 mb-4">{readmeAbout}</p>}
           <div className="grid grid-cols-2 gap-4 w-full pt-4 border-t border-gray-100 dark:border-gray-800 text-sm">
             <div>
-              <span className="block font-bold text-blue-500">{followers ?? 0}</span>
-              <span className="text-xs text-gray-500">Followers</span>
+              <span className="block font-extrabold text-blue-700 dark:text-blue-400">{followers ?? 0}</span>
+              <span className="text-xs text-gray-700 dark:text-gray-400">Followers</span>
             </div>
             <div>
-              <span className="block font-bold text-blue-500">{publicRepos ?? 0}</span>
-              <span className="text-xs text-gray-500">Repositories</span>
+              <span className="block font-extrabold text-blue-700 dark:text-blue-400">{publicRepos ?? 0}</span>
+              <span className="text-xs text-gray-700 dark:text-gray-400">Repositories</span>
             </div>
           </div>
         </div>

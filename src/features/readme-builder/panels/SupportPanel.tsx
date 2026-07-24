@@ -24,6 +24,7 @@ export const SupportPanel: React.FC<SupportPanelProps> = ({
           <input
             type="checkbox"
             checked={support.enabled}
+            aria-label="Enable Support section"
             onChange={(e) => setSupport({ enabled: e.target.checked })}
             className="sr-only peer"
           />

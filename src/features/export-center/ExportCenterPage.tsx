@@ -35,7 +35,7 @@ const MDMarkdown = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="animate-pulse bg-gray-100 dark:bg-gray-800/40 rounded-md h-[400px] flex items-center justify-center text-xs text-gray-400">
+      <div className="bg-gray-100 dark:bg-gray-800/40 rounded-md h-[400px] flex items-center justify-center text-xs text-gray-700 dark:text-gray-300 font-semibold">
         Loading markdown preview...
       </div>
     ),
@@ -275,13 +275,13 @@ const ExportCenterPage = () => {
           <div>
             <Link
               href="/dashboard"
-              className="inline-flex items-center text-sm font-semibold text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 transition mb-2"
+              className="inline-flex items-center text-sm font-semibold text-blue-700 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition mb-2"
             >
               <ArrowLeft className="h-4 w-4 mr-1" />
               Back to Workspace
             </Link>
             <h1 className="text-4xl font-extrabold tracking-tight">Export Studio</h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-gray-700 dark:text-gray-400 mt-1">
               Select a format to download, copy, or print your project workspace.
             </p>
           </div>
@@ -422,7 +422,7 @@ const ExportCenterPage = () => {
           <div className="lg:col-span-2 bg-white dark:bg-[#121212] rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm p-6 flex flex-col h-[600px]">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-4 mb-4 gap-4">
               <div className="flex items-center space-x-2">
-                <Sparkles className="h-5 w-5 text-blue-500" />
+                <Sparkles className="h-5 w-5 text-blue-700 dark:text-blue-400" />
                 <h2 className="font-bold text-lg">Studio Preview</h2>
               </div>
               <div role="tablist" className="flex bg-gray-100 dark:bg-black/40 rounded-lg p-1 text-xs">
@@ -432,8 +432,8 @@ const ExportCenterPage = () => {
                   onClick={() => setViewMode('preview')}
                   className={`px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
                     viewMode === 'preview'
-                      ? 'bg-white dark:bg-gray-800 text-blue-500 shadow-sm'
-                      : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                      ? 'bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 shadow-sm font-bold'
+                      : 'text-gray-700 hover:text-gray-900 dark:text-gray-400'
                   }`}
                 >
                   Rendered
@@ -444,8 +444,8 @@ const ExportCenterPage = () => {
                   onClick={() => setViewMode('source')}
                   className={`px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
                     viewMode === 'source'
-                      ? 'bg-white dark:bg-gray-800 text-blue-500 shadow-sm'
-                      : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                      ? 'bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 shadow-sm font-bold'
+                      : 'text-gray-700 hover:text-gray-900 dark:text-gray-400'
                   }`}
                 >
                   Raw Source
@@ -461,8 +461,8 @@ const ExportCenterPage = () => {
                 onClick={() => setActiveTab('readme')}
                 className={`pb-2 px-4 border-b-2 transition cursor-pointer ${
                   activeTab === 'readme'
-                    ? 'border-blue-500 text-blue-500'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                    ? 'border-blue-700 text-blue-700 dark:border-blue-400 dark:text-blue-400 font-bold'
+                    : 'border-transparent text-gray-700 hover:text-gray-900 dark:text-gray-400'
                 }`}
               >
                 README.md
@@ -473,8 +473,8 @@ const ExportCenterPage = () => {
                 onClick={() => setActiveTab('roadmap')}
                 className={`pb-2 px-4 border-b-2 transition cursor-pointer ${
                   activeTab === 'roadmap'
-                    ? 'border-blue-500 text-blue-500'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                    ? 'border-blue-700 text-blue-700 dark:border-blue-400 dark:text-blue-400 font-bold'
+                    : 'border-transparent text-gray-700 hover:text-gray-900 dark:text-gray-400'
                 }`}
               >
                 roadmap.md
@@ -485,8 +485,8 @@ const ExportCenterPage = () => {
                 onClick={() => setActiveTab('combined')}
                 className={`pb-2 px-4 border-b-2 transition cursor-pointer ${
                   activeTab === 'combined'
-                    ? 'border-blue-500 text-blue-500'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                    ? 'border-blue-700 text-blue-700 dark:border-blue-400 dark:text-blue-400 font-bold'
+                    : 'border-transparent text-gray-700 hover:text-gray-900 dark:text-gray-400'
                 }`}
               >
                 Combined Workspace
@@ -497,11 +497,11 @@ const ExportCenterPage = () => {
             <div className="flex-1 overflow-auto border border-gray-100 dark:border-gray-800 rounded-lg p-4 bg-gray-50 dark:bg-black/10">
               {viewMode === 'preview' ? (
                 <div data-color-mode={colorMode} className="theme-preview-container min-h-full">
-                  <ErrorBoundary name="Export Preview Renderer" fallback={<div className="p-4 text-xs text-red-500 font-semibold bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 rounded-lg">Failed to render markdown content. Syntax errors in template or markdown.</div>}>
+                  <ErrorBoundary name="Export Preview Renderer" fallback={<div className="p-4 text-xs text-red-700 dark:text-red-400 font-semibold bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 rounded-lg">Failed to render markdown content. Syntax errors in template or markdown.</div>}>
                     {activeContent.trim() ? (
                       <MDMarkdown source={activeContent} style={{ background: 'transparent', color: 'inherit' }} />
                     ) : (
-                      <p className="text-sm text-gray-400 text-center py-12">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 text-center py-12">
                         Empty preview. Modify data in builders first.
                       </p>
                     )}
@@ -521,8 +521,8 @@ const ExportCenterPage = () => {
 
             {/* Quick Actions Panel */}
             <div className="flex justify-between items-center mt-4 text-xs">
-              <span className="text-gray-400">
-                Viewing: <b className="text-gray-600 dark:text-gray-200">{activeTitle}</b>
+              <span className="text-gray-600 dark:text-gray-400">
+                Viewing: <b className="text-gray-800 dark:text-gray-200">{activeTitle}</b>
               </span>
               <Button
                 onClick={() => handleCopy(activeContent, activeTitle)}
@@ -538,13 +538,13 @@ const ExportCenterPage = () => {
           <div className="bg-white dark:bg-[#121212] rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm p-6 flex flex-col h-[600px]">
             <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-4 mb-4">
               <div className="flex items-center space-x-2">
-                <History className="h-5 w-5 text-blue-500" />
+                <History className="h-5 w-5 text-blue-700 dark:text-blue-400" />
                 <h2 className="font-bold text-lg">Export History Log</h2>
               </div>
               {readmeState.exportHistory && readmeState.exportHistory.length > 0 && (
                 <button
                   onClick={handleClearHistory}
-                  className="text-xs font-semibold text-red-500 hover:text-red-600 transition flex items-center gap-1 cursor-pointer"
+                  className="text-xs font-semibold text-red-700 dark:text-red-400 hover:text-red-800 transition flex items-center gap-1 cursor-pointer"
                 >
                   <Trash2 className="h-3.5 w-3.5" /> Clear
                 </button>
@@ -572,13 +572,13 @@ const ExportCenterPage = () => {
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-gray-800 dark:text-gray-100">{item.projectName}</span>
-                        <span className="px-2 py-0.5 rounded-full font-bold text-[10px] bg-blue-50 dark:bg-blue-950/40 text-blue-500 uppercase tracking-wide">
+                        <span className="px-2 py-0.5 rounded-full font-bold text-[10px] bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 uppercase tracking-wide">
                           {item.format}
                         </span>
                       </div>
-                      <div className="flex justify-between items-center text-[10px] text-gray-400 mt-1">
+                      <div className="flex justify-between items-center text-[10px] text-gray-600 dark:text-gray-400 mt-1">
                         <span>{formatTimestamp(item.timestamp)}</span>
-                        <span className="flex items-center text-green-500 font-semibold gap-0.5">
+                        <span className="flex items-center text-green-700 dark:text-green-400 font-bold gap-0.5">
                           <CheckCircle className="h-3 w-3" /> Success
                         </span>
                       </div>
@@ -588,8 +588,8 @@ const ExportCenterPage = () => {
               )}
             </div>
 
-            <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 text-[11px] text-gray-400 flex items-center space-x-1.5 bg-blue-50/20 dark:bg-blue-950/10 p-2.5 rounded-lg">
-              <Info className="h-4 w-4 text-blue-500 shrink-0" />
+            <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 text-[11px] text-gray-600 dark:text-gray-400 flex items-center space-x-1.5 bg-blue-50/20 dark:bg-blue-950/10 p-2.5 rounded-lg">
+              <Info className="h-4 w-4 text-blue-700 dark:text-blue-400 shrink-0" />
               <span>Exports automatically increment counts on your developer dashboard.</span>
             </div>
           </div>
@@ -632,10 +632,10 @@ const ExportCenterPage = () => {
                   theme === 'terminal'
                     ? 'text-[#39ff14]'
                     : toast.type === 'error'
-                    ? 'text-red-500'
+                    ? 'text-red-700 dark:text-red-400'
                     : toast.type === 'info'
-                    ? 'text-blue-500'
-                    : 'text-green-500'
+                    ? 'text-blue-700 dark:text-blue-400'
+                    : 'text-green-700 dark:text-green-400'
                 }`}
               />
               <span className="text-xs sm:text-sm font-semibold">{toast.message}</span>

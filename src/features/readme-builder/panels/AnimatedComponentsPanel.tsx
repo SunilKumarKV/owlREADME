@@ -39,6 +39,7 @@ export const AnimatedComponentsPanel: React.FC<AnimatedComponentsPanelProps> = (
           <input
             type="checkbox"
             checked={animatedComponents.enabled}
+            aria-label="Enable Animated Components section"
             onChange={(e) => setAnimatedComponents({ enabled: e.target.checked })}
             className="sr-only peer"
           />
@@ -122,6 +123,7 @@ export const AnimatedComponentsPanel: React.FC<AnimatedComponentsPanelProps> = (
                           <input
                             type="checkbox"
                             checked={comp.enabled}
+                            aria-label={`Enable ${comp.title} component`}
                             onChange={(e) => updateAnimatedComponentItem(comp.id, { enabled: e.target.checked })}
                             className="sr-only peer"
                           />

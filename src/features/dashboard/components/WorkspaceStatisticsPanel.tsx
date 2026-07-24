@@ -19,19 +19,19 @@ export const WorkspaceStatisticsPanel = ({
       <div className={`grid grid-cols-1 ${isReadmeType && isRoadmapType ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-4 text-center`}>
         {isReadmeType && (
           <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/50">
-            <span className="text-xs text-gray-500 dark:text-gray-400 block mb-1">README Exports</span>
-            <span className="text-3xl font-extrabold text-blue-500">{readmeExportsCount}</span>
+            <span className="text-xs text-gray-700 dark:text-gray-400 block mb-1">README Exports</span>
+            <span className="text-3xl font-extrabold text-blue-600 dark:text-blue-400">{readmeExportsCount}</span>
           </div>
         )}
         {isRoadmapType && (
           <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/50">
-            <span className="text-xs text-gray-500 dark:text-gray-400 block mb-1">Roadmap Exports</span>
-            <span className="text-3xl font-extrabold text-blue-500">{roadmapExportsCount}</span>
+            <span className="text-xs text-gray-700 dark:text-gray-400 block mb-1">Roadmap Exports</span>
+            <span className="text-3xl font-extrabold text-blue-600 dark:text-blue-400">{roadmapExportsCount}</span>
           </div>
         )}
         <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/50">
-          <span className="text-xs text-gray-500 dark:text-gray-400 block mb-1">Styles Tested</span>
-          <span className="text-3xl font-extrabold text-blue-500">{totalTemplatesCount}</span>
+          <span className="text-xs text-gray-700 dark:text-gray-400 block mb-1">Styles Tested</span>
+          <span className="text-3xl font-extrabold text-blue-600 dark:text-blue-400">{totalTemplatesCount}</span>
         </div>
       </div>
     </div>

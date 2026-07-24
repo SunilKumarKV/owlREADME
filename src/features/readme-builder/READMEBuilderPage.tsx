@@ -65,7 +65,7 @@ const MDMarkdown = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="animate-pulse bg-gray-100 dark:bg-gray-800/40 rounded-md h-[400px] flex items-center justify-center text-xs text-gray-400">
+      <div className="bg-gray-100 dark:bg-gray-800/40 rounded-md h-[400px] flex items-center justify-center text-xs text-gray-700 dark:text-gray-300 font-semibold">
         Loading markdown preview...
       </div>
     ),
@@ -973,11 +973,12 @@ const READMEBuilderPage = () => {
             {/* Section list (Section Manager) */}
             <div className="p-4 bg-gray-50 dark:bg-gray-900/25 border border-gray-200/80 dark:border-gray-800/80 rounded-lg space-y-3.5">
               <div className="flex items-center justify-between gap-4">
-                <h4 className="text-2xs font-extrabold uppercase tracking-wider text-gray-400 dark:text-gray-555">Section Manager</h4>
+                <h4 className="text-2xs font-extrabold uppercase tracking-wider text-gray-600 dark:text-gray-400">Section Manager</h4>
                 <div className="relative flex-1 max-w-44">
-                  <Search className="absolute left-2 top-2 h-3.5 w-3.5 text-gray-400" />
+                  <Search className="absolute left-2 top-2 h-3.5 w-3.5 text-gray-600 dark:text-gray-400" />
                   <input
                     type="text"
+                    aria-label="Filter sections"
                     placeholder="Filter sections..."
                     value={sectionsSearchQuery}
                     onChange={(e) => setSectionsSearchQuery(e.target.value)}
@@ -988,7 +989,7 @@ const READMEBuilderPage = () => {
 
               {/* Presets Grid */}
               <div className="space-y-1">
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Layout Presets</span>
+                <span className="text-[10px] font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Layout Presets</span>
                 <div className="flex flex-wrap gap-2">
                   {['minimal', 'modern', 'developer', 'open-source', 'gprm-style'].map((pres) => (
                     <button
@@ -1027,7 +1028,7 @@ const READMEBuilderPage = () => {
                         className={`flex items-center justify-between p-2 rounded border text-xs select-none transition cursor-grab active:cursor-grabbing ${
                           sectionConfig.enabled
                             ? 'border-blue-105 dark:border-blue-900 bg-blue-500/5'
-                            : 'border-gray-200 dark:border-gray-800 opacity-60 bg-gray-55/20'
+                            : 'border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/20'
                         }`}
                       >
                         <div className="flex items-center gap-2">
@@ -1035,6 +1036,7 @@ const READMEBuilderPage = () => {
                           <input
                             type="checkbox"
                             checked={sectionConfig.enabled}
+                            aria-label={`Enable ${sectionConfig.name} section`}
                             onChange={() => setSections({
                               sections: {
                                 ...sections.sections,
@@ -1053,7 +1055,7 @@ const READMEBuilderPage = () => {
                               [sectionId]: { ...sectionConfig, collapsed: !sectionConfig.collapsed }
                             }
                           })}
-                          className="text-[10px] text-blue-500 hover:text-blue-600 font-semibold cursor-pointer"
+                          className="text-[10px] text-blue-700 dark:text-blue-400 font-bold cursor-pointer min-h-[24px] min-w-[24px] inline-flex items-center justify-center"
                         >
                           {sectionConfig.collapsed ? 'Expand' : 'Collapse'}
                         </button>
@@ -1064,7 +1066,7 @@ const READMEBuilderPage = () => {
               <button
                 type="button"
                 onClick={() => addCustomMarkdownBlock()}
-                className="w-full mt-2.5 py-1.5 px-3 flex items-center justify-center gap-2 rounded border border-dashed border-blue-300 dark:border-blue-800 text-blue-500 hover:text-blue-600 bg-blue-50/5 hover:bg-blue-50/15 text-[10px] font-extrabold uppercase tracking-wider transition cursor-pointer select-none"
+                className="w-full mt-2.5 py-1.5 px-3 flex items-center justify-center gap-2 rounded border border-dashed border-blue-400 dark:border-blue-800 text-blue-700 dark:text-blue-400 hover:text-blue-800 bg-blue-50/5 hover:bg-blue-50/15 text-[10px] font-extrabold uppercase tracking-wider transition cursor-pointer select-none"
               >
                 ➕ Custom Markdown
               </button>
@@ -1102,7 +1104,7 @@ const READMEBuilderPage = () => {
                             [sectionId]: { ...sectionConfig, collapsed: false }
                           }
                         })}
-                        className="text-2xs text-blue-500 hover:text-blue-655 font-bold cursor-pointer"
+                        className="text-2xs text-blue-700 dark:text-blue-400 font-bold cursor-pointer"
                       >
                         Expand Panel
                       </button>

@@ -17,7 +17,7 @@ const MDMarkdown = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="animate-pulse bg-gray-100 dark:bg-gray-800/40 rounded-md h-[400px] flex items-center justify-center text-xs text-gray-400">
+      <div className="bg-gray-100 dark:bg-gray-800/40 rounded-md h-[400px] flex items-center justify-center text-xs text-gray-700 dark:text-gray-300 font-semibold">
         Loading markdown preview...
       </div>
     ),
@@ -92,8 +92,8 @@ const PreviewPage = () => {
           onClick={() => setViewMode('preview')}
           className={`flex-1 lg:flex-initial lg:px-8 py-3 font-semibold text-center border-b-2 transition-colors duration-200 cursor-pointer ${
             viewMode === 'preview'
-              ? 'border-blue-500 text-blue-500'
-              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
+              ? 'border-blue-700 text-blue-700 dark:border-blue-400 dark:text-blue-400'
+              : 'border-transparent text-gray-700 hover:text-gray-900 dark:text-gray-400'
           }`}
         >
           Preview
@@ -102,8 +102,8 @@ const PreviewPage = () => {
           onClick={() => setViewMode('markdown')}
           className={`flex-1 lg:flex-initial lg:px-8 py-3 font-semibold text-center border-b-2 transition-colors duration-200 cursor-pointer ${
             viewMode === 'markdown'
-              ? 'border-blue-500 text-blue-500'
-              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
+              ? 'border-blue-700 text-blue-700 dark:border-blue-400 dark:text-blue-400'
+              : 'border-transparent text-gray-700 hover:text-gray-900 dark:text-gray-400'
           }`}
         >
           Markdown
@@ -112,8 +112,8 @@ const PreviewPage = () => {
           onClick={() => setViewMode('split')}
           className={`hidden lg:block lg:px-8 py-3 font-semibold text-center border-b-2 transition-colors duration-200 cursor-pointer ${
             viewMode === 'split'
-              ? 'border-blue-500 text-blue-500'
-              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
+              ? 'border-blue-700 text-blue-700 dark:border-blue-400 dark:text-blue-400'
+              : 'border-transparent text-gray-700 hover:text-gray-900 dark:text-gray-400'
           }`}
         >
           Split View
