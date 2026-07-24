@@ -112,7 +112,7 @@ export const CommunityTemplatesPanel: React.FC<CommunityTemplatesPanelProps> = (
               <button
                 key={tab.id}
                 onClick={() => setActiveCollection(tab.id as any)}
-                className={`px-2 py-0.5 text-3xs font-extrabold rounded uppercase tracking-wider cursor-pointer transition flex-shrink-0 ${
+                className={`px-2.5 py-1 text-2xs font-extrabold rounded uppercase tracking-wider cursor-pointer transition flex-shrink-0 min-h-[24px] min-w-[24px] inline-flex items-center justify-center ${
                   activeCollection === tab.id
                     ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
                     : 'text-gray-450 hover:text-gray-600 dark:hover:text-gray-300'

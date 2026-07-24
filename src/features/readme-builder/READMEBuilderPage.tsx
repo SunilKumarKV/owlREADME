@@ -989,14 +989,14 @@ const READMEBuilderPage = () => {
               {/* Presets Grid */}
               <div className="space-y-1">
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Layout Presets</span>
-                <div className="flex flex-wrap gap-1">
+                <div className="flex flex-wrap gap-2">
                   {['minimal', 'modern', 'developer', 'open-source', 'gprm-style'].map((pres) => (
                     <button
                       key={pres}
                       type="button"
                       onClick={() => applyPreset(pres)}
                       aria-label={`Apply ${pres.replace('-style', '').replace('gprm', 'GPRM')} layout preset`}
-                      className="px-2 py-0.5 text-[10px] font-semibold rounded bg-gray-155 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-755 text-gray-655 dark:text-gray-300 transition capitalize cursor-pointer"
+                      className="px-2.5 py-1 text-[11px] font-semibold rounded bg-gray-155 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-755 text-gray-655 dark:text-gray-300 transition capitalize cursor-pointer min-h-[24px] min-w-[24px] inline-flex items-center justify-center"
                     >
                       {pres.replace('-style', '').replace('gprm', 'GPRM')}
                     </button>
@@ -2093,16 +2093,16 @@ const READMEBuilderPage = () => {
 
                         {/* Card actions */}
                         <div className="flex items-center justify-between pt-2 border-t border-gray-150/40 dark:border-gray-850/60 select-none">
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-2">
                             <button
                               onClick={() => setRestoringSnapshot(snap)}
-                              className="px-2 py-0.8 text-3xs font-extrabold rounded bg-blue-600 hover:bg-blue-700 text-white transition cursor-pointer"
+                              className="px-2 py-1 text-3xs font-extrabold rounded bg-blue-600 hover:bg-blue-700 text-white transition cursor-pointer min-h-[24px] min-w-[24px] inline-flex items-center justify-center"
                             >
                               Restore
                             </button>
                             <button
                               onClick={() => setComparingSnapshot(snap)}
-                              className="px-1.5 py-0.8 text-3xs font-bold rounded bg-gray-150 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition cursor-pointer flex items-center gap-0.5"
+                              className="px-2 py-1 text-3xs font-bold rounded bg-gray-150 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition cursor-pointer flex items-center gap-1 min-h-[24px] min-w-[24px] inline-flex items-center justify-center"
                             >
                               <ArrowLeftRight className="h-2.5 w-2.5" /> Compare
                             </button>
@@ -2110,7 +2110,7 @@ const READMEBuilderPage = () => {
 
                           <button
                             onClick={() => deleteSnapshot(snap.id)}
-                            className="p-1 text-gray-450 hover:text-red-500 transition cursor-pointer"
+                            className="p-1 text-gray-450 hover:text-red-500 transition cursor-pointer min-h-[24px] min-w-[24px] inline-flex items-center justify-center"
                             title="Delete this snapshot version"
                           >
                             <Trash2 className="h-3 w-3" />

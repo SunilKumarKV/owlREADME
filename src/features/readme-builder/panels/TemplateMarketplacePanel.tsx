@@ -48,12 +48,12 @@ export const TemplateMarketplacePanel: React.FC<TemplateMarketplacePanelProps> =
         </div>
         
         {/* Categories scroll row */}
-        <div className="flex gap-1 overflow-x-auto pb-1.5 custom-editor-scrollbar">
+        <div className="flex gap-2 overflow-x-auto pb-1.5 custom-editor-scrollbar">
           {['all', 'minimal', 'modern', 'open-source', 'full-stack', 'frontend', 'ai', 'terminal', 'gprm', 'anime'].map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedMarketplaceCategory(cat)}
-              className={`px-2.5 py-1 text-[10px] font-bold rounded-full cursor-pointer transition flex-shrink-0 ${
+              className={`px-2.5 py-1 text-[10px] font-bold rounded-full cursor-pointer transition flex-shrink-0 min-h-[24px] min-w-[24px] inline-flex items-center justify-center ${
                 selectedMarketplaceCategory === cat
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'bg-gray-100 hover:bg-gray-205 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400'
